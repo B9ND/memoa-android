@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.ui.theme.Purple20
 import com.dlrjsgml.memoa.ui.theme.animation.bounceClick
+import com.dlrjsgml.memoa.ui.theme.caption1
 
 
 @Composable
@@ -46,6 +48,9 @@ fun MemoaButton(
                     .padding(contentPadding),
                 text = text,
                 color = if (enabled) Color.Black else Color.Gray, //색깔 꼭 바꾸자 ㅎㅎ
+                style = caption1.copy(
+                    fontWeight = FontWeight.Normal
+                )
             )
 
         }
@@ -58,7 +63,7 @@ fun MemoaButton(
 @Composable
 fun MemoaButtonPreview() {
     MemoaButton(
-        text = "메모아 버튼입니다람쥐",
+        text = "다음",
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
