@@ -38,8 +38,7 @@ fun MemoaButton(
     ) {
         Box(
             modifier = modifier.background(
-                color = if (enabled) Purple20 else Color.White,
-                shape = shape
+                color = if (enabled) Purple20 else Color.White, shape = shape
             )
         ) {
             Text(
@@ -68,6 +67,5 @@ fun MemoaButtonPreview() {
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
         contentPadding = PaddingValues(vertical = 20.dp)
-    ) {
-    }
+    ) {}
 }

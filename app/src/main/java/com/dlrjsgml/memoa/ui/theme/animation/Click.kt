@@ -30,7 +30,6 @@ fun Modifier.bounceClick(onClick: () -> Unit) = composed {
         if (buttonState == ButtonState.Pressed) 0.95f else 1f,
         label = "",
     )
-
     this
         .graphicsLayer {
             scaleX = scale
