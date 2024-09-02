@@ -95,7 +95,7 @@ fun MemoaPasswordTextField(
             onClick = {}
         ) {
             Icon(
-                painter = painterResource(id = if(isHide)  R.drawable.ic_password_hide else R.drawable.ic_password_show),
+                painter = painterResource(id = if (isHide) R.drawable.ic_password_hide else R.drawable.ic_password_show),
                 contentDescription = null
             )
 
@@ -108,7 +108,7 @@ fun MemoaPasswordTextField(
 
 @Composable
 @Preview
-fun fjadjaj(){
+fun fjadjaj() {
     MemoaPasswordTextField(
         value = "",
         onValueChange = {},
