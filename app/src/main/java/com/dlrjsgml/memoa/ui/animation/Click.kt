@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.ui.theme.animation
+package com.dlrjsgml.memoa.ui.animation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
