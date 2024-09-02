@@ -26,8 +26,15 @@ val PretendardFontFamily = FontFamily(
 
 val caption1 = TextStyle(
     fontFamily = PretendardFontFamily,
-    fontWeight = FontWeight.SemiBold,
-    fontSize = 16.sp,
+    fontWeight = FontWeight.Bold,
+    fontSize = 18.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+val caption2 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 22.sp,
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
