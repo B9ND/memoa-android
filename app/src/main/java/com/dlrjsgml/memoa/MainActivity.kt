@@ -11,16 +11,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.dlrjsgml.memoa.feature.TestScreen
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
-import com.dlrjsgml.memoa.ui.theme.component.MemoaButton
+import com.dlrjsgml.memoa.ui.component.MemoaButton
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             MemoaTheme {
-
+                TestScreen()
 
             }
         }

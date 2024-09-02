@@ -2,6 +2,8 @@ package com.dlrjsgml.memoa.ui.component
 
 
 import android.graphics.BlurMaskFilter
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,12 +26,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.ui.theme.Purple20
 import com.dlrjsgml.memoa.ui.animation.bounceClick
+import com.dlrjsgml.memoa.ui.theme.ButtonColor
 import com.dlrjsgml.memoa.ui.theme.caption1
 import com.dlrjsgml.memoa.ui.theme.caption2
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MemoaButton(
     modifier: Modifier = Modifier,
@@ -44,13 +49,13 @@ fun MemoaButton(
             .bounceClick(
                 onClick = onClick
             )
-            .dropShadow(
-                shape = shape,
+            .drawColoredShadow(
+                Color.Black
             )
     ) {
         Box(
             modifier = modifier.background(
-                color = if (enabled) Purple20 else Color.White, shape = shape
+                color = if (enabled) ButtonColor else Color.White, shape = shape
             )
 
         ) {
@@ -61,7 +66,8 @@ fun MemoaButton(
                 text = text,
                 color = if (enabled) Color.Black else Color.Gray, //색깔 꼭 바꾸자 ㅎㅎ
                 style = caption1.copy(
-                    fontWeight = FontWeight.Normal
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
                 )
             )
 
@@ -71,6 +77,7 @@ fun MemoaButton(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 private fun MemoaButtonPreview() {
@@ -84,31 +91,35 @@ private fun MemoaButtonPreview() {
     ) {}
 }
 
-fun Modifier.dropShadow(
-    shape: Shape,
-    color: Color = Color.Black.copy(0.12f),
-    blur: Dp = 14.dp,
-    offsetY: Dp = 10.dp,
-    offsetX: Dp = 0.dp,
-    spread: Dp = 0.dp,
+@RequiresApi(Build.VERSION_CODES.O)
+fun Modifier.drawColoredShadow(
+    color: Color,
+    alpha: Float = 0.08f,
+    borderRadius: Dp = 0.dp,
+    shadowRadius: Dp = 20.dp,
+    offsetY: Dp = 0.dp,
+    offsetX: Dp = 0.dp
 ) = this.drawBehind {
-    val shadowSize = Size(size.width + spread.toPx(), size.height + spread.toPx())
-    val shadowOutline = shape.createOutline(shadowSize, layoutDirection, this)
-
-    val paint = Paint().apply {
-        this.color = color
-    }
-
-    if (blur.toPx() > 0) {
-        paint.asFrameworkPaint().apply {
-            maskFilter = BlurMaskFilter(blur.toPx(), BlurMaskFilter.Blur.NORMAL)
-        }
-    }
-
-    drawIntoCanvas { canvas ->
-        canvas.save()
-        canvas.translate(offsetX.toPx(), offsetY.toPx())
-        canvas.drawOutline(shadowOutline, paint)
-        canvas.restore()
+    val transparentColor = android.graphics.Color.toArgb(color.copy(alpha = 0.0f).value.toLong())
+    val shadowColor = android.graphics.Color.toArgb(color.copy(alpha = alpha).value.toLong())
+    this.drawIntoCanvas {
+        val paint = Paint()
+        val frameworkPaint = paint.asFrameworkPaint()
+        frameworkPaint.color = transparentColor
+        frameworkPaint.setShadowLayer(
+            shadowRadius.toPx(),
+            offsetX.toPx(),
+            offsetY.toPx(),
+            shadowColor
+        )
+        it.drawRoundRect(
+            0f,
+            0f,
+            this.size.width,
+            this.size.height,
+            borderRadius.toPx(),
+            borderRadius.toPx(),
+            paint
+        )
     }
 }
