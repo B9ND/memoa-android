@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.ui.animation.BounceIndication
 import com.dlrjsgml.memoa.ui.theme.Purple20
-import com.dlrjsgml.memoa.ui.animation.bounceClick
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.theme.ButtonColor
 import com.dlrjsgml.memoa.ui.theme.caption1
