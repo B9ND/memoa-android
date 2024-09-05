@@ -28,7 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.root.NavGraph
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaButton
 import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Purple0
@@ -106,7 +111,8 @@ fun TestScreen() {
                     enabled = true,
                     contentPadding = PaddingValues(vertical = 18.dp),
                     text = "로그인",
-                    onClick = {})
+                    onClick = {  }
+                )
             }
             Box(
                 modifier = Modifier
@@ -125,6 +131,7 @@ fun TestScreen() {
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun afdjafjd() {
