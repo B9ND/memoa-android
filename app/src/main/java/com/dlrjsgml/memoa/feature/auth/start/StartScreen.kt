@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -31,6 +32,7 @@ import com.dlrjsgml.memoa.ui.theme.caption1
 fun StartScreen(
     navController: NavHostController
 ) {
+
 
     Box(
         modifier = Modifier
@@ -58,7 +60,9 @@ fun StartScreen(
                     navController.navigate(NavGroup.LOGIN)
                 })
         }
-        Box(modifier = Modifier.padding(horizontal = 35.dp).padding(bottom = 40.dp)) {
+        Box(modifier = Modifier
+            .padding(horizontal = 35.dp)
+            .padding(bottom = 40.dp)) {
             MemoaButton(modifier = Modifier.fillMaxWidth(),
                 enabled = false,
                 contentPadding = PaddingValues(vertical = 18.dp),

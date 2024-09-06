@@ -47,11 +47,19 @@ import com.dlrjsgml.memoa.ui.theme.Black20
 fun NavGraph(
     navController: NavHostController,
 ) {
+    val showNavBarList = arrayListOf(
+        NavGroup.START,
+        NavGroup.LOGIN,
+        NavGroup.SIGNUP_EMAIL,
+        NavGroup.SIGNUP_PASSWORD,
+        NavGroup.SIGNUP_NICKNAME,
+        NavGroup.SIGNUP_SCHOOL,
+        NavGroup.SIGNUP_SCHOOL_NOT_FOUND
+    )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
-    var isShowNavBar by remember {
-        mutableStateOf(true)
-    }
+
+    val isShowNavBar = selectRoute !in showNavBarList
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -123,7 +131,6 @@ fun NavGraph(
                             isSelected = selectRoute == NavGroup.WRITE,
                         )
                     }
-
                 }
             }
         }) {
@@ -133,6 +140,7 @@ fun NavGraph(
                 startDestination = NavGroup.START
             ) {
                 composable(NavGroup.START) {
+                    StartScreen(navController = navController)
                 }
                 composable(NavGroup.LOGIN) {
 
