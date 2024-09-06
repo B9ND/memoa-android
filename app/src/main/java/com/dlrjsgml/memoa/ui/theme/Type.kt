@@ -23,7 +23,13 @@ val PretendardFontFamily = FontFamily(
     Font(R.font.pretendard_thin, FontWeight.Thin),
 )
 
-
+val miniCaption1 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 10.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
 val caption1 = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Bold,
