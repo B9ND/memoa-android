@@ -2,4 +2,7 @@
     <string name="app_name">memoa</string>
     <string name="email_bold"><b>이메일</b></string>
     <string name="password_bold"><b>비밀번호</b></string>
+    <string name="email_auth"><b>인증번호 6자리</b></string>
+    <string name="이용약관">이용약관</string>
+    <string name="개인정보">개인정보처리방침</string>
 </resources>

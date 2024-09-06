@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -26,22 +28,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.MemoaButton
-import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun SignUp_EmailScreen(modifier: Modifier = Modifier) {
     val (text, setValue) = remember {
         mutableStateOf("")
     }
@@ -81,7 +84,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Text(
-                    "로그인",
+                    "회원가입",
                     fontWeight = Bold,
                     fontSize = 30.sp,
                     color = Color.White,
@@ -89,12 +92,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         .align(alignment = Alignment.TopCenter)
                         .padding(top = 10.dp)
                 )
-                val emailInput = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = colorResource(R.color.black))) { // 빨간색 적용
-                        append(stringResource(R.string.email_bold))
-                    }
-                    append("를 입력하세요")
-                }
                 Box(
                     modifier
                         .padding(top = 80.dp)
@@ -105,14 +102,15 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         MemoaTextField(
                             value = text,
                             onValueChange = setValue,
-                            hint = emailInput.toString(),
-                            modifier = Modifier
+                            hint = stringResource(R.string.email_bold) +"를 입력하세요",
+                            textButtonVal = "인증",
+                            textButton = true
                         )
-                        Box(modifier = Modifier.height(10.dp))
-                        MemoaPasswordTextField(
+                        Box(modifier = Modifier.height(10.dp).width(304.dp))
+                        MemoaTextField(
                             value = text,
                             onValueChange = setValue,
-                            hint = stringResource(R.string.password_bold)+"를 입력하세요",
+                            hint = stringResource(R.string.email_auth, Color.Black) +"를 입력하세요"
                         )
                     }
                 }
@@ -125,7 +123,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             contentAlignment = Alignment.BottomCenter,
 
 
-        ) {
+            ) {
             Image(
                 painter = painterResource(R.drawable.goorm),
                 contentDescription = null,
@@ -143,21 +141,43 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 .padding(horizontal = 20.dp)
         ) {
             MemoaButton(
-                text = "로그인",
+                text = "다음",
                 modifier = Modifier
                     .height(55.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
-                enabled = true,
+                    .fillMaxWidth(),
+                enabled = true
             ) { }
         }
+        val text1 = stringResource(R.string.개인정보)
+        val text2 = stringResource(R.string.이용약관)
+
+        val styledText = buildAnnotatedString {
+            append("계정을 생성함으로써,\n")
+            withStyle(style = SpanStyle(color = colorResource(R.color.text_blu))) { // 빨간색 적용
+                append(text2)
+            }
+            append("과 ")
+            withStyle(style = SpanStyle(color = colorResource(R.color.text_blu))) { // 빨간색 적용
+                append(text1)
+            }
+            append("에 동의하였음을 확인합니다.")
+        }
+
+        BasicText(
+            text = styledText,
+            style = TextStyle(
+                fontSize = 12.sp,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+            ),
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 130.dp)
+        )
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.O)
-@Composable
 @Preview
-fun Preview(){
-    LoginScreen()
+@Composable
+fun Test() {
+    SignUp_EmailScreen()
 }
