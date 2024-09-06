@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
-import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10
 

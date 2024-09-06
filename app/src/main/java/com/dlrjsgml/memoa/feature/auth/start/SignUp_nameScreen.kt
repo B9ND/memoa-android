@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.MemoaButton
-import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10
