@@ -4,36 +4,27 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +34,6 @@ import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10
-import com.dlrjsgml.memoa.ui.theme.caption1
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -51,8 +41,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
     val (text, setValue) = remember {
         mutableStateOf("")
     }
-    val scope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
     Box(
         modifier
             .background(brush = Brush.verticalGradient(listOf(Purple0, Purple10)))
@@ -77,7 +65,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 Text(
                     "뒤로가기",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = Bold,
                     color = Color.White,
                     modifier = Modifier
                         .padding(start = 5.dp)
@@ -103,8 +91,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                    ) {
+                    Column {
                         MemoaTextField(
                             value = text,
                             onValueChange = setValue,
@@ -161,6 +148,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview
-fun djadfjkdfjk(){
+fun Preview(){
     LoginScreen()
 }
