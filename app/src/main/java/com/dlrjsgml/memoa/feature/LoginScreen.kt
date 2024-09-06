@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -37,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.ui.component.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.theme.Purple0
@@ -83,7 +85,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             }
             Box(
                 modifier
-                    .padding(top = 40.dp)
+                    .padding(top = 40.dp),
+                contentAlignment = Alignment.BottomCenter
             ) {
                 Text(
                     "로그인",
@@ -118,22 +121,46 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
+        Box(
+            modifier
                 .align(Alignment.BottomCenter)
-                .background(color = Color.Black),
-            onClick = {}
-        ) { }
+                .offset(y = 300.dp),
+            contentAlignment = Alignment.BottomCenter,
+
+
+        ) {
+            Image(
+                painter = painterResource(R.drawable.goorm),
+                contentDescription = null,
+                modifier
+                    .size(1024.dp)
+                    .align(Alignment.BottomCenter),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.BottomCenter
+            )
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 55.dp)
+                .padding(horizontal = 20.dp)
+        ) {
+            MemoaButton(
+                text = "로그인",
+                modifier = Modifier
+                    .height(55.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                enabled = true,
+            ) { }
+        }
     }
 }
 
 
-
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
 @Composable
-fun test() {
+@Preview
+fun djadfjkdfjk(){
     LoginScreen()
 }
