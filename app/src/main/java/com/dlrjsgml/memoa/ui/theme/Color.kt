@@ -17,7 +17,9 @@ val Purple10 = Color(0xFF9C8CFF)
 val Purple20 = Color(0xFFEAE7FF)
 val Purple90 = Color(0xFF715AFF)
 
+val Gray10 = Color(0xFFF0F0F0)
 val Gray20 = Color(0xFFEEEEF0)
+val Gray40 = Color(0xFF6D6D6D)
 
 val Purple60 = Color(0xFF715AFF)
 
