@@ -38,14 +38,6 @@ val miniCaption2 = TextStyle(
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
 
-val miniCaption3 = TextStyle(
-    fontFamily = PretendardFontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 18.sp,
-    lineHeight = 1.3.em,
-    platformStyle = PlatformTextStyle(includeFontPadding = false),
-)
-
 val boardName = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Medium,
@@ -67,6 +59,13 @@ val caption1 = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
+val caption1Regular = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 18.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
 val caption2 = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Normal,
@@ -74,6 +73,14 @@ val caption2 = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
+val search1 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Medium,
+    fontSize = 22.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

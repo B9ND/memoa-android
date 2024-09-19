@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
+import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.BottomCircle
 import com.dlrjsgml.memoa.ui.component.BottomCircleTwo
@@ -138,7 +139,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.MAIN
+                startDestination = NavGroup.WRITE
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -168,7 +169,7 @@ fun NavGraph(
 
                 }
                 composable(NavGroup.WRITE) {
-
+                    WriteScreen()
                 }
                 composable(NavGroup.BOOKMARK) {
 
