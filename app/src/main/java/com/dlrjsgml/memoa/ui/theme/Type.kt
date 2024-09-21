@@ -30,6 +30,35 @@ val miniCaption1 = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
+val miniCaption2 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+
+val boardName = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Medium,
+    fontSize = 18.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+val boardContent1 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Light,
+    fontSize = 14.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+val boardContent = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Light,
+    fontSize = 16.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
 val caption1 = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Bold,
@@ -37,13 +66,28 @@ val caption1 = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
-val caption2 = TextStyle(
+val caption1Regular = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Normal,
+    fontSize = 18.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+val caption2 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Medium,
     fontSize = 22.sp,
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
+val search1 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Medium,
+    fontSize = 22.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

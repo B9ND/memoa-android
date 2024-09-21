@@ -33,7 +33,7 @@ fun BottomNavItem(
     isSelected: Boolean,
     text: String,
 ) {
-    val sizes = if (resId.equals(R.drawable.ic_search)) 32.dp else 24.dp
+    val sizes = if (resId == R.drawable.ic_search) 32.dp else 24.dp
     Column(modifier = modifier.padding(12.dp)) {
         Image(
             modifier = Modifier
@@ -109,7 +109,9 @@ fun BottomCircleTwo(
             painter = painterResource(id = R.drawable.ic_plus), contentDescription = null
         )
         Text(
-            modifier = modifier.padding(top = 50.dp).align(Alignment.BottomCenter), text = "메모 작성",
+            modifier = modifier
+                .padding(top = 50.dp)
+                .align(Alignment.BottomCenter), text = "메모 작성",
             style = if (isSelected) miniCaption1.copy(color = Purple60) else miniCaption1.copy(
                 color = Color.Black
             ),
@@ -120,16 +122,12 @@ fun BottomCircleTwo(
 
 @Preview
 @Composable
-fun fajddafj() {
-    BottomCircle(isSelected = false)
+private fun fajddafj() {
+    Column {
+        BottomCircleTwo(isSelected = false)
+        BottomCircle(isSelected = false)
+    }
 
-
-}
-
-@Preview
-@Composable
-fun fajdddddafj() {
-    BottomCircleTwo(isSelected = false)
 
 }
 //@Preview

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +35,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
+import com.dlrjsgml.memoa.feature.main.main.MainScreen
+import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.BottomCircle
 import com.dlrjsgml.memoa.ui.component.BottomCircleTwo
@@ -137,7 +140,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.START
+                startDestination = NavGroup.WRITE
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -161,13 +164,13 @@ fun NavGraph(
 
                 }
                 composable(NavGroup.MAIN) {
-
+                    MainScreen()
                 }
                 composable(NavGroup.SEARCH) {
 
                 }
                 composable(NavGroup.WRITE) {
-
+                    WriteScreen()
                 }
                 composable(NavGroup.BOOKMARK) {
 
