@@ -1,25 +1,42 @@
 package com.dlrjsgml.memoa.feature.main.main
 
-import android.util.Log
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.ui.component.ArticleList
-import com.dlrjsgml.memoa.ui.component.DropDown
+import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MainScreen() {
-    Box {
-        DropDown(
-            text = "대구소프트웨어마이스터고등학교",
-            selectList = listOf("1학년", "2학년", "3학년"),
-            onClick = { /*TODO*/ },
-            onTextChanged = { newText ->
-                Log.d("하이", newText);
+    Column {
+        Row(modifier = Modifier
+            .background(Color.White)
+            .padding(start = 25.dp, end = 27.dp, top = 10.dp)
+            .padding(vertical = 8.dp)
+            ) {
+            MemoaDropDown(
+                text = "대구소프트웨어마이스터고등학교",
+                selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
+                modifier = Modifier.weight(6f)
+            ) {
             }
-        )
+            MemoaDropDown(
+                text = "1학년",
+                selectList = listOf("1학년", "2학년", "3학년"),
+                modifier = Modifier.weight(2.4f)
+
+            ) {
+            }
+        }
+
         LazyColumn {
            items(5){
                ArticleList(
@@ -36,4 +53,10 @@ fun MainScreen() {
            }
         }
     }
+}
+
+@Preview
+@Composable
+private fun afdjajfd() {
+    MainScreen()
 }

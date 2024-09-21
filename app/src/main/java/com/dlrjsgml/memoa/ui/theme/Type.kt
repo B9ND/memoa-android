@@ -53,6 +53,13 @@ val boardName = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
+val boardContent1 = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Light,
+    fontSize = 14.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
 val boardContent = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Light,
@@ -69,7 +76,7 @@ val caption1 = TextStyle(
 )
 val caption2 = TextStyle(
     fontFamily = PretendardFontFamily,
-    fontWeight = FontWeight.Normal,
+    fontWeight = FontWeight.Medium,
     fontSize = 22.sp,
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
