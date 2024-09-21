@@ -1,6 +1,7 @@
 [versions]
 activityKtx = "1.9.2"
 agp = "8.5.2"
+
 coilCompose = "2.6.0"
 converterGson = "2.11.0"
 kotlin = "1.9.0"
@@ -16,6 +17,8 @@ lifecycleViewmodelCompose = "2.8.6"
 navigationComposeVersion = "2.7.7"
 navigationRuntimeKtx = "2.7.7"
 animationGraphicsAndroid = "1.7.1"
+retrofit = "2.11.0"
+
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -41,7 +44,7 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 androidx-animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version.ref = "animationGraphicsAndroid" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
-
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
