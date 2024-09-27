@@ -80,6 +80,13 @@ val caption2 = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
+val searchMini = TextStyle(
+    fontFamily = PretendardFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 20.sp,
+    lineHeight = 1.3.em,
+    platformStyle = PlatformTextStyle(includeFontPadding = false),
+)
 val search1 = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Medium,

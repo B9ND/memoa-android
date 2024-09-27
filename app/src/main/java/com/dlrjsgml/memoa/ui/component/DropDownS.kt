@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -82,7 +83,7 @@ fun MemoaDropDown(
 
 
         DropdownMenu(
-            modifier = modifier.background(color = White, shape = shape),
+            modifier = modifier.background(color = White),
             expanded = expandStatus,
             onDismissRequest = {
                 expandStatus = false
@@ -95,6 +96,7 @@ fun MemoaDropDown(
         ) {
             selectList.forEachIndexed { index, item ->
                 DropdownMenuItem(
+
                     text = {
                         Text(
                             text = item,

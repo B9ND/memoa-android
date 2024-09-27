@@ -2,8 +2,11 @@
 activityKtx = "1.9.2"
 agp = "8.5.2"
 
+androidxRoomCompiler = "2.5.1"
 coilCompose = "2.6.0"
 converterGson = "2.11.0"
+hiltAndroid = "2.52"
+hiltCompiler = "2.44.2"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -18,6 +21,7 @@ navigationComposeVersion = "2.7.7"
 navigationRuntimeKtx = "2.7.7"
 animationGraphicsAndroid = "1.7.1"
 retrofit = "2.11.0"
+roomCompiler = "2.6.1"
 
 
 [libraries]
@@ -25,8 +29,12 @@ androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompiler" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -44,6 +52,7 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 androidx-animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version.ref = "animationGraphicsAndroid" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
+room-compiler-v251 = { module = "androidx.room:room-compiler", version.ref = "androidxRoomCompiler" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

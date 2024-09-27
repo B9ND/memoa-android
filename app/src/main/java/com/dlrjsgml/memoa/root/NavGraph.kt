@@ -3,7 +3,6 @@ package com.dlrjsgml.memoa.root
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,23 +10,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,12 +27,12 @@ import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
+import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
-import com.dlrjsgml.memoa.ui.component.BottomCircle
-import com.dlrjsgml.memoa.ui.component.BottomCircleTwo
-import com.dlrjsgml.memoa.ui.component.BottomNavItem
-import com.dlrjsgml.memoa.ui.component.drawColoredShadow
+import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
+import com.dlrjsgml.memoa.ui.component.items.BottomNavItem
+import com.dlrjsgml.memoa.ui.component.button.drawColoredShadow
 import com.dlrjsgml.memoa.ui.theme.Black20
 
 
@@ -140,7 +131,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.WRITE
+                startDestination = NavGroup.SEARCH
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -167,7 +158,7 @@ fun NavGraph(
                     MainScreen()
                 }
                 composable(NavGroup.SEARCH) {
-
+                    SearchScreen()
                 }
                 composable(NavGroup.WRITE) {
                     WriteScreen()

@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.ui.component.MemoaButton
+import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10
