@@ -131,7 +131,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.SEARCH
+                startDestination = NavGroup.START
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
