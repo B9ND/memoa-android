@@ -29,9 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.ui.component.MemoaButton
 import com.dlrjsgml.memoa.ui.theme.Purple20
-import com.dlrjsgml.memoa.ui.theme.Purple90
+import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption2
 
 
@@ -87,7 +86,8 @@ fun MemoaTextField(
                 ) {
                     if (value.isEmpty()) {
                         Text(
-                            text = hint, style = caption2,
+                            modifier = Modifier.align(Alignment.CenterStart),
+                            text = hint, style = caption2.copy(fontSize = 16.sp),
                             color = Color.Gray
                         )
                     }
@@ -112,7 +112,11 @@ fun MemoaTextField(
 
             if (textButton) {
                 TextButton(onClick = textButtonOnClick) {
+<<<<<<< HEAD
                     Text(text = textButtonVal, style = caption2, color = Purple90, fontSize = 16.sp)
+=======
+                    Text(text = textButtonVal, style = caption2, color = Purple60)
+>>>>>>> origin/bugfix/test
                 }
             }
 

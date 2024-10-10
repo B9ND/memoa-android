@@ -32,9 +32,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.dlrjsgml.memoa.R
+<<<<<<< HEAD
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaButton
+=======
+import com.dlrjsgml.memoa.ui.component.button.MemoaButton
+>>>>>>> origin/bugfix/test
 import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10

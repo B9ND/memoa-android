@@ -8,4 +8,9 @@ object NavGroup {
     const val SIGNUP_NICKNAME = "signup_nickname"
     const val SIGNUP_SCHOOL = "signup_school"
     const val SIGNUP_SCHOOL_NOT_FOUND = "signup_school_not_found"
+    const val MAIN = "main"
+    const val SEARCH = "search"
+    const val WRITE = "write"
+    const val BOOKMARK = "bookmark"
+    const val PROFILE = "profile"
 }
