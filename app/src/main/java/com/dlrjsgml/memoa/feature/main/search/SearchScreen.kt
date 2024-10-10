@@ -38,10 +38,13 @@ fun SearchScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(uiState.searchHistory) {
         viewModel.getData()
     }
-    Column(Modifier.fillMaxSize().background(Color.White)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.White)) {
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier.padding(horizontal = 24.dp),

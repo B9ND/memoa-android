@@ -7,6 +7,10 @@ import androidx.room.Query
 @Dao
 interface SearchHistoryDao {
 
+
+
+
+
     @Insert
     fun insert(searchHistory: SearchHistoryEntity)
 
@@ -16,6 +20,10 @@ interface SearchHistoryDao {
 
     @Query("DELETE FROM SEARCHHISTORY")
     fun deleteAll()
+
+    @Query("DELETE FROM SEARCHHISTORY WHERE id IN (SELECT id FROM SearchHistory ORDER BY id ASC LIMIT 5)")
+    suspend fun deleteFirstFive()
+
 
 
 }

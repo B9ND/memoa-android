@@ -17,6 +17,11 @@ data class SearchState(
     val searchHistory: List<SearchHistoryEntity> = emptyList(),
 )
 
+sealed interface SearchEffect{
+    data object SearchSuccess : SearchEffect
+    data object SearchFailure : SearchEffect
+}
+
 class SearchViewModel(
 ) : ViewModel(
 
@@ -35,14 +40,12 @@ class SearchViewModel(
             )
             db!!.searchHistoryDao().insert(newDataObject)
             getData()
-
         }
     }
 
     fun deleteAllData(){
         viewModelScope.launch(Dispatchers.IO) {
             db!!.searchHistoryDao().deleteAll()
-            getData()
         }
 
     }
@@ -51,6 +54,9 @@ class SearchViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val data = db!!.searchHistoryDao().getAll()
             updateSearchHistory(data)
+            if (_uiState.value.searchHistory.size >= 12){
+                db.searchHistoryDao().deleteFirstFive()
+            }
             Log.d("ㅎㅇ", "${data}");
         }
     }

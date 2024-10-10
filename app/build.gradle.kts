@@ -58,6 +58,7 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
 
 
+    implementation (libs.androidx.room.ktx)
     implementation (libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API
