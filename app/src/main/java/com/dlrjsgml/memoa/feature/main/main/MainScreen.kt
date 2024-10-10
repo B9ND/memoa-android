@@ -23,13 +23,11 @@ fun MainScreen() {
             .padding(vertical = 8.dp)
             ) {
             MemoaDropDown(
-                text = "대구소프트웨어마이스터고등학교",
                 selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
                 modifier = Modifier.weight(6f)
             ) {
             }
             MemoaDropDown(
-                text = "1학년",
                 selectList = listOf("1학년", "2학년", "3학년"),
                 modifier = Modifier.weight(2.4f)
 

@@ -38,14 +38,14 @@ import com.dlrjsgml.memoa.ui.theme.boardContent1
 
 @Composable
 fun MemoaDropDown(
-    text: String,
+
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(8.dp),
     selectList: List<String> = emptyList(),
     onTextChanged: (String) -> Unit,
 ) {
     var expandStatus by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(text) }
+    var selectedText by remember { mutableStateOf(selectList[0]) }
 
     val isSelected = remember { mutableStateOf(true) }
 
@@ -121,7 +121,6 @@ fun MemoaDropDown(
 @Composable
 private fun DropDownTwoPreView() {
     MemoaDropDown(
-        text = "1학년",
         selectList = listOf("대구소프트웨어마이스터고등학교", "2학년", "3학년"),
         modifier = Modifier.width(340.dp),
     ) {
