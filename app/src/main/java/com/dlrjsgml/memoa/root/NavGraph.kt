@@ -20,13 +20,17 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
+import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
+import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -131,7 +135,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.SEARCH
+                startDestination = NavGroup.MAIN
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -155,7 +159,27 @@ fun NavGraph(
 
                 }
                 composable(NavGroup.MAIN) {
-                    MainScreen()
+                    MainScreen(navController)
+                }
+                composable(route = "${NavGroup.DETAIL}/phone={phone}",
+                    arguments = listOf(
+                        navArgument("phone") { NavType.StringType }
+                    )){
+                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    DetailScreen(
+                        navController = navController,
+                        boardNumber = phoneNum
+                    )
+                }
+                composable(route = "${NavGroup.COMMENT}/phone={phone}",
+                    arguments = listOf(
+                        navArgument("phone") { NavType.StringType }
+                    )){
+                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    CommentScreen(
+                        navController = navController,
+                        boardNumber = phoneNum
+                    )
                 }
                 composable(NavGroup.SEARCH) {
                     SearchScreen()

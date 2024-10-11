@@ -49,6 +49,7 @@ import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.dlrjsgml.memoa.ui.component.button.BackButton
 
 
 @Composable
@@ -81,20 +82,9 @@ fun WriteScreen(
                 .padding(top = 32.dp)
                 .padding(horizontal = 20.dp)
         ) {
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .width(12.dp)
-                    .height(19.dp)
-                    .align(Alignment.CenterVertically)
-            ) {
-                Icon(painter = painterResource(id = R.drawable.ic_back), contentDescription = null)
+            BackButton {
+
             }
-            Text(
-                modifier = Modifier.padding(start = 9.dp),
-                text = "뒤로가기",
-                style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
-            )
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "완료",
