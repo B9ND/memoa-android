@@ -3,6 +3,8 @@ package com.dlrjsgml.memoa.ui.component.items
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
+import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
+import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
+import com.dlrjsgml.memoa.ui.component.button.CommentButton
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Gray40
@@ -36,25 +42,35 @@ import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardName
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+
 @Composable
 fun ArticleList(
     name: String = "",
     date: String = "",
-    content: String = "",
+    title: String = "",
     image: ImmutableList<String> = persistentListOf(),
     profile: String = "",
-    tag: ImmutableList<String> =persistentListOf(),
+    tag: ImmutableList<String> = persistentListOf(),
     comment: Long = 0,
-    bookmark: Long = 0,
+    onClick: () -> Unit = {},
+    bookmarkClick: () -> Unit = {},
+    commentClick: () -> Unit = {}
 ) {
-    val bookmarkIsSelected = remember {
-        mutableStateOf(false)
-    }
-    val bookmarkImage =
-        if (bookmarkIsSelected.value) painterResource(id = R.drawable.ic_selectbook) else painterResource(
-            id = R.drawable.ic_smallbookmark
-        )
-    Column {
+
+
+    Column(
+        modifier = Modifier
+            .clickable(
+                indication = rememberBounceIndication(
+                    scale = 0.95f,
+                    showBackground = true,
+                    radius = RoundedCornerShape(8.dp)
+                ),
+                interactionSource = remember { MutableInteractionSource() },
+                enabled = true,
+                onClick = onClick
+            )
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,9 +92,10 @@ fun ArticleList(
                 AsyncImage(
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape),  // 원형으로 이미지를 클립
                     model = profile,
-                    contentDescription = null
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop  // 이미지를 원에 맞춰 자르기
                 )
             }
 
@@ -107,7 +124,7 @@ fun ArticleList(
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = content, style = boardContent)
+                Text(text = title, style = boardContent)
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(modifier = Modifier.fillMaxWidth()) {
                     LazyRow {
@@ -118,23 +135,11 @@ fun ArticleList(
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                LazyRow {
-                    items(tag.size) {
-                        Text(
-                            text = "#${tag[it]}",
-                            color = Gray40,
-                            style = boardContent.copy(fontWeight = FontWeight.Medium)
-                        )
-                    }
-                }
+                TagLists(tag = tag)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row {
                     Row {
-                        Image(
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            painter = painterResource(id = R.drawable.ic_comment),
-                            contentDescription = null
-                        )
+                        CommentButton(onClick = commentClick)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             modifier = Modifier.align(Alignment.CenterVertically),
@@ -145,19 +150,11 @@ fun ArticleList(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Row {
-                        Image(
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .noRippleClickable(
-                                    onClick = {
-                                        bookmarkIsSelected.value = !bookmarkIsSelected.value
-                                    },
-                                ), painter = bookmarkImage, contentDescription = null
-                        )
+                        BookMarkButton(modifier = Modifier.align(Alignment.CenterVertically), onClick = bookmarkClick)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            text = bookmark.toString(),
+                            text = "",
                             color = Gray40,
                             style = boardContent.copy(fontWeight = FontWeight.Medium)
                         )
@@ -183,7 +180,8 @@ fun ArticleImage(image: String) {
                 .height(240.dp)
                 .clip(RoundedCornerShape(10.dp)),
             model = image,
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -194,7 +192,7 @@ fun ArticleListPreview() {
     ArticleList(
         name = "김은찬",
         date = "2024년 8월 13일",
-        content = "국어, 과학 필기 공유합니다!",
+        title = "국어, 과학 필기 공유합니다!",
         profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
         tag = persistentListOf("국어", "과학"),
         image = persistentListOf(
