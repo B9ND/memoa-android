@@ -62,8 +62,8 @@ fun DetailScreen(
             title = "TODO",
             profile = "https://i.namu.wiki/i/PLZBtADX5SaHJjlBEq2PDLknUdpCM2mzRDdZhmnALxIDuxnypcMP0C3vq_vCa-HsQ50ECb0kFB48w8mFTz0nU6-v0ijnzMHKwzg2-JCi0dQ4XZYLIhNh-rcE_JnBEJbLHIW04BOSODr9x4rhR64S-Q.webp"
         )
-        Spacer(modifier = Modifier.height(40.dp))
-        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+        Spacer(modifier = Modifier.height(30.dp))
+        Column(modifier = Modifier.padding(horizontal = 32.dp)) {
             Column {
                 Text(
                     text = "글 번호:$boardNumber 글글" +

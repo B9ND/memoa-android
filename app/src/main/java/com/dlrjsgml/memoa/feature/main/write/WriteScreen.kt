@@ -48,13 +48,16 @@ import com.dlrjsgml.memoa.ui.component.textfield.SimpleTextField
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 
 
 @Composable
 fun WriteScreen(
     viewModel: WriteViewModel = viewModel(),
+    navController: NavHostController
 ) {
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
     val context = LocalContext.current
@@ -83,10 +86,11 @@ fun WriteScreen(
                 .padding(horizontal = 20.dp)
         ) {
             BackButton {
-
+                navController.popBackStack()
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
+                modifier = Modifier.noRippleClickable { navController.popBackStack() },
                 text = "완료",
                 color = Purple60,
                 style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
@@ -156,5 +160,5 @@ fun WriteScreen(
 @Preview
 @Composable
 private fun afdjadfj() {
-    WriteScreen()
+//    WriteScreen()
 }

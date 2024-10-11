@@ -45,9 +45,9 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ArticleList(
-    name: String = "",
-    date: String = "",
-    title: String = "",
+    name: String = "ERROR",
+    date: String = "ERROR",
+    title: String = "ERROR",
     image: ImmutableList<String> = persistentListOf(),
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),

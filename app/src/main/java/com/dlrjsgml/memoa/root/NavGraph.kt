@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
+import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
@@ -185,10 +186,10 @@ fun NavGraph(
                     SearchScreen()
                 }
                 composable(NavGroup.WRITE) {
-                    WriteScreen()
+                    WriteScreen(navController = navController)
                 }
                 composable(NavGroup.BOOKMARK) {
-
+                    BookMarkScreen()
                 }
                 composable(NavGroup.PROFILE) {
 
