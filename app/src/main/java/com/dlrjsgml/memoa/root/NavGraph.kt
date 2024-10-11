@@ -32,6 +32,7 @@ import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
+import com.dlrjsgml.memoa.feature.main.profile.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -192,7 +193,7 @@ fun NavGraph(
                     BookMarkScreen()
                 }
                 composable(NavGroup.PROFILE) {
-
+                    ProfileScreen()
                 }
             }
         }
