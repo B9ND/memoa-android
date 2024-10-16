@@ -22,10 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.ui.theme.Gray30
 import com.dlrjsgml.memoa.ui.theme.Gray5
 import com.dlrjsgml.memoa.ui.theme.Gray60
-import com.dlrjsgml.memoa.ui.theme.Purple20
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption2
-import com.dlrjsgml.memoa.ui.theme.search1
 
 @Composable
 fun SimpleTextField(
@@ -57,14 +55,14 @@ fun SimpleTextField(
         minLines = minLines,
         singleLine = singleLine,
         onValueChange = onValueChange,
-        textStyle = search1,
+        textStyle = caption2,
         maxLines = maxLines,
         decorationBox = { innerTextField ->
             if (value.isEmpty()) {
                 Text(
                     modifier = Modifier.padding(start = 2.dp),
                     text = hint,
-                    style = search1,
+                    style = caption2,
                     color = if(hintColorWhite)Gray5 else Gray60
                 )
             }

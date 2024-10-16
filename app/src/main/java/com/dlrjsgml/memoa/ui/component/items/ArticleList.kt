@@ -35,6 +35,7 @@ import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
 import com.dlrjsgml.memoa.ui.component.button.CommentButton
+import com.dlrjsgml.memoa.ui.component.effect.shimmerEffect
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Gray40
@@ -88,14 +89,18 @@ fun ArticleList(
                     modifier = Modifier
                         .size(48.dp)
                         .background(color = Gray20, CircleShape)
+                        .clip(CircleShape)
+                        .shimmerEffect()
                 )
                 AsyncImage(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape),  // 원형으로 이미지를 클립
                     model = profile,
+
                     contentDescription = null,
-                    contentScale = ContentScale.Crop  // 이미지를 원에 맞춰 자르기
+                    contentScale = ContentScale.Crop,  // 이미지를 원에 맞춰 자르기,
+
                 )
             }
 

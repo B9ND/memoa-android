@@ -33,12 +33,13 @@ import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
 import com.dlrjsgml.memoa.feature.main.profile.ProfileScreen
+import com.dlrjsgml.memoa.feature.main.profile.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
+import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
 import com.dlrjsgml.memoa.ui.component.items.BottomNavItem
-import com.dlrjsgml.memoa.ui.component.button.drawColoredShadow
 import com.dlrjsgml.memoa.ui.theme.Black20
 
 
@@ -81,16 +82,18 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
+                                    navController.popBackStack()
                                     navController.navigate(NavGroup.MAIN)
                                 }),
                             resId = R.drawable.ic_home,
-                            isSelected = selectRoute == NavGroup.MAIN,
+                            isSelected = selectRoute == NavGroup.MAIN || NavGroup.DETAIL in selectRoute.toString() ,
                             text = "메인"
                         )
                         BottomNavItem(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
+                                    navController.popBackStack()
                                     navController.navigate(NavGroup.SEARCH)
                                 }),
                             resId = R.drawable.ic_search,
@@ -102,6 +105,7 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
+                                    navController.popBackStack()
                                     navController.navigate(NavGroup.BOOKMARK)
                                 }),
                             resId = R.drawable.ic_bookmark,
@@ -112,10 +116,11 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
+                                    navController.popBackStack()
                                     navController.navigate(NavGroup.PROFILE)
                                 }),
                             resId = R.drawable.ic_avatar,
-                            isSelected = selectRoute == NavGroup.PROFILE,
+                            isSelected = selectRoute == NavGroup.PROFILE || NavGroup.SETTING in selectRoute.toString(),
                             text = "프로필"
                         )
                     }
@@ -124,6 +129,7 @@ fun NavGraph(
                             .align(Alignment.BottomCenter)
                             .offset(y = (-28).dp)
                             .noRippleClickable(onClick = {
+                                navController.popBackStack()
                                 navController.navigate(NavGroup.WRITE)
                             })
                     ) {
@@ -184,16 +190,19 @@ fun NavGraph(
                     )
                 }
                 composable(NavGroup.SEARCH) {
-                    SearchScreen()
+                    SearchScreen(navController = navController)
                 }
                 composable(NavGroup.WRITE) {
                     WriteScreen(navController = navController)
                 }
                 composable(NavGroup.BOOKMARK) {
-                    BookMarkScreen()
+                    BookMarkScreen(navController = navController)
                 }
                 composable(NavGroup.PROFILE) {
-                    ProfileScreen()
+                    ProfileScreen(navController)
+                }
+                composable(NavGroup.SETTING) {
+                    SettingScreen()
                 }
             }
         }
