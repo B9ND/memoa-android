@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
@@ -22,6 +23,7 @@ fun MainScreen(
     navController: NavHostController
 ) {
     Column {
+        HomeBackOnPressed()
         Row(modifier = Modifier
             .background(Color.White)
             .padding(start = 25.dp, end = 27.dp, top = 10.dp)
