@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,15 +54,18 @@ fun SettingScreen(
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Gray30)
+        .verticalScroll(scrollState)
         ) {
         Box(
             modifier = Modifier
                 .padding(top = 167.dp)
                 .fillMaxWidth()
+                .fillMaxHeight()
                 .background(
                     Color.White,
                     shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                 )
+            
         ) {
             CircleProfile(
                 modifier = Modifier
@@ -114,6 +118,7 @@ fun SettingScreen(
             ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "로그아웃") {
 
             }
+            Spacer(modifier = Modifier.height(220.dp))
         }
     }
 }
