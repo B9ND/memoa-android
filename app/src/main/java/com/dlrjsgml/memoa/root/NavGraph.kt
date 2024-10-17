@@ -29,6 +29,7 @@ import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
+import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
@@ -201,9 +202,20 @@ fun NavGraph(
                 composable(NavGroup.PROFILE) {
                     ProfileScreen(navController)
                 }
+                composable(route = "${NavGroup.FOLLOWER}/phone={phone}",
+                    arguments = listOf(
+                        navArgument("phone") { NavType.StringType }
+                    )){
+                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    FollowerScreen(
+                        userId = phoneNum,
+                        navController = navController
+                    )
+                }
                 composable(NavGroup.SETTING) {
                     SettingScreen()
                 }
+
             }
         }
     }

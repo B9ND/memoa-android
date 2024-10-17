@@ -120,9 +120,12 @@ fun ProfileScreen(
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        FollowNumber(number = 211, text = "팔로우")
+
+
+                        FollowNumber(number = 211, text = "팔로우", onClick = {navController.navigate("${NavGroup.FOLLOWER}/phone=ddddddd")})
                         Spacer(modifier = Modifier.width(35.dp))
-                        FollowNumber(number = 211, text = "팔로잉")
+                        FollowNumber(number = 211, text = "팔로잉", onClick = {navController.navigate("${NavGroup.FOLLOWER}/phone=ddddddd")})
+
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
