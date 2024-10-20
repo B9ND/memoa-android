@@ -2,7 +2,6 @@ package com.dlrjsgml.memoa.ui.component.textfield
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,12 +25,15 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.ui.theme.Purple20
 import com.dlrjsgml.memoa.ui.theme.Purple60
+import com.dlrjsgml.memoa.ui.theme.caption1
 import com.dlrjsgml.memoa.ui.theme.caption2
 
 
@@ -40,21 +43,18 @@ fun MemoaTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    hint: String,
+    hint: AnnotatedString,
     enabled: Boolean = true,
     singleLine: Boolean = true,
     maxLines: Int = 1,
-    secured: Boolean = false,
     shape: Shape = RoundedCornerShape(12.dp),
     textButton: Boolean = false,
     textButtonVal: String = "",
-    textButtonOnClick: () -> Unit = {}
+    textButtonOnClick: () -> Unit = {},
+    firstFocus: Boolean
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    val animBorderColor by animateColorAsState(
-        targetValue = if (isFocused) Purple20 else Color(0xFFCCCCD6),
-        label = "",
-    )
+
     Box {
         BasicTextField(
             modifier = modifier
@@ -66,11 +66,6 @@ fun MemoaTextField(
                 .onFocusChanged {
                     isFocused = it.isFocused
                 }
-//                .border(
-//                    width = 4.dp,
-//                    color = animBorderColor,
-//                    shape = shape
-//                )
             ,
             value = value,
             onValueChange = onValueChange,
@@ -87,13 +82,14 @@ fun MemoaTextField(
                     if (value.isEmpty()) {
                         Text(
                             modifier = Modifier.align(Alignment.CenterStart),
-                            text = hint, style = caption2.copy(fontSize = 16.sp),
+                            text = hint, style = caption2.copy(fontSize = 14.sp),
                             color = Color.Gray
                         )
                     }
                     innerTextField()
                 }
-            }
+            },
+            keyboardOptions = if(firstFocus) KeyboardOptions( imeAction = ImeAction.Next ) else KeyboardOptions( imeAction = ImeAction.Done ),
         )
         Row(
             modifier = modifier
@@ -112,7 +108,7 @@ fun MemoaTextField(
 
             if (textButton) {
                 TextButton(onClick = textButtonOnClick) {
-                    Text(text = textButtonVal, style = caption2, color = Purple60)
+                    Text(text = textButtonVal, style = caption1, color = Purple60)
                 }
             }
 
@@ -130,8 +126,11 @@ fun MemoaTextFieldPreview() {
     MemoaTextField(
         value = "",
         onValueChange = {},
-        hint = "아녕하세요",
+        hint = buildAnnotatedString {
+            append("dgod")
+        },
         textButton = true,
-        textButtonVal = "인증"
+        textButtonVal = "인증",
+        firstFocus = true
     )
 }

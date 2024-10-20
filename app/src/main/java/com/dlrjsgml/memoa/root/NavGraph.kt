@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
+import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.feature.SignUp.email.EmailScreen
+import com.dlrjsgml.memoa.feature.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
@@ -137,16 +140,16 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.MAIN
+                startDestination = NavGroup.START
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
                 }
                 composable(NavGroup.LOGIN) {
-
+                    LoginScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_EMAIL) {
-
+                    EmailScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_PASSWORD) {
 
@@ -198,7 +201,6 @@ fun NavGraph(
             }
         }
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

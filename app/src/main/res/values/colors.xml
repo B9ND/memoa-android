@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="start_purple">#FF5B48D0</color>
+    <color name="end_purple">#FF9C8CFF</color>
+    <color name="auth_text">#2E8FD5</color>
+    <color name="btn">#EAE6FF</color>
 </resources>
