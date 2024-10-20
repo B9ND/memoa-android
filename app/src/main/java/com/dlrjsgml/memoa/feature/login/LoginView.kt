@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.SignUp.email.addFocusCleaner
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
@@ -165,7 +166,9 @@ fun LoginScreen(
                         .height(55.dp),
                     text = "로그인",
                     enabled = true,
-                ) { }
+                ) {
+                    navController.navigate(NavGroup.MAIN)
+                }
             }
         }
     }
