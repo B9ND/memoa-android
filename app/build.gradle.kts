@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation(libs.logging.interceptor)
+    implementation (libs.converter.scalars)
     implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -56,7 +56,8 @@ fun NavGraph(
         NavGroup.SIGNUP_PASSWORD,
         NavGroup.SIGNUP_NICKNAME,
         NavGroup.SIGNUP_SCHOOL,
-        NavGroup.SIGNUP_SCHOOL_NOT_FOUND
+        NavGroup.SIGNUP_SCHOOL_NOT_FOUND,
+        NavGroup.WRITE
     )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
@@ -130,7 +131,6 @@ fun NavGraph(
                             .align(Alignment.BottomCenter)
                             .offset(y = (-28).dp)
                             .noRippleClickable(onClick = {
-                                navController.popBackStack()
                                 navController.navigate(NavGroup.WRITE)
                             })
                     ) {
