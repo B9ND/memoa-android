@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Icon
@@ -50,6 +51,7 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 
@@ -79,7 +81,9 @@ fun WriteScreen(
         modifier = Modifier
             .background(Color.White)
             .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
+        BackHandlers(navController = navController)
         Row(
             modifier = Modifier
                 .padding(top = 32.dp)

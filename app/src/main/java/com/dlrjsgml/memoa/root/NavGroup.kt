@@ -15,4 +15,6 @@ object NavGroup {
     const val WRITE = "write"
     const val BOOKMARK = "bookmark"
     const val PROFILE = "profile"
+    const val SETTING = "setting"
+    const val FOLLOWER = "follower"
 }
