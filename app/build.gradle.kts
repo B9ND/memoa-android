@@ -59,6 +59,7 @@ dependencies {
 
 
     implementation (libs.androidx.room.runtime)
+    implementation(libs.androidx.appcompat)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -83,4 +84,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
 }
