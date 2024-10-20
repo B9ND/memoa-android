@@ -1,9 +1,13 @@
 package com.dlrjsgml.memoa.feature.main.write
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -41,6 +45,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.textfield.SimpleTextField
@@ -57,6 +63,9 @@ import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
 import com.dlrjsgml.memoa.ui.component.items.ArticleImage
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -73,6 +82,7 @@ fun WriteScreen(
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var selectedFileName by remember { mutableStateOf("") }
+
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->
@@ -86,18 +96,46 @@ fun WriteScreen(
             }
         }
     }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // 권한이 허용되었을 경우 갤러리 열기
+            galleryLauncher.launch("image/*")
+        } else {
+            // 권한이 거부되었을 경우 사용자에게 알림
+            Toast.makeText(context, "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 권한 확인
+    val permissionCheckResult = ContextCompat.checkSelfPermission(
+        context,
+        android.Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+
 
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect{ effect->
             when(effect){
                 is WriteSideEffect.Success -> {
+                    viewModel.wrigingErrorAlert("글쓰기 성공")
                     navController.popBackStack()
                     Log.d("글쓰기", "성공");
-
                 }
                 is WriteSideEffect.Failure ->{
-                    viewModel.wrigingErrorAlert()
+                    viewModel.wrigingErrorAlert("글쓰기 실패")
                     Log.d("글쓰기", "실패");
+                }
+                is UpLoadImageSideEffect.CompressionFailure ->{
+                    viewModel.wrigingErrorAlert("이미지 압축실패")
+                }
+                is UpLoadImageSideEffect.Failure -> {
+                    viewModel.wrigingErrorAlert("이미지 업로드 실패")
+                }
+                is UpLoadImageSideEffect.Success -> {
+                    viewModel.wrigingErrorAlert("이미지 업로드 성공")
+
                 }
             }
 
@@ -126,7 +164,7 @@ fun WriteScreen(
                     }else{
                         viewModel.plsAllWrite()
                     }
-                    },
+                },
                 text = "완료",
                 color = Purple60,
                 style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
@@ -179,7 +217,15 @@ fun WriteScreen(
                     .align(Alignment.BottomEnd)
                     .padding(end = 20.dp),
                 onClick = {
-                    galleryLauncher.launch("image/*")})
+                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                        // 권한이 이미 허용된 경우 갤러리 열기
+                        galleryLauncher.launch("image/*")
+                    } else {
+                        // 권한이 허용되지 않은 경우 권한 요청
+                        permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                }
+            )
             {
                 Image(painter = painterResource(id = R.drawable.ic_get_gallery), contentDescription = null)
             }

@@ -177,7 +177,8 @@ fun ArticleImage(image: String) {
             modifier = Modifier
                 .width(220.dp)
                 .height(240.dp)
-                .background(Gray20, RoundedCornerShape(10.dp))
+                .background(Gray20, RoundedCornerShape(10.dp)
+                ).shimmerEffect()
         )
         AsyncImage(
             modifier = Modifier

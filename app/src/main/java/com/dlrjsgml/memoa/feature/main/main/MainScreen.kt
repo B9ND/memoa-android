@@ -48,11 +48,11 @@ fun MainScreen(
                    name = "안녕하세요",
                    date = "2024년 8월 13일",
                    title = "국어, 과학 필기 공유합니다!",
-                   profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
+                   profile = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWvmIAnvnN_rA11aC0bbHS_yNog_QKAA2LCQ&s",
                    tag = persistentListOf("국어", "과학"),
                    image = persistentListOf(
-                       "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
-                       "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
+                       "https://i.namu.wiki/i/sjJGjBG7FBg2jzymT2KvN5hPMFTWzP2ynpOuVfGXZvs2vuedC2-5-FYEn5-bTds1_DJIah7OYV5wK3PW9Vn3bQ.svg",
+                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGUAVDX6Mh4IUZikLC7iHrRRjNySxM1Qlt2Q&s"
                    ),
                    onClick = {navController.navigate("${NavGroup.DETAIL}/phone=ddddddd")},
                    bookmarkClick = {},
