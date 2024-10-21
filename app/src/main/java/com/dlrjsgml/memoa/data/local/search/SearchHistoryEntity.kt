@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.data.local
+package com.dlrjsgml.memoa.data.local.search
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

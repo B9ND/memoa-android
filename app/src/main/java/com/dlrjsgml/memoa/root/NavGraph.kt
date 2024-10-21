@@ -33,6 +33,7 @@ import com.dlrjsgml.memoa.feature.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
+import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
@@ -59,12 +60,14 @@ fun NavGraph(
         NavGroup.SIGNUP_PASSWORD,
         NavGroup.SIGNUP_NICKNAME,
         NavGroup.SIGNUP_SCHOOL,
-        NavGroup.SIGNUP_SCHOOL_NOT_FOUND
+        NavGroup.SIGNUP_SCHOOL_NOT_FOUND,
+        NavGroup.WRITE,
+        NavGroup.IMAGEDETAIL
     )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
 
-    val isShowNavBar = selectRoute !in showNavBarList
+    var isShowNavBar = selectRoute !in showNavBarList
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -133,7 +136,6 @@ fun NavGraph(
                             .align(Alignment.BottomCenter)
                             .offset(y = (-28).dp)
                             .noRippleClickable(onClick = {
-                                navController.popBackStack()
                                 navController.navigate(NavGroup.WRITE)
                             })
                     ) {
@@ -177,6 +179,7 @@ fun NavGraph(
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )){
+
                     val phoneNum =  it.arguments?.getString("phone")?: ""
                     DetailScreen(
                         navController = navController,
@@ -201,6 +204,17 @@ fun NavGraph(
                 }
                 composable(NavGroup.BOOKMARK) {
                     BookMarkScreen(navController = navController)
+                }
+                composable(route = "${NavGroup.IMAGEDETAIL}?{phone}",
+                    arguments = listOf(
+                        navArgument("phone") { NavType.StringType }
+                    )){
+                    isShowNavBar = false
+                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    ImageDetailScreen(
+                        navController = navController,
+                        imgUrl = phoneNum
+                    )
                 }
                 composable(NavGroup.PROFILE) {
                     ProfileScreen(navController)

@@ -135,7 +135,8 @@ fun ProfileScreen(
         items(6) {
             Box(modifier = Modifier.background(Color.White)) {
                 ArticleList(
-                    profile = "https://i.namu.wiki/i/slmFMXb1Fchs2zN0ZGOzqfuPDvhRS-H9eBp7Gp613-DNKi6i6Ct7eFkTUpauqv5HAYR97mrNqrvvcCDEyBdL_g.webp"
+                    profile = "https://i.namu.wiki/i/slmFMXb1Fchs2zN0ZGOzqfuPDvhRS-H9eBp7Gp613-DNKi6i6Ct7eFkTUpauqv5HAYR97mrNqrvvcCDEyBdL_g.webp",
+                    navController = navController
                 )
             }
 

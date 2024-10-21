@@ -1,8 +1,10 @@
 package com.dlrjsgml.memoa.feature.main.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -22,6 +24,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun MainScreen(
     navController: NavHostController
 ) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.White))
     Column {
         HomeBackOnPressed()
         Row(modifier = Modifier
@@ -48,15 +51,16 @@ fun MainScreen(
                    name = "안녕하세요",
                    date = "2024년 8월 13일",
                    title = "국어, 과학 필기 공유합니다!",
-                   profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
+                   profile = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWvmIAnvnN_rA11aC0bbHS_yNog_QKAA2LCQ&s",
                    tag = persistentListOf("국어", "과학"),
                    image = persistentListOf(
-                       "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
-                       "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
+                       "https://velog.velcdn.com/images/osohyun0224/post/f04c94bf-2668-4066-bc4e-5739b1b1f38d/image.png",
+                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGUAVDX6Mh4IUZikLC7iHrRRjNySxM1Qlt2Q&s"
                    ),
                    onClick = {navController.navigate("${NavGroup.DETAIL}/phone=ddddddd")},
                    bookmarkClick = {},
-                   commentClick = {navController.navigate("${NavGroup.COMMENT}/phone=ddddddd")}
+                   commentClick = {navController.navigate("${NavGroup.COMMENT}/phone=ddddddd")},
+                   navController = navController
                )
            }
         }

@@ -1,13 +1,19 @@
 package com.dlrjsgml.memoa.feature.main.write
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
-import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
@@ -17,15 +23,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,16 +37,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.textfield.SimpleTextField
@@ -50,12 +58,22 @@ import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.network.write.image.getFileName
+import com.dlrjsgml.memoa.network.write.image.uriToBitmap
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
+import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
+import com.dlrjsgml.memoa.ui.component.items.ArticleImage
+import com.dlrjsgml.memoa.ui.theme.Gray10
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun WriteScreen(
     viewModel: WriteViewModel = viewModel(),
@@ -64,18 +82,67 @@ fun WriteScreen(
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
     val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val customAlertDialogState = viewModel.customAlertDialogState.value
+    var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var selectedFileName by remember { mutableStateOf("") }
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->
-        selectedImageUri = uri
+        if (uri != null) {
+            coroutineScope.launch {
+                Log.d("글쓰기", "ChatDetailScreen: $uri")
+                selectedImageBitmap = context.contentResolver.uriToBitmap(uri)
+                selectedFileName = context.contentResolver.getFileName(uri).toString()
+                Log.d("글쓰기", "ChatDetailScreen: $selectedFileName $selectedImageBitmap")
+                viewModel.uploadImage(uri,context)
+            }
+        }
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        } else {
+            Toast.makeText(context, "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    LaunchedEffect(key1 = Unit) {
+    // 권한 확인
+    val permissionCheckResult = ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    )
 
+
+    LaunchedEffect(viewModel) {
+        viewModel.uiEffect.collect{ effect->
+            when(effect){
+                is WriteSideEffect.Success -> {
+                    viewModel.wrigingErrorAlert("글쓰기 성공")
+                    navController.popBackStack()
+                    Log.d("글쓰기", "성공");
+                }
+                is WriteSideEffect.Failure ->{
+                    viewModel.wrigingErrorAlert("글쓰기 실패")
+                    Log.d("글쓰기", "실패");
+                }
+                is UpLoadImageSideEffect.CompressionFailure ->{
+                    viewModel.wrigingErrorAlert("이미지 압축실패")
+                }
+                is UpLoadImageSideEffect.Failure -> {
+                    viewModel.wrigingErrorAlert("이미지 업로드 실패")
+                }
+                is UpLoadImageSideEffect.Success -> {
+                    viewModel.wrigingErrorAlert("이미지 업로드 성공")
+
+                }
+            }
+
+        }
     }
     Column(
         modifier = Modifier
@@ -94,7 +161,14 @@ fun WriteScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier.noRippleClickable { navController.popBackStack() },
+                modifier = Modifier.noRippleClickable {
+                    Log.d("글쓰기", "현재 상태 : ${uiState.isReleased}");
+                    if(uiState.title.isNotBlank() && uiState.content.isNotBlank()){
+                        viewModel.postWrite()
+                    }else{
+                        viewModel.plsAllWrite()
+                    }
+                },
                 text = "완료",
                 color = Purple60,
                 style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
@@ -119,7 +193,7 @@ fun WriteScreen(
                 items(selectTags.size) {
                     MemoaCheckBox(
                         text = selectTags[it],
-                        onClick = { viewModel.fillTags(selectTags[it]) } // Pass the single tag
+                        onClick = { viewModel.fillTags(selectTags[it]) }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }
@@ -129,9 +203,6 @@ fun WriteScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         Box {
-            val contentText = remember {
-                mutableStateOf("")
-            }
             SimpleTextField(
                 hintColorWhite = true,
                 modifier = Modifier.padding(horizontal = 21.dp),
@@ -146,7 +217,18 @@ fun WriteScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = 20.dp),
-                onClick = { imagePickerLauncher.launch("image/*") }) {
+                onClick = {
+                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                        // 권한이 이미 허용된 경우 갤러리 열기
+                        galleryLauncher.launch("image/*")
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                        }
+                    }
+                }
+            )
+            {
                 Image(painter = painterResource(id = R.drawable.ic_get_gallery), contentDescription = null)
             }
 //            selectedImageUri?.let {
@@ -159,8 +241,52 @@ fun WriteScreen(
 //                )
 //            }
         }
+
+        Row(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+            Text( modifier = Modifier.align(Alignment.CenterVertically), text = "공개", style = caption1Regular.copy(fontSize = 16.sp))
+            Spacer(Modifier.width(20.dp))
+            Switch(
+                checked = uiState.isReleased,
+                onCheckedChange = viewModel::changeRelease,
+                colors = SwitchColors(
+                    checkedThumbColor = Purple60,
+                    checkedTrackColor = Gray10,
+                    checkedBorderColor = Gray10,
+                    checkedIconColor = Color.White,
+                    uncheckedThumbColor = Color.White,
+                    uncheckedTrackColor = Gray10,
+                    uncheckedBorderColor = Gray10,
+                    uncheckedIconColor = Color.White,
+                    disabledCheckedThumbColor = Color.White,
+                    disabledCheckedTrackColor = Gray10,
+                    disabledCheckedBorderColor = Gray10,
+                    disabledCheckedIconColor = Color.White,
+                    disabledUncheckedThumbColor = Color.White,
+                    disabledUncheckedTrackColor = Gray10,
+                    disabledUncheckedBorderColor = Gray10,
+                    disabledUncheckedIconColor = Gray10,
+                )
+            )
+
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
+            items(uiState.image.size){
+                ArticleImage(image = uiState.image[it], navController = navController)
+            }
+        }
+        Spacer(modifier = Modifier.height(200.dp))
+        if (customAlertDialogState.content.isNotBlank()) {
+            MemoaSimpleDialog(
+                content = customAlertDialogState.content,
+                onClickConfirm = { customAlertDialogState.onClickConfirm() }
+            )
+        }
     }
 }
+
 @Preview
 @Composable
 private fun afdjadfj() {

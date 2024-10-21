@@ -18,19 +18,24 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
@@ -55,7 +60,8 @@ fun ArticleList(
     comment: Long = 0,
     onClick: () -> Unit = {},
     bookmarkClick: () -> Unit = {},
-    commentClick: () -> Unit = {}
+    commentClick: () -> Unit = {},
+    navController: NavHostController
 ) {
 
 
@@ -134,7 +140,7 @@ fun ArticleList(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     LazyRow {
                         items(image.size) {
-                            ArticleImage(image = image[it])
+                            ArticleImage(image = image[it], navController = navController)
                             Spacer(modifier = Modifier.width(6.dp))
                         }
                     }
@@ -155,7 +161,10 @@ fun ArticleList(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Row {
-                        BookMarkButton(modifier = Modifier.align(Alignment.CenterVertically), onClick = bookmarkClick)
+                        BookMarkButton(
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            onClick = bookmarkClick
+                        )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             modifier = Modifier.align(Alignment.CenterVertically),
@@ -171,38 +180,50 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleImage(image: String) {
+fun ArticleImage(image: String,navController: NavHostController) {
+    var isImageLoaded by remember { mutableStateOf(false) }
+
     Box {
-        Box(
-            modifier = Modifier
-                .width(220.dp)
-                .height(240.dp)
-                .background(Gray20, RoundedCornerShape(10.dp))
-        )
+        if (!isImageLoaded) {
+            // Shimmer 효과 적용
+            Box(
+                modifier = Modifier
+                    .width(220.dp)
+                    .height(240.dp)
+                    .shimmerEffect()
+            )
+        }
+
         AsyncImage(
             modifier = Modifier
                 .width(220.dp)
                 .height(240.dp)
-                .clip(RoundedCornerShape(10.dp)),
+                .clip(RoundedCornerShape(12.dp))
+                .noRippleClickable {
+                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
+
+                },
             model = image,
             contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            onSuccess = { isImageLoaded = true } // 이미지가 로드되면 shimmer 중단
         )
     }
 }
 
-@Preview
-@Composable
-fun ArticleListPreview() {
-    ArticleList(
-        name = "김은찬",
-        date = "2024년 8월 13일",
-        title = "국어, 과학 필기 공유합니다!",
-        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
-        tag = persistentListOf("국어", "과학"),
-        image = persistentListOf(
-            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
-        )
-    )
-}
+//
+//@Preview
+//@Composable
+//fun ArticleListPreview() {
+//    ArticleList(
+//        name = "김은찬",
+//        date = "2024년 8월 13일",
+//        title = "국어, 과학 필기 공유합니다!",
+//        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
+//        tag = persistentListOf("국어", "과학"),
+//        image = persistentListOf(
+//            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
+//            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
+//        )
+//    )
+//}

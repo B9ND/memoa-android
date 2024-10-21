@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">13.125.84.202</domain>  <!-- 허용할 HTTP 주소 -->
+    </domain-config>
+</network-security-config>
