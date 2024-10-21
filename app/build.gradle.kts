@@ -57,7 +57,7 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     // To use Kotlin Symbol Processing (KSP)
 
-
+    implementation (libs.zoomable)
     implementation (libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API

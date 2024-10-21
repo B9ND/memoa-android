@@ -7,13 +7,14 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -50,18 +51,48 @@ object FileUtil {
         return File(storageDir, fileName)
     }
 
-    fun prepareFilePart(partName: String, fileUri: Uri, contentResolver: ContentResolver): MultipartBody.Part {
-        // 파일 경로 확인
-        val file = File(fileUri.path)
+    // 이미지 회전
+    private fun rotateImageIfRequired(bitmap: Bitmap, imgPath: String): Bitmap {
+        val exif = ExifInterface(imgPath)
+        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
 
-        // MIME 타입 확인
-        val mimeType = contentResolver.getType(fileUri) ?: "image/*" // MIME 타입이 null이면 기본값으로 설정
+        return when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270)
+            else -> bitmap // 변환할 필요가 없는 경우
+        }
+    }
 
-        // RequestBody로 변환
-        val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), file)
+    // Bitmap 회전
+    private fun rotateImage(source: Bitmap, angle: Int): Bitmap {
+        val matrix = Matrix().apply {
+            postRotate(angle.toFloat())
+        }
+        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+    }
 
-        // MultipartBody.Part 생성
-        return MultipartBody.Part.createFormData(partName, file.name, requestFile)
+    // 리사이즈된 이미지를 파일에 저장
+    fun resizeImageFile(context: Context, originalFile: File, newWidth: Int, newHeight: Int): File {
+        // BitmapFactory를 사용해 원본 파일을 Bitmap으로 변환
+        val bitmap = BitmapFactory.decodeFile(originalFile.absolutePath)
+
+        // 이미지 회전 처리
+        val rotatedBitmap = rotateImageIfRequired(bitmap, originalFile.absolutePath)
+
+        // Bitmap 크기 조정
+        val resizedBitmap = Bitmap.createScaledBitmap(rotatedBitmap, newWidth, newHeight, true)
+
+        // 임시 파일 생성
+        val resizedFile = createTempFile(context, "resized_" + originalFile.name)
+
+        // 파일에 리사이즈된 이미지 저장
+        val outputStream = FileOutputStream(resizedFile)
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream) // JPEG 포맷으로 90% 품질로 저장
+        outputStream.flush()
+        outputStream.close()
+
+        return resizedFile
     }
 
     // 파일 내용 스트림 복사
@@ -79,6 +110,7 @@ object FileUtil {
         outputStream.flush()
     }
 }
+
 object UriUtil {
     // URI -> File
     fun toFile(context: Context, uri: Uri): File {

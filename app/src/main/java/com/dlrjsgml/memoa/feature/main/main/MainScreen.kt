@@ -1,8 +1,10 @@
 package com.dlrjsgml.memoa.feature.main.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -22,6 +24,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun MainScreen(
     navController: NavHostController
 ) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.White))
     Column {
         HomeBackOnPressed()
         Row(modifier = Modifier
@@ -51,12 +54,13 @@ fun MainScreen(
                    profile = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWvmIAnvnN_rA11aC0bbHS_yNog_QKAA2LCQ&s",
                    tag = persistentListOf("국어", "과학"),
                    image = persistentListOf(
-                       "https://i.namu.wiki/i/sjJGjBG7FBg2jzymT2KvN5hPMFTWzP2ynpOuVfGXZvs2vuedC2-5-FYEn5-bTds1_DJIah7OYV5wK3PW9Vn3bQ.svg",
+                       "https://velog.velcdn.com/images/osohyun0224/post/f04c94bf-2668-4066-bc4e-5739b1b1f38d/image.png",
                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGUAVDX6Mh4IUZikLC7iHrRRjNySxM1Qlt2Q&s"
                    ),
                    onClick = {navController.navigate("${NavGroup.DETAIL}/phone=ddddddd")},
                    bookmarkClick = {},
-                   commentClick = {navController.navigate("${NavGroup.COMMENT}/phone=ddddddd")}
+                   commentClick = {navController.navigate("${NavGroup.COMMENT}/phone=ddddddd")},
+                   navController = navController
                )
            }
         }

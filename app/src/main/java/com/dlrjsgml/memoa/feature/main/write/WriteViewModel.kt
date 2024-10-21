@@ -1,16 +1,18 @@
 package com.dlrjsgml.memoa.feature.main.write
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.network.write.WriteDTO
+import com.dlrjsgml.memoa.network.write.image.FileUtil
 import com.dlrjsgml.memoa.network.write.image.FormDataUtil
 import com.dlrjsgml.memoa.network.write.image.UriUtil
 import com.dlrjsgml.memoa.remote.RetrofitClient
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 
 data class WriteState(
@@ -32,6 +35,7 @@ data class WriteState(
     val content: String = "",
     val tags: List<String> = emptyList(),
     val image: List<String> = emptyList(),
+    val isReleased : Boolean = true
 )
 
 data class CustomAlertDialogState(
@@ -98,28 +102,60 @@ class WriteViewModel : ViewModel() {
         Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
     }
 
-    private fun convertResizeImage(context: Context,imageUri: Uri): Uri {
+    private fun convertResizeImage(context: Context, imageUri: Uri): Uri? {
         val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
         val resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
 
+        // 임시 파일을 만듦
         val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
         val fileOutputStream = FileOutputStream(tempFile)
         fileOutputStream.write(byteArrayOutputStream.toByteArray())
         fileOutputStream.close()
 
-        return Uri.fromFile(tempFile)
+        // 파일을 MediaStore에 저장
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, tempFile.name)
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        }
+
+        val contentUri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+        contentUri?.let {
+            context.contentResolver.openOutputStream(it)?.use { outputStream ->
+                val inputStream = FileInputStream(tempFile)
+                inputStream.copyTo(outputStream)
+                inputStream.close()
+            }
+        }
+
+        // 모든 스트림이 제대로 닫혔는지 확인한 후 임시 파일 삭제
+        if (tempFile.exists()) {
+            val deleted = tempFile.delete()
+            if (!deleted) {
+                tempFile.deleteOnExit() // 임시 파일이 삭제되지 않으면 나중에 삭제하도록 예약
+            }
+        }
+
+        return contentUri
     }
+
 
     fun uploadImage(uri: Uri, context: Context) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                val imageFile = UriUtil.toFile(context, convertResizeImage(context,uri))
-                Log.d("글쓰기", "1글쓰기 중 : $imageFile")
+                val smallImage =  convertResizeImage(context,uri)
+                Log.d("글쓰기", "uri : $uri");
+                Log.d("글쓰기", "작은거 : $smallImage");
+
+                val imageFile = UriUtil.toFile(context, uri)
+                val resizedFile = FileUtil.resizeImageFile(context, imageFile, 1080, 1080)
+                Log.d("글쓰기", "1글쓰기 중 : $resizedFile")
                 val multipartImage: MultipartBody.Part =
-                    FormDataUtil.getImageMultipart("file", imageFile)
+                    FormDataUtil.getImageMultipart("file", resizedFile)
 
                 val response = RetrofitClient.upLoadImgService.uploadImage(
                     TemporaryToken.AccessToken,
@@ -174,6 +210,10 @@ class WriteViewModel : ViewModel() {
                 _uiEffect.emit(WriteSideEffect.Failure)
             }
         }
+    }
+
+    fun changeRelease(isReleased : Boolean){
+        _uiState.update { it.copy(isReleased = isReleased) }
     }
 
     fun updateTitle(title: String) {

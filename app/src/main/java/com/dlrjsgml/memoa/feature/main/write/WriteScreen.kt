@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.feature.main.write
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -27,6 +28,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.dlrjsgml.memoa.R
@@ -62,6 +66,7 @@ import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
 import com.dlrjsgml.memoa.ui.component.items.ArticleImage
+import com.dlrjsgml.memoa.ui.theme.Gray10
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -100,10 +105,8 @@ fun WriteScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // 권한이 허용되었을 경우 갤러리 열기
             galleryLauncher.launch("image/*")
         } else {
-            // 권한이 거부되었을 경우 사용자에게 알림
             Toast.makeText(context, "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -111,7 +114,7 @@ fun WriteScreen(
     // 권한 확인
     val permissionCheckResult = ContextCompat.checkSelfPermission(
         context,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
 
@@ -159,6 +162,7 @@ fun WriteScreen(
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier.noRippleClickable {
+                    Log.d("글쓰기", "현재 상태 : ${uiState.isReleased}");
                     if(uiState.title.isNotBlank() && uiState.content.isNotBlank()){
                         viewModel.postWrite()
                     }else{
@@ -189,7 +193,7 @@ fun WriteScreen(
                 items(selectTags.size) {
                     MemoaCheckBox(
                         text = selectTags[it],
-                        onClick = { viewModel.fillTags(selectTags[it]) } // Pass the single tag
+                        onClick = { viewModel.fillTags(selectTags[it]) }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }
@@ -199,9 +203,6 @@ fun WriteScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         Box {
-            val contentText = remember {
-                mutableStateOf("")
-            }
             SimpleTextField(
                 hintColorWhite = true,
                 modifier = Modifier.padding(horizontal = 21.dp),
@@ -221,8 +222,9 @@ fun WriteScreen(
                         // 권한이 이미 허용된 경우 갤러리 열기
                         galleryLauncher.launch("image/*")
                     } else {
-                        // 권한이 허용되지 않은 경우 권한 요청
-                        permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                        }
                     }
                 }
             )
@@ -239,9 +241,40 @@ fun WriteScreen(
 //                )
 //            }
         }
-        LazyRow {
+
+        Row(modifier = Modifier.padding(horizontal = 20.dp)) {
+
+            Text( modifier = Modifier.align(Alignment.CenterVertically), text = "공개", style = caption1Regular.copy(fontSize = 16.sp))
+            Spacer(Modifier.width(20.dp))
+            Switch(
+                checked = uiState.isReleased,
+                onCheckedChange = viewModel::changeRelease,
+                colors = SwitchColors(
+                    checkedThumbColor = Purple60,
+                    checkedTrackColor = Gray10,
+                    checkedBorderColor = Gray10,
+                    checkedIconColor = Color.White,
+                    uncheckedThumbColor = Color.White,
+                    uncheckedTrackColor = Gray10,
+                    uncheckedBorderColor = Gray10,
+                    uncheckedIconColor = Color.White,
+                    disabledCheckedThumbColor = Color.White,
+                    disabledCheckedTrackColor = Gray10,
+                    disabledCheckedBorderColor = Gray10,
+                    disabledCheckedIconColor = Color.White,
+                    disabledUncheckedThumbColor = Color.White,
+                    disabledUncheckedTrackColor = Gray10,
+                    disabledUncheckedBorderColor = Gray10,
+                    disabledUncheckedIconColor = Gray10,
+                )
+            )
+
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
             items(uiState.image.size){
-                ArticleImage(image = uiState.image[it])
+                ArticleImage(image = uiState.image[it], navController = navController)
             }
         }
         Spacer(modifier = Modifier.height(200.dp))

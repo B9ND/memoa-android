@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dlrjsgml.memoa.MemoaApplication
+import com.dlrjsgml.memoa.data.local.search.SearchHistoryDao
+import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 
 
 @Database(

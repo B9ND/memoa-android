@@ -46,7 +46,7 @@ fun BookMarkScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        ArticleList()
+        ArticleList(navController = navController)
     }
 }
 
