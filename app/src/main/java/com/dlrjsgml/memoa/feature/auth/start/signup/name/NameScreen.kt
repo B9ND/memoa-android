@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.SignUp.email
+package com.dlrjsgml.memoa.feature.auth.start.signup.name
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,20 +43,63 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EmailScreen(
+fun NameScreen(
     modifier: Modifier = Modifier,
-    viewModel: EmailViewModel = viewModel(),
-    navController: NavController
+    navController: NavController,
+    viewModel: NameScreenViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val authString = buildAnnotatedString {
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.text_black)
+            )
+        ) {
+            append("계정을 생성함으로써,\n")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.auth_text)
+            )
+        ) {
+            append("이용약관")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.text_black)
+            )
+        ) {
+            append("과")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.auth_text)
+            )
+        ) {
+            append("개인정처리약관")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.text_black)
+            )
+        ) {
+            append("에 동의하셨음을 확인합니다.")
+        }
+    }
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -63,24 +107,7 @@ fun EmailScreen(
                 fontWeight = FontWeight.Bold
             )
         ) {
-            append("이메일")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 16.sp
-            )
-        ) {
-            append("를 입력하세요")
-        }
-    }
-    val authText = buildAnnotatedString {
-        withStyle(
-            SpanStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        ) {
-            append("인증번호 6자리")
+            append("닉네임")
         }
         withStyle(
             SpanStyle(
@@ -136,36 +163,35 @@ fun EmailScreen(
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(Modifier.height(30.dp))
+                Spacer(Modifier.height(50.dp))
                 MemoaTextField(
-                    value = uiState.email,
-                    onValueChange = viewModel::updateEmail,
+                    value = uiState.name,
+                    onValueChange = viewModel::updateName,
                     hint = emailText,
-                    textButton = true,
-                    textButtonVal = "인증",
+                    modifier = Modifier.focusRequester(focusRequester),
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester)
+                )
+
+            }
+            Column(
+                modifier
+                    .align(alignment = Alignment.BottomCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = authString,
+                    textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(10.dp))
-                MemoaTextField(
-                    value = uiState.auth,
-                    onValueChange = viewModel::updatePAuth,
-                    hint = authText,
-                    firstFocus = false
-                )
-            }
-            Box(
-                modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
                 MemoaButton(
                     modifier = modifier
-                        .align(alignment = Alignment.BottomCenter)
                         .fillMaxWidth()
                         .height(55.dp),
                     text = "다음",
                     enabled = true,
-                ) { }
+                ) {
+                    navController.navigate(NavGroup.SIGNUP_SCHOOL)
+                }
             }
         }
     }
@@ -185,5 +211,6 @@ fun Modifier.addFocusCleaner(
 //@Composable
 //@Preview
 //fun EmailScreenPreview() {
-//    EmailScreen()
+//    PasswordScreen()
 //}
+

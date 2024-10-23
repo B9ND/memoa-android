@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.login
+package com.dlrjsgml.memoa.feature.auth.start.login
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

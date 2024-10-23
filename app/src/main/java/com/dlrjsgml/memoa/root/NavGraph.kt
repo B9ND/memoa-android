@@ -1,24 +1,22 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
+<<<<<<< HEAD
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
+=======
+>>>>>>> d5aeb34 (feat: singUpScreen)
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -29,9 +27,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.feature.SignUp.email.EmailScreen
-import com.dlrjsgml.memoa.feature.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
+import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
 import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
 import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
@@ -42,6 +39,11 @@ import com.dlrjsgml.memoa.feature.main.profile.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.SchoolChoose.SchoolChooseScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.noschool.NoSchoolScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
@@ -81,7 +83,7 @@ fun NavGraph(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                White,
+                                Color.White,
                             )
                             .padding(horizontal = 16.dp)
                             .padding(bottom = 15.dp, top = 4.dp)
@@ -162,16 +164,16 @@ fun NavGraph(
                     EmailScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_PASSWORD) {
-
+                    PasswordScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_NICKNAME) {
-
+                    NameScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_SCHOOL) {
-
+                    SchoolChooseScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_SCHOOL_NOT_FOUND) {
-
+                    NoSchoolScreen(navController = navController)
                 }
                 composable(NavGroup.MAIN) {
                     MainScreen(navController = navController)

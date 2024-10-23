@@ -25,8 +25,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -54,6 +59,7 @@ fun SearchScreen(
         viewModel.getData()
         viewModel.beforeSearch()
     }
+<<<<<<< HEAD
 
     Column(
         Modifier
@@ -61,12 +67,27 @@ fun SearchScreen(
             .background(Color.White)
     ) {
         BackHandlers(navController = navController)
+=======
+    val searchText = buildAnnotatedString {
+        withStyle(
+            SpanStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        ) {
+            append("검색어")
+        }
+        append("를 입력하세요")
+    }
+    Column(Modifier.fillMaxSize().background(Color.White).verticalScroll(scrollState)) {
+//        BackHandlers(navController = navController)
+>>>>>>> d5aeb34 (feat: singUpScreen)
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier.padding(horizontal = 24.dp),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,
-            hint = "검색어를 입력하세요",
+            hint = searchText,
             onClick = {
                 if (uiState.search.isNotEmpty()) {
                     viewModel.getSearchArticles()

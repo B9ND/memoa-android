@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.login
+package com.dlrjsgml.memoa.feature.auth.start.signup.email
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,29 +43,64 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
-
-
-import com.dlrjsgml.memoa.feature.SignUp.email.addFocusCleaner
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreenViewModel
 import com.dlrjsgml.memoa.root.NavGroup
-
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun LoginScreen(
+fun EmailScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: EmailViewModel = viewModel(),
     navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    val loginState by viewModel.loginState.collectAsState()
-
-
+    val authString = buildAnnotatedString {
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.text_black)
+            )
+        ) {
+            append("계정을 생성함으로써,\n")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.auth_text)
+            )
+        ) {
+            append("이용약관")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.text_black)
+                )
+        ) {
+            append("과")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.auth_text)
+            )
+        ) {
+            append("개인정처리약관")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 12.sp,
+                color = colorResource(R.color.text_black)
+                )
+        ) {
+            append("에 동의하셨음을 확인합니다.")
+        }
+    }
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -76,7 +112,7 @@ fun LoginScreen(
         }
         withStyle(
             SpanStyle(
-                fontSize = 16.sp
+                fontSize = 16.sp,
             )
         ) {
             append("를 입력하세요")
@@ -89,7 +125,7 @@ fun LoginScreen(
                 fontWeight = FontWeight.Bold
             )
         ) {
-            append("비밀번호")
+            append("인증번호 6자리")
         }
         withStyle(
             SpanStyle(
@@ -138,7 +174,7 @@ fun LoginScreen(
                     .padding(top = 50.dp)
             ) {
                 Text(
-                    text = "로그인",
+                    text = "회원가입",
                     fontSize = 30.sp,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(),
@@ -150,48 +186,40 @@ fun LoginScreen(
                     value = uiState.email,
                     onValueChange = viewModel::updateEmail,
                     hint = emailText,
+                    textButton = true,
+                    textButtonVal = "인증",
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester)
+                    modifier = Modifier.focusRequester(focusRequester),
                 )
                 Spacer(Modifier.height(10.dp))
                 MemoaTextField(
-                    value = uiState.password,
-                    onValueChange = viewModel::updatePassword,
+                    value = uiState.auth,
+                    onValueChange = viewModel::updateAuth,
                     hint = authText,
                     firstFocus = false,
+                    modifier = Modifier,
                 )
             }
-            Box(
-                modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
+            Column(
+                modifier
+                    .align(alignment = Alignment.BottomCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                Text(
+                    text = authString,
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(Modifier.height(10.dp))
                 MemoaButton(
                     modifier = modifier
-                        .align(alignment = Alignment.BottomCenter)
                         .fillMaxWidth()
                         .height(55.dp),
-                    text = "로그인",
+                    text = "다음",
                     enabled = true,
-
-                    onClick = {
-                        viewModel.login(uiState.email, uiState.password)
-                    }
-                )
-
-
-            }
-            MemoaButton(
-                modifier = modifier
-                    .align(alignment = Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(55.dp),
-                text = "넘어가기",
-                enabled = true,
-
-                onClick = {
-                    navController.navigate(NavGroup.MAIN)
+                ) {
+                    navController.navigate(NavGroup.SIGNUP_PASSWORD)
                 }
-            )
+            }
         }
     }
 }
@@ -205,10 +233,10 @@ fun Modifier.addFocusCleaner(
         })
     }
 }
-
+//
 //@RequiresApi(Build.VERSION_CODES.O)
 //@Composable
 //@Preview
 //fun EmailScreenPreview() {
-//    LoginScreen()
+//    EmailScreen()
 //}

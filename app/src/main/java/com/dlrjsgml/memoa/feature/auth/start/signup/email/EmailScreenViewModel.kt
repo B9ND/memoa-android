@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.SignUp.email
+package com.dlrjsgml.memoa.feature.auth.start.signup.email
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ class EmailViewModel : ViewModel() {
     fun updateEmail(content: String) {
         _uiState.update { it.copy(email = content) }
     }
-    fun updatePAuth(auth: String) {
+    fun updateAuth(auth: String) {
         if (auth.length < 7) _uiState.update { it.copy(auth = auth) } else _uiState
     }
 }
