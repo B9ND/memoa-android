@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.login
+package com.dlrjsgml.memoa.feature.auth.start.signup.email
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -7,21 +7,19 @@ import kotlinx.coroutines.flow.update
 
 data class TextState(
     val email: String = "",
-    val password: String = ""
+    val auth: String = ""
 )
 
 
 
-class LoginViewModel : ViewModel() {
+class EmailViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(TextState())
     val uiState = _uiState.asStateFlow()
 
     fun updateEmail(content: String) {
         _uiState.update { it.copy(email = content) }
     }
-    fun updatePassword(password: String) {
-        _uiState.update { it.copy(password = password) }
+    fun updateAuth(auth: String) {
+        if (auth.length < 7) _uiState.update { it.copy(auth = auth) } else _uiState
     }
 }
-
-
