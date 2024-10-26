@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.feature.SignUp.email.addFocusCleaner
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
@@ -58,6 +57,7 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val loginState by viewModel.loginState.collectAsState()
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -82,7 +82,7 @@ fun LoginScreen(
                 fontWeight = FontWeight.Bold
             )
         ) {
-            append("인증번호 6자리")
+            append("비밀번호")
         }
         withStyle(
             SpanStyle(
@@ -165,7 +165,10 @@ fun LoginScreen(
                         .height(55.dp),
                     text = "로그인",
                     enabled = true,
-                ) { }
+                    onClick = {
+                        viewModel.login(uiState.email, uiState.password)
+                    }
+                )
             }
         }
     }
