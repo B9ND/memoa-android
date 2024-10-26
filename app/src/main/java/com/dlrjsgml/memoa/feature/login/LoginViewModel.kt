@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.data.ApiService
 import com.dlrjsgml.memoa.feature.data.LoginRequest
+import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,10 +32,7 @@ class LoginViewModel : ViewModel() {
         _uiState.update { it.copy(password = password) }
     }
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("http://13.125.84.202")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    private val retrofit = RetrofitClient.instance
 
     private val apiService = retrofit.create(ApiService::class.java)
 
@@ -44,7 +42,8 @@ class LoginViewModel : ViewModel() {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                val response = apiService.login(LoginRequest(email, password))
+                val loginData = LoginRequest(email,password)
+                val response = apiService.login(loginData)
             } catch (e: HttpException) {
                 if (e.code() == 403) {
                     Log.d("login", "403!!!!에러!!!이런!!!")
