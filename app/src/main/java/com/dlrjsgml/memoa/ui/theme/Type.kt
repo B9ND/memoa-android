@@ -87,13 +87,6 @@ val searchMini = TextStyle(
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )
-val search1 = TextStyle(
-    fontFamily = PretendardFontFamily,
-    fontWeight = FontWeight.Medium,
-    fontSize = 22.sp,
-    lineHeight = 1.3.em,
-    platformStyle = PlatformTextStyle(includeFontPadding = false),
-)
 
 // Set of Material typography styles to start with
 val Typography = Typography(

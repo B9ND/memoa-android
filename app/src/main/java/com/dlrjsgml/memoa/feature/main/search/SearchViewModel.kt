@@ -3,7 +3,7 @@ package com.dlrjsgml.memoa.feature.main.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dlrjsgml.memoa.data.local.SearchHistoryEntity
+import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 import com.dlrjsgml.memoa.data.local.UserDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

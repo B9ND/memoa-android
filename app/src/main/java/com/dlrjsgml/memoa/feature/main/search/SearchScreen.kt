@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
 import com.dlrjsgml.memoa.ui.component.items.SearchHistoryList
 import com.dlrjsgml.memoa.ui.component.textfield.SearchTextField
@@ -35,13 +39,15 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = viewModel(),
+    navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
+    val scrollState = rememberScrollState()
     LaunchedEffect(Unit) {
         viewModel.getData()
     }
-    Column(Modifier.fillMaxSize().background(Color.White)) {
+    Column(Modifier.fillMaxSize().background(Color.White).verticalScroll(scrollState)) {
+        BackHandlers(navController = navController)
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier.padding(horizontal = 24.dp),
@@ -49,12 +55,18 @@ fun SearchScreen(
             onValueChange = viewModel::updateTitle,
             hint = "검색어를 입력하세요",
             onClick = {
-                viewModel.addData(uiState.search)
-                viewModel.updateTitle("")
+                if(uiState.search.isNotEmpty()){
+                    viewModel.addData(uiState.search)
+                    viewModel.updateTitle("")
+                }
+
                       },
             keyboardActions = KeyboardActions(onDone = {
-                viewModel.addData(uiState.search)
-                viewModel.updateTitle("")
+                if (uiState.search.isNotEmpty()){
+                    viewModel.addData(uiState.search)
+                    viewModel.updateTitle("")
+                }
+
             })
         )
         Spacer(modifier = Modifier.height(22.dp))

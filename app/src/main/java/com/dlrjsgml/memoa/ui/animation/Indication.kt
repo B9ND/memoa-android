@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.dlrjsgml.memoa.ui.theme.Gray40
 
 internal class BounceIndication(
     private val scale: Float,
@@ -92,5 +93,5 @@ internal object BounceIndicationDefaults {
     const val DEFAULT_SCALE = 0.95f
 
     val DefaultRadius = RoundedCornerShape(4.dp)
-    val DefaultColor @Composable get() = Color.Black
+    val DefaultColor @Composable get() = Gray40
 }

@@ -13,8 +13,9 @@ import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 
 @Composable
-fun BookMarkButton(modifier: Modifier = Modifier,
-                   onClick: () -> Unit = {}
+fun BookMarkButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
 
     val bookmarkIsSelected = remember {
@@ -24,14 +25,14 @@ fun BookMarkButton(modifier: Modifier = Modifier,
         if (bookmarkIsSelected.value) painterResource(id = R.drawable.ic_selectbook) else painterResource(
             id = R.drawable.ic_smallbookmark
         )
-    Box(modifier = modifier.noRippleClickable(onClick = onClick)){
+    Box(modifier = modifier.noRippleClickable(onClick = onClick)) {
         Image(
             modifier = modifier
                 .noRippleClickable(
                     onClick = {
                         bookmarkIsSelected.value = !bookmarkIsSelected.value
                     },
-                ), painter =bookmarkImage, contentDescription = null
+                ), painter = bookmarkImage, contentDescription = null
         )
     }
 
