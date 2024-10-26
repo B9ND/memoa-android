@@ -1,9 +1,18 @@
 package com.dlrjsgml.memoa.feature.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.memoa.feature.data.ApiService
+import com.dlrjsgml.memoa.feature.data.LoginRequest
+import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 data class TextState(
     val email: String = "",
@@ -22,6 +31,29 @@ class LoginViewModel : ViewModel() {
     fun updatePassword(password: String) {
         _uiState.update { it.copy(password = password) }
     }
+
+    private val retrofit = RetrofitClient.instance
+
+    private val apiService = retrofit.create(ApiService::class.java)
+
+    private val _loginState = MutableStateFlow("")
+    val loginState = _loginState.asStateFlow()
+
+    fun login(email: String, password: String) {
+        viewModelScope.launch {
+            try {
+                val loginData = LoginRequest(email,password)
+                val response = apiService.login(loginData)
+            } catch (e: HttpException) {
+                if (e.code() == 403) {
+                    Log.d("login", "403!!!!에러!!!이런!!!")
+                } else {
+                    Log.d("login", "?뭔오류임${e.code()}")
+                }
+            }
+        }
+    }
 }
+
 
 
