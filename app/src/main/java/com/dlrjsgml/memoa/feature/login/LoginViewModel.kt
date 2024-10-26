@@ -44,6 +44,8 @@ class LoginViewModel : ViewModel() {
             try {
                 val loginData = LoginRequest(email,password)
                 val response = apiService.login(loginData)
+                Log.d("로그인", "성공 : ${response.access}")
+
             } catch (e: HttpException) {
                 if (e.code() == 403) {
                     Log.d("login", "403!!!!에러!!!이런!!!")

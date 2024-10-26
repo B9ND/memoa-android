@@ -176,10 +176,6 @@ fun LoginScreen(
                     }
                 )
 
-                ) {
-                    navController.navigate(NavGroup.MAIN)
-                }
-
             }
         }
     }
