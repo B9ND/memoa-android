@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.feature.data
 
 data class LoginResponse (
-    val isSuccessful : String
+    val access: String,
+    val refresh : String
 )

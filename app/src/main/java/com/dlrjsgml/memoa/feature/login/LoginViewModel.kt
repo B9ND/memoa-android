@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -42,11 +43,14 @@ class LoginViewModel : ViewModel() {
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            val response = apiService.login(LoginRequest(email, password))
-            if (response?.isSuccessful == "200") {
-                Log.d("login", "s")
-            } else {
-                Log.d("login", "n")
+            try {
+                val response = apiService.login(LoginRequest(email, password))
+            } catch (e: HttpException) {
+                if (e.code() == 403) {
+                    Log.d("login", "403!!!!에러!!!이런!!!")
+                } else {
+                    Log.d("login", "?뭔오류임${e.code()}")
+                }
             }
         }
     }
