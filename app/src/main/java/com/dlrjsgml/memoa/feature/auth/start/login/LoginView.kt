@@ -42,15 +42,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
-<<<<<<< HEAD:app/src/main/java/com/dlrjsgml/memoa/feature/login/LoginView.kt
 
-
-import com.dlrjsgml.memoa.feature.SignUp.email.addFocusCleaner
-import com.dlrjsgml.memoa.root.NavGroup
-
-=======
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.addFocusCleaner
->>>>>>> 8d79e96 (feat: singUpScreen):app/src/main/java/com/dlrjsgml/memoa/feature/auth/start/login/LoginView.kt
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
