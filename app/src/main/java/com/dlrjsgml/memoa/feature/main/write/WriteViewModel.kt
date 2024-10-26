@@ -152,7 +152,7 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "작은거 : $smallImage");
 
                 val imageFile = UriUtil.toFile(context, uri)
-                val resizedFile = FileUtil.resizeImageFile(context, imageFile, 1080, 1080)
+                val resizedFile = FileUtil.resizeImageFile(context, imageFile, 1920, 1080) //TODO
                 Log.d("글쓰기", "1글쓰기 중 : $resizedFile")
                 val multipartImage: MultipartBody.Part =
                     FormDataUtil.getImageMultipart("file", resizedFile)

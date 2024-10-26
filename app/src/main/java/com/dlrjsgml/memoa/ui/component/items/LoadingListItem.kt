@@ -1,6 +1,5 @@
 package com.dlrjsgml.memoa.ui.component.items
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,33 +49,13 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun ArticleList(
-    id : Int = 0,
-    name: String = "ERROR",
-    date: String = "ERROR",
-    title: String = "ERROR",
-    image: ImmutableList<String> = persistentListOf(),
-    profile: String = "",
-    tag: ImmutableList<String> = persistentListOf(),
-    comment: Long = 0,
-    bookmarkClick: () -> Unit = {},
-    commentClick: () -> Unit = {},
-    navController: NavHostController
+fun JJapList(
 ) {
 
 
     Column(
         modifier = Modifier
-            .clickable(
-                indication = rememberBounceIndication(
-                    scale = 0.95f,
-                    showBackground = true,
-                    radius = RoundedCornerShape(8.dp)
-                ),
-                interactionSource = remember { MutableInteractionSource() },
-                enabled = true,
-                onClick = {navController.navigate("${NavGroup.DETAIL}?$id")}
-            )
+
     ) {
         Box(
             modifier = Modifier
@@ -98,15 +77,6 @@ fun ArticleList(
                         .clip(CircleShape)
                         .shimmerEffect()
                 )
-                AsyncImage(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),  // 원형으로 이미지를 클립
-                    model = profile,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,  // 이미지를 원에 맞춰 자르기,
-
-                )
             }
 
             Column(
@@ -116,7 +86,12 @@ fun ArticleList(
             ) {
                 Row() {
                     Column {
-                        Text(modifier = Modifier, text = name, style = boardName)
+                        Box(
+                            modifier = Modifier
+                                .width(55.dp)
+                                .height(18.dp)
+                                .shimmerEffect()
+                        )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
@@ -126,50 +101,86 @@ fun ArticleList(
                             .background(Color.Gray, CircleShape)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = date,
-                        style = boardContent.copy(fontWeight = FontWeight.Medium),
-                        color = Color.Gray
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(18.dp)
+                            .shimmerEffect()
                     )
+
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = title, style = boardContent)
+                Box(
+                    modifier = Modifier
+                        .width(260.dp)
+                        .height(18.dp)
+                        .shimmerEffect()
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .width(160.dp)
+                        .height(18.dp)
+                        .shimmerEffect()
+                )
+
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(modifier = Modifier.fillMaxWidth()) {
                     LazyRow {
-                        items(image.size) {
-                            ArticleImage(image = image[it], navController = navController)
+                        items(4) {
+                            JJapArticleImage()
                             Spacer(modifier = Modifier.width(6.dp))
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                TagLists(tag = tag)
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .width(30.dp)
+                            .height(20.dp)
+                            .shimmerEffect()
+                    )
+                    Spacer(Modifier.width(2.dp))
+                    Box(
+                        modifier = Modifier
+                            .width(30.dp)
+                            .height(20.dp)
+                            .shimmerEffect()
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(6.dp))
                 Row {
                     Row {
-                        CommentButton(onClick = commentClick)
+                        Box(
+                            modifier = Modifier
+                                .width(20.dp)
+                                .height(20.dp)
+                                .shimmerEffect()
+                        )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            text = comment.toString(),
-                            color = Gray40,
-                            style = boardContent.copy(fontWeight = FontWeight.Medium)
+                        Box(
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(20.dp)
+                                .shimmerEffect()
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Row {
-                        BookMarkButton(
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            onClick = bookmarkClick
+                        Box(
+                            modifier = Modifier
+                                .width(20.dp)
+                                .height(20.dp)
+                                .shimmerEffect()
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            text = "",
-                            color = Gray40,
-                            style = boardContent.copy(fontWeight = FontWeight.Medium)
+                        Box(
+                            modifier = Modifier
+                                .width(17.dp)
+                                .height(20.dp)
+                                .shimmerEffect()
                         )
                     }
                 }
@@ -179,50 +190,22 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleImage(image: String,navController: NavHostController) {
-    var isImageLoaded by remember { mutableStateOf(false) }
+fun JJapArticleImage() {
 
     Box {
-        if (!isImageLoaded) {
-            // Shimmer 효과 적용
-            Box(
-                modifier = Modifier
-                    .width(220.dp)
-                    .height(240.dp)
-                    .shimmerEffect()
-            )
-        }
-
-        AsyncImage(
+        Box(
             modifier = Modifier
                 .width(220.dp)
                 .height(240.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .noRippleClickable {
-                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
-
-                },
-            model = image,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            onSuccess = { isImageLoaded = true } // 이미지가 로드되면 shimmer 중단
+                .shimmerEffect()
         )
+
+
     }
 }
 
-//
-//@Preview
-//@Composable
-//fun ArticleListPreview() {
-//    ArticleList(
-//        name = "김은찬",
-//        date = "2024년 8월 13일",
-//        title = "국어, 과학 필기 공유합니다!",
-//        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
-//        tag = persistentListOf("국어", "과학"),
-//        image = persistentListOf(
-//            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
-//            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
-//        )
-//    )
-//}
+@Preview
+@Composable
+fun afdjkadfjk() {
+    JJapList()
+}
