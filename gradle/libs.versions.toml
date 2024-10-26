@@ -22,10 +22,12 @@ loggingInterceptor = "4.9.2"
 navigationComposeVersion = "2.7.7"
 navigationRuntimeKtx = "2.7.7"
 animationGraphicsAndroid = "1.7.1"
+pagingRuntimeKtx = "3.3.2"
 retrofit = "2.11.0"
 roomCompiler = "2.6.1"
 appcompat = "1.7.0"
 zoomable = "1.6.2"
+pagingComposeAndroid = "3.3.2"
 
 
 [libraries]
@@ -34,6 +36,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompiler" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
@@ -62,6 +65,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converte
 room-compiler-v251 = { module = "androidx.room:room-compiler", version.ref = "androidxRoomCompiler" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
+androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "pagingComposeAndroid" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

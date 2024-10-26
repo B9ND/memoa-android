@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.feature.main.main.deatil
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.feature.main.main.ArticlesSideEffect
 import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
@@ -36,6 +41,8 @@ import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardContent1
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun DetailScreen(
@@ -43,7 +50,23 @@ fun DetailScreen(
     navController: NavHostController,
     boardNumber: String,
 ) {
+
+    val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getDetailInfo(boardNumber.toInt())
+        Log.d("디테일", "ddgd");
+
+    }
+    LaunchedEffect(viewModel) {
+        viewModel.uiEffect.collect{effect ->
+            when(effect) {
+                DetailInfoSideEffect.Failure -> Log.d("디테일", "성공");
+                DetailInfoSideEffect.Success -> Log.d("디테일", "실패");
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,27 +84,23 @@ fun DetailScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         CommentList(
-            name = "TODO",
-            date = "2024년 8월 13일",
-            title = "TODO",
+            name = uiState.author,
+            date = uiState.createdAt,
+            title = uiState.title,
             profile = "https://i.namu.wiki/i/PLZBtADX5SaHJjlBEq2PDLknUdpCM2mzRDdZhmnALxIDuxnypcMP0C3vq_vCa-HsQ50ECb0kFB48w8mFTz0nU6-v0ijnzMHKwzg2-JCi0dQ4XZYLIhNh-rcE_JnBEJbLHIW04BOSODr9x4rhR64S-Q.webp"
         )
         Spacer(modifier = Modifier.height(30.dp))
+
         Column(modifier = Modifier.padding(horizontal = 32.dp)) {
             Column {
+                Log.d("디테일", "자르기 : ${uiState.content}");
                 Text(
-                    text = "글 번호:$boardNumber 글글" +
-                            "글" +
-                            "글" +
-                            "글" +
-                            "글" +
-                            "\n글글글" +
-                            "\nrmjkadfkjdfakjadfadfsdfafa",
+                    text = uiState.content,
                     style = boardContent
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
-            TagLists(persistentListOf("국어","과학"), mini = true)
+            TagLists(uiState.tags.toImmutableList(), mini = true)
             Spacer(modifier = Modifier.height(5.dp))
             Row {
                 Row {

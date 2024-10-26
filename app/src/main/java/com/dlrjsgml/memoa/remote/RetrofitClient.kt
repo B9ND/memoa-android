@@ -1,5 +1,7 @@
 package com.dlrjsgml.memoa.remote
 
+import com.dlrjsgml.memoa.network.main.GetMainService
+import com.dlrjsgml.memoa.network.main.detail.DetailService
 import com.dlrjsgml.memoa.network.write.WriteService
 import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
 import com.google.gson.GsonBuilder
@@ -33,5 +35,7 @@ object RetrofitClient {
 
     val writeService : WriteService by lazy { instance.create(WriteService::class.java) }
     val upLoadImgService : UpLoadImgService by lazy { instance.create(UpLoadImgService::class.java) }
+    val getMainService : GetMainService by lazy { instance.create(GetMainService::class.java) }
+    val getDetailService : DetailService by lazy { instance.create(DetailService::class.java) }
 
 }

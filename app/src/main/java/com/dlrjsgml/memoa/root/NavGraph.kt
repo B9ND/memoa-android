@@ -149,7 +149,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = NavGroup.START
+                startDestination = NavGroup.MAIN
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -173,9 +173,9 @@ fun NavGraph(
 
                 }
                 composable(NavGroup.MAIN) {
-                    MainScreen(navController)
+                    MainScreen(navController = navController)
                 }
-                composable(route = "${NavGroup.DETAIL}/phone={phone}",
+                composable(route = "${NavGroup.DETAIL}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )){
