@@ -97,7 +97,7 @@ fun WriteScreen(
                 selectedImageBitmap = context.contentResolver.uriToBitmap(uri)
                 selectedFileName = context.contentResolver.getFileName(uri).toString()
                 Log.d("글쓰기", "ChatDetailScreen: $selectedFileName $selectedImageBitmap")
-                viewModel.uploadImage(uri,context)
+                viewModel.uploadImage(uri,context,selectedImageBitmap!!)
             }
         }
     }

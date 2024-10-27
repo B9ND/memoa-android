@@ -63,6 +63,8 @@ fun LoginScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val loginState by viewModel.loginState.collectAsState()
+
+
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -176,7 +178,20 @@ fun LoginScreen(
                     }
                 )
 
+
             }
+            MemoaButton(
+                modifier = modifier
+                    .align(alignment = Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(55.dp),
+                text = "넘어가기",
+                enabled = true,
+
+                onClick = {
+                    navController.navigate(NavGroup.MAIN)
+                }
+            )
         }
     }
 }

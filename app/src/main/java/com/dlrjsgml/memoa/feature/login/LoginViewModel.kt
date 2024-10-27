@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.data.ApiService
 import com.dlrjsgml.memoa.feature.data.LoginRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
+import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -45,6 +46,8 @@ class LoginViewModel : ViewModel() {
                 val loginData = LoginRequest(email,password)
                 val response = apiService.login(loginData)
                 Log.d("로그인", "성공 : ${response.access}")
+                TemporaryToken.AccessToken = response.access
+
 
             } catch (e: HttpException) {
                 if (e.code() == 403) {
