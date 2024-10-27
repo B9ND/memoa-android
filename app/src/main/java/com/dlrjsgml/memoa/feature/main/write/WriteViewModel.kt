@@ -144,7 +144,7 @@ class WriteViewModel : ViewModel() {
     }
 
 
-    fun uploadImage(uri: Uri, context: Context) {
+    fun uploadImage(uri: Uri, context: Context,fileBitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 val smallImage =  convertResizeImage(context,uri)
@@ -152,7 +152,7 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "작은거 : $smallImage");
 
                 val imageFile = UriUtil.toFile(context, uri)
-                val resizedFile = FileUtil.resizeImageFile(context, imageFile, 1920, 1080) //TODO
+                val resizedFile = FileUtil.resizeImageFile(context, imageFile, (fileBitmap.width)/2, (fileBitmap.height)/2) //TODO
                 Log.d("글쓰기", "1글쓰기 중 : $resizedFile")
                 val multipartImage: MultipartBody.Part =
                     FormDataUtil.getImageMultipart("file", resizedFile)
