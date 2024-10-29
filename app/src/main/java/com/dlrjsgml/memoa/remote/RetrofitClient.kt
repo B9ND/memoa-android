@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.remote
 
+import com.dlrjsgml.memoa.BuildConfig
 import com.dlrjsgml.memoa.network.main.GetMainService
 import com.dlrjsgml.memoa.network.main.detail.DetailService
 import com.dlrjsgml.memoa.network.write.WriteService
@@ -13,7 +14,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 object RetrofitClient {
-    private const val BASE_URL = "http://13.125.84.202"
+    private const val BASE_URL = BuildConfig.API_KEY
     var gson= GsonBuilder().setLenient().create()
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BASIC // 요청 메서드 및 URL만 로그에 남기기

@@ -28,6 +28,9 @@
       <SelectionState runConfigName="adjdfkajadkfj">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="memoa-android.memoa.app">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

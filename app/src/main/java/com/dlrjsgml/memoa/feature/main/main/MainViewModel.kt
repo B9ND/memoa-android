@@ -1,22 +1,13 @@
 package com.dlrjsgml.memoa.feature.main.main
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.dlrjsgml.memoa.feature.main.main.paging.MyPagingSource
-import com.dlrjsgml.memoa.feature.main.write.WriteSideEffect
-import com.dlrjsgml.memoa.feature.main.write.WriteState
+import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
 import com.dlrjsgml.memoa.network.main.ArticleResponse
-import com.dlrjsgml.memoa.network.main.GetMainService
-import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -55,15 +46,13 @@ class MainViewModel(
                     enablePlaceholders = false,
                     initialLoadSize = 10
                 ),
-                    pagingSourceFactory = {MyPagingSource()}).flow.cachedIn(viewModelScope)
+                    pagingSourceFactory = {ArticlePagingSource("")}).flow.cachedIn(viewModelScope)
                 _uiState.update { it.copy(articles = data) }
                 _uiEffect.emit(ArticlesSideEffect.Success)
             } catch (e:Exception){
                 _uiEffect.emit(ArticlesSideEffect.Failure)
             }
-
         }
-
     }
 
 

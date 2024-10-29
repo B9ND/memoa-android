@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.update
 
 
 data class DetailInfoState(
-    val id: Int = 1,
-    val title: String = "오류",
-    val content : String = "오류",
-    val author : String = "ERROR",
+    val id: Int = -1,
+    val title: String = "로딩",
+    val content : String = "로딩",
+    val author : String = "로딩",
     val tags : List<String> = emptyList(),
     val createdAt : String = "2008.12.13",
     val images: List<String> = emptyList(),

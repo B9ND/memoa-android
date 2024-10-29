@@ -33,7 +33,7 @@ import java.io.FileOutputStream
 data class WriteState(
     val title: String = "",
     val content: String = "",
-    val tags: List<String> = emptyList(),
+    val tags: List<String> = arrayListOf("대구소프트웨어마이스터고등학교"),
     val image: List<String> = emptyList(),
     val isReleased : Boolean = true
 )
@@ -164,6 +164,7 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "Uploading file: ${multipartImage}")
                 Log.d("글쓰기", "ㅇㅇㅇㅇㅇ: ${response.url}")
                 _uiState.update { it.copy(image = it.image + response.url) }
+                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
                 _uiEffect.emit(UpLoadImageSideEffect.Success)
 //                if(response.isSuccessful){
 //                    Log.d("글쓰기", "성공: ${response.body()}")
@@ -203,7 +204,6 @@ class WriteViewModel : ViewModel() {
                     writeData
                 )
                 _uiEffect.emit(WriteSideEffect.Success)
-
             } catch (e: Exception) {
                 Log.d("글쓰기", e.message.toString());
 

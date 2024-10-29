@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.ui.component.items
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,15 +15,17 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.theme.Gray30
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 
 @Composable
-fun SearchHistoryList(content: String, shape: Shape = RoundedCornerShape(40)) {
+fun SearchHistoryList(content: String, shape: Shape = RoundedCornerShape(40),onClick: () -> Unit) {
     Box(modifier = Modifier
         .padding(end = 8.dp, bottom = 8.dp)
         .background(Color.White, shape)
         .border(width = 2.dp, color = Gray30, shape = shape)
+        .noRippleClickable { onClick() }
         ){
         Text(modifier = Modifier
             .align(Alignment.Center)
@@ -34,5 +37,9 @@ fun SearchHistoryList(content: String, shape: Shape = RoundedCornerShape(40)) {
 @Preview
 @Composable
 private fun afjdadjkdjafk(){
-    SearchHistoryList(content = "여승원 농구하다")
+    SearchHistoryList(
+        content = "여승원 농구하다",
+        shape = TODO(),
+        onClick = TODO()
+    )
 }
