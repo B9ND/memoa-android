@@ -106,8 +106,7 @@ fun DetailScreen(
                                 image = imageUrl,
                                 navController = navController
                             )
-                            Log.d("디테일", "이미지 있음 ${content.replace("★","")}");
-
+                            Log.d("디테일", "이미지 있음 ${content.toString().replace("★","")}");
                         } else {
                             Text(
                                 text = content.toString(),

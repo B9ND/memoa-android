@@ -22,7 +22,6 @@ class  ArticlePagingSource(
 ) : PagingSource<Int, ArticleResponse>() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleResponse> {
-
         // Retrofit calls that return the body type throw either IOException for network
         // failures, or HttpException for any non-2xx HTTP status codes. This code reports all
         // errors to the UI, but you can inspect/wrap the exceptions to provide more context.

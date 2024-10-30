@@ -106,7 +106,7 @@ fun MainScreen(
                                 date = article.createdAt,
                                 title = article.title,
                                 image = article.images.toImmutableList(),
-                                profile = "https://image.kmib.co.kr/online_image/2020/0920/611718110015025888_4.jpg",
+                                profile = article.authorProfileImage,
                                 tag = article.tags.toImmutableList(),
                                 comment = 1,
                                 bookmarkClick = { },

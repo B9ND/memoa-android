@@ -38,6 +38,8 @@ data class WriteState(
     val isReleased : Boolean = true
 )
 
+
+
 data class CustomAlertDialogState(
     val content: String = "",
     val onClickConfirm: () -> Unit = {},
@@ -198,7 +200,6 @@ class WriteViewModel : ViewModel() {
                     images = uiState.value.image
                 )
                 Log.d("글쓰기", "글 내용 ㄱㅡ$writeData");
-
                 val write = RetrofitClient.writeService.postWrite(
                     TemporaryToken.AccessToken,
                     writeData

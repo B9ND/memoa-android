@@ -27,9 +27,7 @@ sealed interface ArticlesSideEffect{
     data object Failure : ArticlesSideEffect
 }
 
-class MainViewModel(
-) : ViewModel(
-) {
+class MainViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ArticlesState())
     val uiState = _uiState.asStateFlow()
