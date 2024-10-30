@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.main.main.ArticlesSideEffect
 import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
@@ -33,6 +35,7 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
 import com.dlrjsgml.memoa.ui.component.button.CommentButton
+import com.dlrjsgml.memoa.ui.component.items.ArticleImage
 import com.dlrjsgml.memoa.ui.component.items.CommentList
 import com.dlrjsgml.memoa.ui.component.items.TagLists
 import com.dlrjsgml.memoa.ui.theme.Gray40
@@ -52,16 +55,16 @@ fun DetailScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
-    val scrollState = rememberScrollState()
-
+    val boards = uiState.content.split("✔")
     LaunchedEffect(Unit) {
         viewModel.getDetailInfo(boardNumber.toInt())
-        Log.d("디테일", "ddgd");
-
+        Log.d("글만", "글 리스트는 : ${boards}");
     }
+    Log.d("글만", "글 리스트는 : ${boards}");
+
     LaunchedEffect(viewModel) {
-        viewModel.uiEffect.collect{effect ->
-            when(effect) {
+        viewModel.uiEffect.collect { effect ->
+            when (effect) {
                 DetailInfoSideEffect.Failure -> Log.d("디테일", "성공");
                 DetailInfoSideEffect.Success -> Log.d("디테일", "실패");
             }
@@ -71,7 +74,6 @@ fun DetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
-            .verticalScroll(scrollState)
     ) {
         Row(
             modifier = Modifier
@@ -94,17 +96,33 @@ fun DetailScreen(
         Column(modifier = Modifier.padding(horizontal = 32.dp)) {
             Column {
                 Log.d("디테일", "자르기 : ${uiState.content}");
-                Text(
-                    text = uiState.content,
-                    style = boardContent
-                )
+                LazyColumn {
+                    items(boards.size) { board->
+                        val content = boards[board]
+                        val firstChar = content.firstOrNull()
+                        if (firstChar == '★') {
+                            val imageUrl = content.replace("★","")
+                            ArticleImage(
+                                image = imageUrl,
+                                navController = navController
+                            )
+                            Log.d("디테일", "이미지 있음 ${content.toString().replace("★","")}");
+                        } else {
+                            Text(
+                                text = content.toString(),
+                                style = boardContent
+                            )
+                        }
+                    }
+//                }
+                }
             }
             Spacer(modifier = Modifier.height(20.dp))
             TagLists(uiState.tags.toImmutableList(), mini = true)
             Spacer(modifier = Modifier.height(5.dp))
             Row {
                 Row {
-                    CommentButton(onClick = {navController.navigate("${NavGroup.COMMENT}/phone=ddddddd")})
+                    CommentButton(onClick = { navController.navigate("${NavGroup.COMMENT}/phone=ddddddd") })
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
@@ -128,10 +146,9 @@ fun DetailScreen(
                 }
             }
         }
-
-
     }
 }
+
 
 //@Preview
 //@Composable

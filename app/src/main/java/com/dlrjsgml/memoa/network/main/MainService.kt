@@ -11,6 +11,7 @@ data class ArticleResponse(
     val title: String,
     val content: String,
     val author: String,
+    val authorProfileImage : String,
     val tags: List<String>,
     val createdAt : String,
     val images : List<String>

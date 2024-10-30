@@ -52,9 +52,9 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun ArticleList(
     id : Int = 0,
-    name: String = "ERROR",
-    date: String = "ERROR",
-    title: String = "ERROR",
+    name: String = "로딩",
+    date: String = "로딩",
+    title: String = "로딩",
     image: ImmutableList<String> = persistentListOf(),
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),
@@ -179,7 +179,7 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleImage(image: String,navController: NavHostController) {
+fun ArticleImage(image: String,navController: NavHostController, ) {
     var isImageLoaded by remember { mutableStateOf(false) }
 
     Box {

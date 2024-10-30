@@ -1,9 +1,14 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id ("kotlin-kapt")
     id("com.google.devtools.ksp")
 }
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.dlrjsgml.memoa"
@@ -20,6 +25,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField ("String", "API_KEY", properties["API_KEY"].toString())
     }
 
     buildTypes {
@@ -40,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

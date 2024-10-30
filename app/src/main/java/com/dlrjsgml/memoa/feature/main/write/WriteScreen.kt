@@ -101,6 +101,7 @@ fun WriteScreen(
             }
         }
     }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -219,7 +220,6 @@ fun WriteScreen(
                     .padding(end = 20.dp),
                 onClick = {
                     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                        // 권한이 이미 허용된 경우 갤러리 열기
                         galleryLauncher.launch("image/*")
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -268,9 +268,7 @@ fun WriteScreen(
                     disabledUncheckedIconColor = Gray10,
                 )
             )
-
         }
-
         Spacer(modifier = Modifier.height(20.dp))
         LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
             items(uiState.image.size){
