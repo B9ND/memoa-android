@@ -31,8 +31,6 @@ import com.dlrjsgml.memoa.ui.theme.boardName
 @Composable
 fun FollowerList(
     name: String = "ERROR",
-    date: String = "ERROR",
-    title: String = "ERROR",
     profile: String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyB_Y4x_2qADG2TQ2-lR8BB53v9UpL7a2Cjg&s",
 ) {
     Column {

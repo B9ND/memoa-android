@@ -15,7 +15,6 @@ data class WriteDTO(
 interface WriteService {
     @POST("/post")
     suspend fun postWrite(
-        @Header("Authorization") token: String,
         @Body writeDTO: WriteDTO
     )
 }

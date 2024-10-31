@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="memoa-android.memoa.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-30T09:13:00.965937Z">
+        <DropdownSelection timestamp="2024-10-30T10:20:00.433264Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=R3CN20HX43V" />

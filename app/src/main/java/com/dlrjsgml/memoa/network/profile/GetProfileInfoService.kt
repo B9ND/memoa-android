@@ -13,6 +13,5 @@ data class ProfileResponse(
 interface GetProfileInfoService {
     @GET("/auth/me")
     suspend fun getProfileInfo(
-        @Header("Authorization") token: String,
     ): ProfileResponse
 }

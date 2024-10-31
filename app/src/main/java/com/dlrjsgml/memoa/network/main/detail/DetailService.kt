@@ -9,7 +9,6 @@ import retrofit2.http.Query
 interface DetailService {
     @GET("/post/{id}")
     suspend fun getDetailArticle(
-        @Header("Authorization") token: String,
         @Path("id") id: Int,
     ): ArticleResponse
 }

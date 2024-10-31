@@ -55,7 +55,7 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response =
-                    RetrofitClient.getProfileService.getProfileInfo(TemporaryToken.AccessToken)
+                    RetrofitClient.getProfileService.getProfileInfo()
                 Log.d("프로필", "리스폰스보기 : $response");
                 _uiState.update {
                     it.copy(

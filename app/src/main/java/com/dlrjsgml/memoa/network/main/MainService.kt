@@ -28,7 +28,6 @@ data class ArticleDataRequest(
 interface GetMainService {
     @GET("/post")
     suspend fun getArticles(
-        @Header("Authorization") token: String,
         @Query("search") search: String,
         @Query("tags") tags: List<String>,
         @Query("page") page: Int,

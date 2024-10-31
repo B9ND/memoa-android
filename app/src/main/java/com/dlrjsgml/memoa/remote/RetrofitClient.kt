@@ -23,6 +23,8 @@ object RetrofitClient {
         level = HttpLoggingInterceptor.Level.BASIC // 요청 메서드 및 URL만 로그에 남기기
     }
 
+    val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
+        .addInterceptor(ResponseInterceptor()).build()
     val client = OkHttpClient.Builder()
         .addInterceptor(logging)
         .build()
@@ -31,6 +33,7 @@ object RetrofitClient {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
+            .client(interceptorClient)
             .addConverterFactory(ScalarsConverterFactory.create() )
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

@@ -16,8 +16,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 data class TextState(
-    val email: String = "",
-    val password: String = ""
+    val email: String = "leegeh1213@gmail.com",
+    val password: String = "1234"
 )
 
 

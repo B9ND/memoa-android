@@ -14,7 +14,6 @@ interface UpLoadImgService {
     @Multipart
     @POST("/image/upload")
     suspend fun uploadImage(
-        @Header("Authorization") token: String,
         @Part file: MultipartBody.Part
     ) : UpLoadImgResponse
 }

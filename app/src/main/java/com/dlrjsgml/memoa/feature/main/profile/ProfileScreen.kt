@@ -66,6 +66,7 @@ fun ProfileScreen(
             }
         }
     }
+
     BackHandlers(navController = navController)
     LazyColumn(
         modifier = Modifier
@@ -91,7 +92,6 @@ fun ProfileScreen(
         }
 
         item {
-
             Box(
                 modifier = Modifier
                     .padding(top = 120.dp)
@@ -128,12 +128,9 @@ fun ProfileScreen(
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-
-
-                        FollowNumber(number = followUiState.following, text = "팔로우", onClick = {navController.navigate("${NavGroup.FOLLOWER}/phone=ddddddd")})
+                        FollowNumber(number = followUiState.follower, text = "팔로우", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true")})
                         Spacer(modifier = Modifier.width(35.dp))
-                        FollowNumber(number = followUiState.following, text = "팔로잉", onClick = {navController.navigate("${NavGroup.FOLLOWER}/phone=ddddddd")})
-
+                        FollowNumber(number = followUiState.following, text = "팔로잉", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false")})
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
