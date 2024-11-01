@@ -38,7 +38,7 @@ class DetailViewModel : ViewModel() {
 
     suspend fun getDetailInfo(id : Int){
         try {
-            val response = RetrofitClient.getDetailService.getDetailArticle(TemporaryToken.AccessToken,id)
+            val response = RetrofitClient.getDetailService.getDetailArticle(id)
             _uiState.update {it.copy(
                 id = response.id,
                 title = response.title,

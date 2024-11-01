@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -61,7 +62,7 @@ internal class BounceIndication(
     inner class BounceIndicationInstance(
         private val scale: Float,
         private val radius: CornerBasedShape,
-        private val color: Color
+        private val color: Color,
     ) : IndicationInstance {
 
         override fun ContentDrawScope.drawIndication() {

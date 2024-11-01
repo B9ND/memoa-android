@@ -160,7 +160,6 @@ class WriteViewModel : ViewModel() {
                     FormDataUtil.getImageMultipart("file", resizedFile)
 
                 val response = RetrofitClient.upLoadImgService.uploadImage(
-                    TemporaryToken.AccessToken,
                     multipartImage
                 )
                 Log.d("글쓰기", "Uploading file: ${multipartImage}")
@@ -201,7 +200,6 @@ class WriteViewModel : ViewModel() {
                 )
                 Log.d("글쓰기", "글 내용 ㄱㅡ$writeData");
                 val write = RetrofitClient.writeService.postWrite(
-                    TemporaryToken.AccessToken,
                     writeData
                 )
                 _uiEffect.emit(WriteSideEffect.Success)

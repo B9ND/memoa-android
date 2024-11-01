@@ -59,9 +59,9 @@ fun SegmentedButton(
 fun SegmentedButtonRow(
     modifier: Modifier = Modifier,
     segments: ImmutableList<Segment>,
+    selectedSegment: Segment,
+    onSegmentSelected: (Segment) -> Unit
 ) {
-    var selectedSegment by remember { mutableStateOf(segments.first()) }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -72,11 +72,10 @@ fun SegmentedButtonRow(
             SegmentedButton(
                 selected = segment == selectedSegment,
                 onClick = {
-                    selectedSegment = segment // 선택된 세그먼트 업데이트
-                    segment.onClick() // 클릭 이벤트 처리
+                    onSegmentSelected(segment)
                 },
                 enabled = segment.enabled,
-                text = segment.text
+                text = segment.text,
             )
         }
     }
@@ -97,6 +96,9 @@ fun PreviewSegmentedButtonRow() {
                 onClick = { /* 팔로잉 클릭 시 동작 */ },
                 text = "팔로잉"
             )
-        )
+        ),
+        modifier = TODO(),
+        selectedSegment = TODO(),
+        onSegmentSelected = TODO()
     )
 }

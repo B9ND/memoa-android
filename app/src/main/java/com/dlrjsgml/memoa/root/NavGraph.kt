@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.root
 
 import android.os.Build
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -219,13 +220,15 @@ fun NavGraph(
                 composable(NavGroup.PROFILE) {
                     ProfileScreen(navController)
                 }
-                composable(route = "${NavGroup.FOLLOWER}/phone={phone}",
+                composable(route = "${NavGroup.FOLLOWER}?{phone}?{checker}",
                     arguments = listOf(
-                        navArgument("phone") { NavType.StringType }
+                        navArgument("phone") { NavType.StringType },
+                        navArgument("checker") { NavType.StringType }
                     )){
                     val phoneNum =  it.arguments?.getString("phone")?: ""
+                    val checkers = it.arguments?.getString("checker")?: "false"
                     FollowerScreen(
-                        userId = phoneNum,
+                        userId = phoneNum, followingChecker = checkers,
                         navController = navController
                     )
                 }

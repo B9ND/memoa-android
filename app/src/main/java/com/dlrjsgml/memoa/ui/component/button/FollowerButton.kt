@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,11 +53,12 @@ fun FollowerButton(
             )
             .background(color = if (isEnable.value) Purple60 else Color.White, shape = shape)
             .border(width = if(isEnable.value) 0.dp else 2.dp, color = Gray60, shape = shape)
+            .width(90.dp)
     )
 
     {
         Text(
-            modifier = modifier.padding(vertical = 6.dp, horizontal = 32.dp),
+            modifier = Modifier.padding(vertical = 6.dp, horizontal = 16.dp).align(Alignment.Center),
             style = miniCaption2,
             text = if(isEnable.value) "팔로우" else "언팔로우",
             color = if (isEnable.value) Color.White else Gray60
