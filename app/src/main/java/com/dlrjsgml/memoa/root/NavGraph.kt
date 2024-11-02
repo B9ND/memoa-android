@@ -1,11 +1,6 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
-<<<<<<< HEAD
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.util.Log
-=======
->>>>>>> d5aeb34 (feat: singUpScreen)
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
