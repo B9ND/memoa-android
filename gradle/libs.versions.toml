@@ -6,6 +6,7 @@ androidxRoomCompiler = "2.5.1"
 coilCompose = "2.6.0"
 converterGson = "2.11.0"
 converterScalars = "2.9.0"
+datastorePreferences = "1.1.1"
 hiltAndroid = "2.52"
 hiltCompiler = "2.44.2"
 kotlin = "1.9.0"
@@ -33,6 +34,7 @@ pagingComposeAndroid = "3.3.2"
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
