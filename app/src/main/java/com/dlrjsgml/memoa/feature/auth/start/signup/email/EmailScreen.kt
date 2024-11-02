@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -48,6 +49,8 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -58,6 +61,7 @@ fun EmailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val authString = buildAnnotatedString {
         withStyle(
@@ -190,6 +194,11 @@ fun EmailScreen(
                     textButtonVal = "인증",
                     firstFocus = true,
                     modifier = Modifier.focusRequester(focusRequester),
+                    textButtonOnClick = {
+                        coroutineScope.launch {
+                            viewModel.sendCode(uiState.email)
+                        }
+                    }
                 )
                 Spacer(Modifier.height(10.dp))
                 MemoaTextField(
@@ -217,7 +226,15 @@ fun EmailScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    navController.navigate(NavGroup.SIGNUP_PASSWORD)
+                    focusManager.clearFocus()
+                    if (uiState.auth.length == 6) {
+                        coroutineScope.launch {
+                            viewModel.checkCode(uiState.email, uiState.auth)
+                            if (uiState.welcome) {
+                                navController.navigate(NavGroup.SIGNUP_PASSWORD)
+                            }
+                        }
+                    }
                 }
             }
         }
