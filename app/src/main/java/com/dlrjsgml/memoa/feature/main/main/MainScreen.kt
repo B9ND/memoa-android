@@ -39,7 +39,6 @@ fun MainScreen(
     LaunchedEffect(Unit) {
         viewModel.getArticles()
     }
-
     val id = 1 // 특정 ID를 사용하여 글 가져오기
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
@@ -48,7 +47,7 @@ fun MainScreen(
         viewModel.getArticles()
         pullRefreshState.endRefresh()
     }
-    Log.d("글보기 ", "헬로우월ㄷ ${lazyPagingItems.itemCount}");
+    Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,12 +88,11 @@ fun MainScreen(
                             JJapList()
                         }
                     }
-
-                    lazyPagingItems.loadState.append is LoadState.Loading -> {
-                        items(10) {
-                            JJapList()
-                        }
-                    }
+//                    lazyPagingItems.loadState.append is LoadState.Loading -> {
+//                        items(10) {
+//                            JJapList()
+//                        }
+//                    }
                 }
                 if (lazyPagingItems.itemCount != 0) {
                     items(lazyPagingItems.itemCount) {
@@ -109,8 +107,8 @@ fun MainScreen(
                                 profile = article.authorProfileImage,
                                 tag = article.tags.toImmutableList(),
                                 comment = 1,
-                                bookmarkClick = { },
-                                commentClick = {},
+                                onBookmarkClick = { },
+                                onCommentClick = {},
                                 navController = navController
                             )
                         }
@@ -125,6 +123,8 @@ fun MainScreen(
         PullToRefreshContainer(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
+            containerColor = Color.White,
+            contentColor = Color.Black
         )
     }
 

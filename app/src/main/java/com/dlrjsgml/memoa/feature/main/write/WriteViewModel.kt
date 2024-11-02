@@ -38,6 +38,10 @@ data class WriteState(
     val isReleased : Boolean = true
 )
 
+data class ContentWriteState(
+    val content : String = ""
+)
+
 
 
 data class CustomAlertDialogState(
@@ -64,12 +68,17 @@ class WriteViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(WriteState())
     val uiState = _uiState.asStateFlow()
 
+    private val _contentWriteState = MutableStateFlow(ContentWriteState())
+    val contentWriteState = _contentWriteState.asStateFlow()
+
+
     val customAlertDialogState: MutableState<CustomAlertDialogState> =
         mutableStateOf<CustomAlertDialogState>(
             CustomAlertDialogState()
         )
 
 
+    // 다이얼로그
     fun wrigingErrorAlert(text : String) {
         customAlertDialogState.value = CustomAlertDialogState(
             content = text,
@@ -79,6 +88,7 @@ class WriteViewModel : ViewModel() {
         )
     }
 
+    // 다 적어주세요.
     fun plsAllWrite() {
         customAlertDialogState.value = CustomAlertDialogState(
             content = "제목과 내용을 다 적어 주세요",
@@ -93,6 +103,7 @@ class WriteViewModel : ViewModel() {
         customAlertDialogState.value = CustomAlertDialogState()
     }
 
+    // 태그 넣기
     fun fillTags(tag: String) {
         _uiState.update {
             if (tag in it.tags) {
@@ -104,6 +115,7 @@ class WriteViewModel : ViewModel() {
         Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
     }
 
+    // 이미지 압축
     private fun convertResizeImage(context: Context, imageUri: Uri): Uri? {
         val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
         val resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
@@ -145,7 +157,7 @@ class WriteViewModel : ViewModel() {
         return contentUri
     }
 
-
+    // 이미지 올리기
     fun uploadImage(uri: Uri, context: Context,fileBitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
@@ -166,6 +178,13 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "ㅇㅇㅇㅇㅇ: ${response.url}")
                 _uiState.update { it.copy(image = it.image + response.url) }
                 _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
+
+                Log.d("글글", "ui 하나 : ${_uiState.value.content}");
+
+                _contentWriteState.update { it.copy(content = it.content + "\n[${_uiState.value.image.size}번 이미지가 들어갈 곳]\n") }
+
+
+
                 _uiEffect.emit(UpLoadImageSideEffect.Success)
 //                if(response.isSuccessful){
 //                    Log.d("글쓰기", "성공: ${response.body()}")
@@ -175,7 +194,6 @@ class WriteViewModel : ViewModel() {
 //                }else{
 //                    Log.d("글쓰기", "실패: ${response.body()}")
 //                }
-
             } catch (e: Exception) {
                 if(e.message == null){
                     _uiEffect.emit(UpLoadImageSideEffect.CompressionFailure)
@@ -188,7 +206,7 @@ class WriteViewModel : ViewModel() {
         }
     }
 
-
+    // 글 올리기
     fun postWrite() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -221,5 +239,8 @@ class WriteViewModel : ViewModel() {
 
     fun updateContent(content: String) {
         _uiState.update { it.copy(content = content) }
+//        _contentWriteState.update { it.copy(content = content) }
+
     }
+
 }

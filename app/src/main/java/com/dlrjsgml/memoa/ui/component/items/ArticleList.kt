@@ -1,7 +1,6 @@
 package com.dlrjsgml.memoa.ui.component.items
 
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,15 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
@@ -59,8 +54,8 @@ fun ArticleList(
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),
     comment: Long = 0,
-    bookmarkClick: () -> Unit = {},
-    commentClick: () -> Unit = {},
+    onBookmarkClick: () -> Unit = {},
+    onCommentClick: () -> Unit = {},
     navController: NavHostController
 ) {
 
@@ -149,7 +144,7 @@ fun ArticleList(
                 Spacer(modifier = Modifier.height(6.dp))
                 Row {
                     Row {
-                        CommentButton(onClick = commentClick)
+                        CommentButton(onClick = onCommentClick)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             modifier = Modifier.align(Alignment.CenterVertically),
@@ -162,7 +157,7 @@ fun ArticleList(
                     Row {
                         BookMarkButton(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            onClick = bookmarkClick
+                            onClick = onBookmarkClick
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(

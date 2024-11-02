@@ -18,9 +18,11 @@ data class DetailInfoState(
     val title: String = "로딩",
     val content : String = "로딩",
     val author : String = "로딩",
+    val authorProfileImage : String = "",
     val tags : List<String> = emptyList(),
     val createdAt : String = "2008.12.13",
     val images: List<String> = emptyList(),
+
 )
 
 sealed interface DetailInfoSideEffect {
@@ -44,6 +46,7 @@ class DetailViewModel : ViewModel() {
                 title = response.title,
                 content = response.content,
                 author = response.author,
+                authorProfileImage = response.authorProfileImage,
                 tags = response.tags,
                 createdAt = response.createdAt,
                 images = response.images

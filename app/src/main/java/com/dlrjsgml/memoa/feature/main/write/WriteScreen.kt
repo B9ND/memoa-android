@@ -83,6 +83,7 @@ fun WriteScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+
     val coroutineScope = rememberCoroutineScope()
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -139,7 +140,6 @@ fun WriteScreen(
                 }
                 is UpLoadImageSideEffect.Success -> {
                     viewModel.wrigingErrorAlert("이미지 업로드 성공")
-
                 }
             }
 
@@ -264,6 +264,7 @@ fun WriteScreen(
                     disabledCheckedIconColor = Color.White,
                     disabledUncheckedThumbColor = Color.White,
                     disabledUncheckedTrackColor = Gray10,
+
                     disabledUncheckedBorderColor = Gray10,
                     disabledUncheckedIconColor = Gray10,
                 )
@@ -290,3 +291,4 @@ fun WriteScreen(
 private fun afdjadfj() {
 //    WriteScreen()
 }
+

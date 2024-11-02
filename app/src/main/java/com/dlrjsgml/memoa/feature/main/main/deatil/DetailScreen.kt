@@ -89,7 +89,7 @@ fun DetailScreen(
             name = uiState.author,
             date = uiState.createdAt,
             title = uiState.title,
-            profile = "https://i.namu.wiki/i/PLZBtADX5SaHJjlBEq2PDLknUdpCM2mzRDdZhmnALxIDuxnypcMP0C3vq_vCa-HsQ50ECb0kFB48w8mFTz0nU6-v0ijnzMHKwzg2-JCi0dQ4XZYLIhNh-rcE_JnBEJbLHIW04BOSODr9x4rhR64S-Q.webp"
+            profile = uiState.authorProfileImage
         )
         Spacer(modifier = Modifier.height(30.dp))
 

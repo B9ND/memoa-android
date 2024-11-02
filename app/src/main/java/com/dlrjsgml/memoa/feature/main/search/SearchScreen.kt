@@ -12,17 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -32,15 +29,16 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
-import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.component.items.SearchHistoryList
 import com.dlrjsgml.memoa.ui.component.textfield.SearchTextField
 import com.dlrjsgml.memoa.ui.theme.boardContent1
-import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -49,7 +47,7 @@ fun SearchScreen(
     navController: NavHostController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.getData()
         viewModel.beforeSearch()
@@ -133,8 +131,8 @@ fun SearchScreen(
                                             profile = "https://image.kmib.co.kr/online_image/2020/0920/611718110015025888_4.jpg",
                                             tag = article.tags.toImmutableList(),
                                             comment = 1,
-                                            bookmarkClick = { },
-                                            commentClick = {},
+                                            onBookmarkClick = { },
+                                            onCommentClick = {},
                                             navController = navController
                                         )
                                     }
@@ -146,4 +144,9 @@ fun SearchScreen(
             }
         }
     }
+}
+
+suspend fun returnTrueAfterDelay(): Boolean {
+    delay(1000) // 1000ms (1초) 지연
+    return true
 }

@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +47,7 @@ class MainViewModel : ViewModel() {
                 ),
                     pagingSourceFactory = {ArticlePagingSource("")}).flow.cachedIn(viewModelScope)
                 _uiState.update { it.copy(articles = data) }
+
                 _uiEffect.emit(ArticlesSideEffect.Success)
             } catch (e:Exception){
                 _uiEffect.emit(ArticlesSideEffect.Failure)
