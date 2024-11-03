@@ -1,6 +1,8 @@
 package com.dlrjsgml.memoa.remote
 
 import com.dlrjsgml.memoa.BuildConfig
+import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
+import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
 import com.dlrjsgml.memoa.network.follow.GetFollowersService
 import com.dlrjsgml.memoa.network.follow.GetFollowingService
 import com.dlrjsgml.memoa.network.main.GetMainService
@@ -47,5 +49,7 @@ object RetrofitClient {
     val getProfileService : GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
     val getFollowingService : GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
     val getFollowersService : GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
+    val getBookMarkService : GetBookMarkService by lazy { instance.create(GetBookMarkService::class.java) }
+    val postBookMarkService : PostBookMarkService by lazy { instance.create(PostBookMarkService::class.java) }
 
 }

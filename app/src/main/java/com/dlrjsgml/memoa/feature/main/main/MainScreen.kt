@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,10 +26,12 @@ import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
+import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +46,7 @@ fun MainScreen(
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
     val pullRefreshState = rememberPullToRefreshState()
+    val coroutineScope = rememberCoroutineScope()
     if (pullRefreshState.isRefreshing) {
         viewModel.getArticles()
         pullRefreshState.endRefresh()
@@ -107,7 +111,9 @@ fun MainScreen(
                                 profile = article.authorProfileImage,
                                 tag = article.tags.toImmutableList(),
                                 comment = 1,
-                                onBookmarkClick = { },
+                                onBookmarkClick = {
+                                    viewModel.bookmark(article.id)
+                                },
                                 onCommentClick = {},
                                 navController = navController
                             )

@@ -41,6 +41,7 @@ import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Gray40
 import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardName
+import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -58,7 +59,6 @@ fun ArticleList(
     onCommentClick: () -> Unit = {},
     navController: NavHostController
 ) {
-
 
     Column(
         modifier = Modifier

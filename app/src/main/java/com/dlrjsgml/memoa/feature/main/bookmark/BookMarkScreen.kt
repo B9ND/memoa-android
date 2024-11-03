@@ -1,6 +1,5 @@
 package com.dlrjsgml.memoa.feature.main.bookmark
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,8 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
-import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
-import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 
@@ -28,6 +29,11 @@ fun BookMarkScreen(
     navController: NavHostController
 ) {
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.getBookMarks()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +52,16 @@ fun BookMarkScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        ArticleList(navController = navController)
+
+        LazyColumn {
+            items(uiState.bookMarks.size){
+                val bookMark = uiState.bookMarks[it]
+                ArticleList(
+                    name = bookMark.nickname,
+                    date = bookMark.createdAt,
+                    navController = navController)
+            }
+        }
     }
 }
 
