@@ -59,7 +59,7 @@ fun BookMarkScreen(
                 ArticleList(
                     name = bookMark.nickname,
                     date = bookMark.createdAt,
-                    navController = navController)
+                    )
             }
         }
     }

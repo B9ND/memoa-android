@@ -62,6 +62,7 @@ import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
@@ -273,7 +274,8 @@ fun WriteScreen(
         Spacer(modifier = Modifier.height(20.dp))
         LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
             items(uiState.image.size){
-                ArticleImage(image = uiState.image[it], navController = navController)
+                ArticleImage(image = uiState.image[it],
+                    onImageClick = {navController.navigate("${NavGroup.IMAGEDETAIL}?${uiState.image[it]}")})
             }
         }
         Spacer(modifier = Modifier.height(200.dp))

@@ -47,7 +47,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ArticleList(
-    id : Int = 0,
+    id: Int = 0,
     name: String = "로딩",
     date: String = "로딩",
     title: String = "로딩",
@@ -57,7 +57,8 @@ fun ArticleList(
     comment: Long = 0,
     onBookmarkClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
-    navController: NavHostController
+    onArticleClick: () -> Unit = {},
+    onImageClick: () -> Unit ={}
 ) {
 
     Column(
@@ -70,7 +71,10 @@ fun ArticleList(
                 ),
                 interactionSource = remember { MutableInteractionSource() },
                 enabled = true,
-                onClick = {navController.navigate("${NavGroup.DETAIL}?$id")}
+                onClick = {
+                    onArticleClick()
+//                    navController.navigate("${NavGroup.DETAIL}?$id")
+                }
             )
     ) {
         Box(
@@ -134,7 +138,10 @@ fun ArticleList(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     LazyRow {
                         items(image.size) {
-                            ArticleImage(image = image[it], navController = navController)
+                            ArticleImage(image = image[it],
+                                onImageClick = {onImageClick()}
+                                //navController = navController
+                                )
                             Spacer(modifier = Modifier.width(6.dp))
                         }
                     }
@@ -174,7 +181,7 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleImage(image: String,navController: NavHostController, ) {
+fun ArticleImage(image: String, onImageClick : () -> Unit) {
     var isImageLoaded by remember { mutableStateOf(false) }
 
     Box {
@@ -194,8 +201,8 @@ fun ArticleImage(image: String,navController: NavHostController, ) {
                 .height(240.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .noRippleClickable {
-                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
-
+//                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
+                    onImageClick()
                 },
             model = image,
             contentDescription = null,

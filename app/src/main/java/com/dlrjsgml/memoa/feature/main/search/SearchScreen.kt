@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.component.items.SearchHistoryList
@@ -128,12 +129,15 @@ fun SearchScreen(
                                             date = article.createdAt,
                                             title = article.title,
                                             image = article.images.toImmutableList(),
-                                            profile = "https://image.kmib.co.kr/online_image/2020/0920/611718110015025888_4.jpg",
+                                            profile = article.authorProfileImage,
                                             tag = article.tags.toImmutableList(),
                                             comment = 1,
-                                            onBookmarkClick = { },
+                                            onBookmarkClick = {
+//                                                viewModel.bookmark(article.id)
+                                            },
                                             onCommentClick = {},
-                                            navController = navController
+                                            onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
+                                            onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
                                         )
                                     }
                                 }

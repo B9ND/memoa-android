@@ -104,7 +104,9 @@ fun DetailScreen(
                             val imageUrl = content.replace("★","")
                             ArticleImage(
                                 image = imageUrl,
-                                navController = navController
+                                onImageClick = {navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl")}
+
+//                                navController = navController
                             )
                             Log.d("디테일", "이미지 있음 ${content.toString().replace("★","")}");
                         } else {
