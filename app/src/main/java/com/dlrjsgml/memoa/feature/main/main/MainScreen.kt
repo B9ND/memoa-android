@@ -27,6 +27,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
 import com.dlrjsgml.memoa.remote.RetrofitClient
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.JJapList
@@ -115,7 +116,8 @@ fun MainScreen(
                                     viewModel.bookmark(article.id)
                                 },
                                 onCommentClick = {},
-                                navController = navController
+                                onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
+                                onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
                             )
                         }
                     }
