@@ -9,7 +9,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 import com.dlrjsgml.memoa.data.local.UserDatabase
-import com.dlrjsgml.memoa.feature.main.main.ArticlesSideEffect
 import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
 import com.dlrjsgml.memoa.network.main.ArticleResponse
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -48,7 +46,7 @@ class SearchViewModel(
     val uiEffect = _uiEffect.asSharedFlow()
 
 
-    val db = UserDatabase.getInstance()
+    private val room = UserDatabase.getInstance()
 
 
     fun beforeSearch(){
@@ -86,21 +84,21 @@ class SearchViewModel(
             val newDataObject = SearchHistoryEntity(
                 history = searchHistory
             )
-            db!!.searchHistoryDao().insert(newDataObject)
+            room!!.searchHistoryDao().insert(newDataObject)
             getData()
         }
     }
 
     fun deleteAllData(){
         viewModelScope.launch(Dispatchers.IO) {
-            db!!.searchHistoryDao().deleteAll()
+            room!!.searchHistoryDao().deleteAll()
             getData()
         }
     }
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = db!!.searchHistoryDao().getAll()
+            val data = room!!.searchHistoryDao().getAll()
             updateSearchHistory(data)
             _uiEffect.emit(SearchSideEffect.BeforeSearch)
             Log.d("ㅎㅇ", "${data}");

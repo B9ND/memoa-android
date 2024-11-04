@@ -70,6 +70,7 @@ fun DetailScreen(
             }
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,22 +94,23 @@ fun DetailScreen(
         )
         Spacer(modifier = Modifier.height(30.dp))
 
+
         Column(modifier = Modifier.padding(horizontal = 32.dp)) {
             Column {
                 Log.d("디테일", "자르기 : ${uiState.content}");
                 LazyColumn {
-                    items(boards.size) { board->
+                    items(boards.size) { board ->
                         val content = boards[board]
                         val firstChar = content.firstOrNull()
                         if (firstChar == '★') {
-                            val imageUrl = content.replace("★","")
+                            val imageUrl = content.replace("★", "")
                             ArticleImage(
                                 image = imageUrl,
-                                onImageClick = {navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl")}
+                                onImageClick = { navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl") }
 
 //                                navController = navController
                             )
-                            Log.d("디테일", "이미지 있음 ${content.toString().replace("★","")}");
+                            Log.d("디테일", "이미지 있음 ${content.toString().replace("★", "")}");
                         } else {
                             Text(
                                 text = content.toString(),
@@ -149,6 +151,7 @@ fun DetailScreen(
             }
         }
     }
+
 }
 
 

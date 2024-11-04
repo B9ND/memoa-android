@@ -4,16 +4,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dlrjsgml.memoa.MemoaApplication
+import com.dlrjsgml.memoa.data.local.bookmark.BookMarkDao
+import com.dlrjsgml.memoa.data.local.bookmark.BookMarkEntity
 import com.dlrjsgml.memoa.data.local.search.SearchHistoryDao
 import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 
 
 @Database(
-    entities = [SearchHistoryEntity::class],
+    entities = [SearchHistoryEntity::class,BookMarkEntity::class],
     version = 1
 )
 abstract class UserDatabase: RoomDatabase() {
     abstract fun searchHistoryDao(): SearchHistoryDao
+    abstract fun bookMarkDao(): BookMarkDao
 
     companion object {
         private var instance: UserDatabase? = null

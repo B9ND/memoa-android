@@ -19,6 +19,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 object RetrofitClient {
+
     private const val BASE_URL = BuildConfig.API_KEY
     var gson= GsonBuilder().setLenient().create()
     val logging = HttpLoggingInterceptor().apply {
@@ -27,6 +28,7 @@ object RetrofitClient {
 
     val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
         .addInterceptor(ResponseInterceptor()).build()
+
     val client = OkHttpClient.Builder()
         .addInterceptor(logging)
         .build()

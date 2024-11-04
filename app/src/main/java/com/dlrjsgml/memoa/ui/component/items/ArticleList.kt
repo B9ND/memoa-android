@@ -61,6 +61,7 @@ fun ArticleList(
     onImageClick: () -> Unit ={}
 ) {
 
+    
     Column(
         modifier = Modifier
             .clickable(
@@ -164,7 +165,7 @@ fun ArticleList(
                     Row {
                         BookMarkButton(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            onClick = onBookmarkClick
+                            onClick = {onBookmarkClick()}
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
