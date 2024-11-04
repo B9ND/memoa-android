@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.main.profile
+package com.dlrjsgml.memoa.feature.main.profile.my
 
 import android.os.Build
 import android.util.Log
@@ -42,6 +42,7 @@ import com.dlrjsgml.memoa.ui.component.items.FollowNumber
 import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
+import kotlinx.collections.immutable.toImmutableList
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -61,6 +62,7 @@ fun ProfileScreen(
             when(effect){
                 MyProfileEffect.Failed -> Log.d("프로필", "에러");
                 MyProfileEffect.Success -> {
+                    viewModel.getUsersArticles(uiState.nickname)
                     viewModel.getFollowSize(uiState.nickname)
                 }
             }
@@ -137,14 +139,30 @@ fun ProfileScreen(
             }
         }
 
-        items(6) {
+        items(uiState.articles.size) {
+            val article = uiState.articles[it]
             Box(modifier = Modifier.background(Color.White)) {
                 ArticleList(
-                    profile = "https://i.namu.wiki/i/slmFMXb1Fchs2zN0ZGOzqfuPDvhRS-H9eBp7Gp613-DNKi6i6Ct7eFkTUpauqv5HAYR97mrNqrvvcCDEyBdL_g.webp",
-//                    navController = navController
+                    id = article.id,
+                    name = article.author,
+                    date = article.createdAt,
+                    title = article.title,
+                    image = article.images.toImmutableList(),
+                    profile = article.authorProfileImage,
+                    tag = article.tags.toImmutableList(),
+                    comment = 1,
+                    onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${article.author}")},
+                    onBookmarkClick = {
+//                        viewModel.bookmark(article.id)
+                    },
+                    onCommentClick = {},
+                    onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
+                    onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
                 )
             }
-
+        }
+        if(uiState.articles.size <= 5) {
+            items(3) { Box(modifier = Modifier.fillMaxWidth().height(300.dp).background(Color.White))  }
         }
     }
 }

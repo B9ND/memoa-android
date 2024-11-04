@@ -1,8 +1,10 @@
-package com.dlrjsgml.memoa.feature.main.profile
+package com.dlrjsgml.memoa.feature.main.profile.my
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.memoa.feature.main.profile.user.UserArticlesSideEffect
+import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +22,8 @@ data class MyProfileState(
     val nickname: String = "",
     val description: String? = "",
     val profileImage: String = "",
-)
+    val articles: List<ArticleResponse> = listOf(),
+    )
 
 data class MyFollowingState(
     val following : Int =-1,
@@ -36,6 +39,10 @@ sealed interface MyFollowingEffect {
     data object Success : MyFollowingEffect
     data object Failed : MyFollowingEffect
 }
+sealed interface MyArticlesSideEffect {
+    data object Success : MyArticlesSideEffect
+    data object Failed : MyArticlesSideEffect
+}
 
 class ProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MyProfileState())
@@ -44,7 +51,8 @@ class ProfileViewModel : ViewModel() {
     private val _uiEffect = MutableSharedFlow<MyProfileEffect>()
     val uiEffect: SharedFlow<MyProfileEffect> = _uiEffect.asSharedFlow()
 
-
+    private val _userArticlesSideEffect = MutableSharedFlow<MyArticlesSideEffect>()
+    val userArticlesSideEffect: SharedFlow<MyArticlesSideEffect> = _userArticlesSideEffect.asSharedFlow()
     private val _followUiState = MutableStateFlow(MyFollowingState())
     val followUiState: StateFlow<MyFollowingState> = _followUiState.asStateFlow()
 
@@ -73,6 +81,25 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+
+    fun getUsersArticles(author: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.getUserArticles.getUserArticles(author)
+                Log.d("유저", "성공 : $response");
+                _uiState.update {
+                    it.copy(
+                        articles = response
+                    )
+                }
+                _userArticlesSideEffect.emit(MyArticlesSideEffect.Success)
+            } catch (e: Exception) {
+                Log.d("유저", "오류 : $e");
+                _userArticlesSideEffect.emit(MyArticlesSideEffect.Failed)
+            }
+        }
+
+    }
     fun getFollowSize(user:String){
         viewModelScope.launch(Dispatchers.IO){
             try {

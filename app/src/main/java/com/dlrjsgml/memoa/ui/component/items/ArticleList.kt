@@ -55,6 +55,7 @@ fun ArticleList(
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),
     comment: Long = 0,
+    onProfileClick: () -> Unit = {},
     onBookmarkClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onArticleClick: () -> Unit = {},
@@ -101,7 +102,8 @@ fun ArticleList(
                 AsyncImage(
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(CircleShape),  // 원형으로 이미지를 클립
+                        .clip(CircleShape)
+                        .noRippleClickable { onProfileClick() },  // 원형으로 이미지를 클립
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,  // 이미지를 원에 맞춰 자르기,

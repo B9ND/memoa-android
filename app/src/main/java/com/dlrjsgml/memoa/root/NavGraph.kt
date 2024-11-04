@@ -1,8 +1,6 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,8 +36,9 @@ import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
-import com.dlrjsgml.memoa.feature.main.profile.ProfileScreen
-import com.dlrjsgml.memoa.feature.main.profile.setting.SettingScreen
+import com.dlrjsgml.memoa.feature.main.profile.my.ProfileScreen
+import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
+import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -219,6 +218,16 @@ fun NavGraph(
                 }
                 composable(NavGroup.PROFILE) {
                     ProfileScreen(navController)
+                }
+                composable(route = "${NavGroup.USERPROFILE}?{name}",
+                    arguments = listOf(
+                        navArgument("name") { NavType.StringType }
+                    )){
+                    isShowNavBar = false
+                    val name =  it.arguments?.getString("name")?: ""
+                    UserProfileScreen(userName = name,
+                        navController = navController,
+                    )
                 }
                 composable(route = "${NavGroup.FOLLOWER}?{phone}?{checker}",
                     arguments = listOf(
