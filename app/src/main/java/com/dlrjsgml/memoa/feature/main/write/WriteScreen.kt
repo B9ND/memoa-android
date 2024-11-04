@@ -41,6 +41,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -84,7 +86,7 @@ fun WriteScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
-
+    val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -207,7 +209,7 @@ fun WriteScreen(
         Box {
             SimpleTextField(
                 hintColorWhite = true,
-                modifier = Modifier.padding(horizontal = 21.dp),
+                modifier = Modifier.padding(horizontal = 21.dp).focusRequester(focusRequester),
                 singleLine = false,
                 minLines = 14,
                 maxLines = 14,
@@ -286,6 +288,9 @@ fun WriteScreen(
             )
         }
     }
+//    LaunchedEffect(uiState.image) {
+//        focusRequester.requestFocus()
+//    }
 }
 
 @Preview
