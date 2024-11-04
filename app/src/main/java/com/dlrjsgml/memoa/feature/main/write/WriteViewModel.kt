@@ -38,9 +38,6 @@ data class WriteState(
     val isReleased : Boolean = true
 )
 
-data class ContentWriteState(
-    val content : String = ""
-)
 
 
 
@@ -68,8 +65,6 @@ class WriteViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(WriteState())
     val uiState = _uiState.asStateFlow()
 
-    private val _contentWriteState = MutableStateFlow(ContentWriteState())
-    val contentWriteState = _contentWriteState.asStateFlow()
 
 
     val customAlertDialogState: MutableState<CustomAlertDialogState> =
@@ -177,11 +172,11 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "Uploading file: ${multipartImage}")
                 Log.d("글쓰기", "ㅇㅇㅇㅇㅇ: ${response.url}")
                 _uiState.update { it.copy(image = it.image + response.url) }
-                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
+//                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
+                _uiState.update { it.copy(content = it.content + "\n📷${_uiState.value.image.size} 번째에 들어갈 이미지 입니다!\n") }
 
                 Log.d("글글", "ui 하나 : ${_uiState.value.content}");
 
-                _contentWriteState.update { it.copy(content = it.content + "\n[${_uiState.value.image.size}번 이미지가 들어갈 곳]\n") }
 
 
 
@@ -208,8 +203,23 @@ class WriteViewModel : ViewModel() {
 
     // 글 올리기
     fun postWrite() {
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                _uiState.update { state ->
+                    // 현재 content 값을 가져와 정규식을 통해 바꿔줌
+                    val updatedContent = state.content.replace(Regex("📷(\\d+) 번째에 들어갈 이미지 입니다!")) { matchResult ->
+                        // 정규식에서 숫자 부분을 추출하여 인덱스로 사용
+                        val index = (matchResult.groupValues[1].toIntOrNull() ?: 1) - 1
+                        // image 리스트의 index에 해당하는 값을 가져오거나 기본값 설정
+                        val image = _uiState.value.image.getOrNull(index) ?: "이미지 없음"
+                        // 교체할 텍스트 생성
+                        "✔★$image✔"
+                    }
+                    // 업데이트된 content 값으로 state 복사
+                    state.copy(content = updatedContent)
+                }
+
                 val writeData = WriteDTO(
                     title = uiState.value.title,
                     content = uiState.value.content,
