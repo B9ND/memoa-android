@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.main.profile.setting
+package com.dlrjsgml.memoa.feature.main.profile.my.setting
 
 import android.os.Build
 import androidx.annotation.RequiresApi

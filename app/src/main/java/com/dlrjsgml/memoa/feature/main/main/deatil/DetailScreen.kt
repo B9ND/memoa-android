@@ -90,7 +90,9 @@ fun DetailScreen(
             name = uiState.author,
             date = uiState.createdAt,
             title = uiState.title,
-            profile = uiState.authorProfileImage
+            profile = uiState.authorProfileImage,
+            onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}")},
+
         )
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -107,7 +109,6 @@ fun DetailScreen(
                             ArticleImage(
                                 image = imageUrl,
                                 onImageClick = { navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl") }
-
 //                                navController = navController
                             )
                             Log.d("디테일", "이미지 있음 ${content.toString().replace("★", "")}");

@@ -8,6 +8,8 @@ import com.dlrjsgml.memoa.network.follow.GetFollowingService
 import com.dlrjsgml.memoa.network.main.GetMainService
 import com.dlrjsgml.memoa.network.main.detail.DetailService
 import com.dlrjsgml.memoa.network.profile.GetProfileInfoService
+import com.dlrjsgml.memoa.network.profile.GetUserArticles
+import com.dlrjsgml.memoa.network.profile.GetUserProfileInfoService
 import com.dlrjsgml.memoa.network.write.WriteService
 import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
 import com.google.gson.GsonBuilder
@@ -49,9 +51,10 @@ object RetrofitClient {
     val getMainService : GetMainService by lazy { instance.create(GetMainService::class.java) }
     val getDetailService : DetailService by lazy { instance.create(DetailService::class.java) }
     val getProfileService : GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
+    val getUserProfileService : GetUserProfileInfoService by lazy { instance.create(GetUserProfileInfoService::class.java) }
     val getFollowingService : GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
     val getFollowersService : GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
     val getBookMarkService : GetBookMarkService by lazy { instance.create(GetBookMarkService::class.java) }
     val postBookMarkService : PostBookMarkService by lazy { instance.create(PostBookMarkService::class.java) }
-
+    val getUserArticles : GetUserArticles by lazy { instance.create(GetUserArticles::class.java) }
 }

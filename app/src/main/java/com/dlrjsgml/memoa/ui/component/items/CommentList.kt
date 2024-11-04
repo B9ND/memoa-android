@@ -39,6 +39,7 @@ fun CommentList(
     date: String = "ERROR",
     title: String = "ERROR",
     profile: String = "ERROR",
+    onProfileClick: () -> Unit = {},
 
     ) {
     Column {
@@ -58,7 +59,8 @@ fun CommentList(
                 AsyncImage(
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .noRippleClickable { onProfileClick() },
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop
