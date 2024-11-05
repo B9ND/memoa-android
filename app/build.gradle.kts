@@ -70,8 +70,6 @@ dependencies {
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.paging.compose.android)
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.kotlinx.collections.immutable)

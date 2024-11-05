@@ -3,6 +3,7 @@ package com.dlrjsgml.memoa.feature.main.main.deatil
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -71,61 +72,64 @@ fun DetailScreen(
         }
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(top = 32.dp)
-                .padding(horizontal = 20.dp)
-        ) {
-            BackButton {
-                navController.popBackStack()
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        CommentList(
-            name = uiState.author,
-            date = uiState.createdAt,
-            title = uiState.title,
-            profile = uiState.authorProfileImage,
-            onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}")},
-
-        )
-        Spacer(modifier = Modifier.height(30.dp))
-
-
-        Column(modifier = Modifier.padding(horizontal = 32.dp)) {
-            Column {
-                Log.d("디테일", "자르기 : ${uiState.content}");
-                LazyColumn {
-                    items(boards.size) { board ->
-                        val content = boards[board]
-                        val firstChar = content.firstOrNull()
-                        if (firstChar == '★') {
-                            val imageUrl = content.replace("★", "")
-                            ArticleImage(
-                                image = imageUrl,
-                                onImageClick = { navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl") }
-//                                navController = navController
-                            )
-                            Log.d("디테일", "이미지 있음 ${content.toString().replace("★", "")}");
-                        } else {
-                            Text(
-                                text = content.toString(),
-                                style = boardContent
-                            )
-                        }
-                    }
-//                }
+        item {
+            Row(
+                modifier = Modifier
+                    .padding(top = 32.dp)
+                    .padding(horizontal = 20.dp)
+            ) {
+                BackButton {
+                    navController.popBackStack()
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
-            TagLists(uiState.tags.toImmutableList(), mini = true)
+            CommentList(
+                name = uiState.author,
+                date = uiState.createdAt,
+                title = uiState.title,
+                profile = uiState.authorProfileImage,
+                onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}") },
+
+                )
+            Spacer(modifier = Modifier.height(30.dp))
+        }
+
+        items(boards.size) { board ->
+            val content = boards[board]
+            val firstChar = content.firstOrNull()
+            if (firstChar == '★') {
+                val imageUrl = content.replace("★", "")
+                Box(modifier = Modifier.padding(horizontal = 36.dp)) {
+                    ArticleImage(
+                        image = imageUrl,
+                        onImageClick = { navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl") }
+                    )
+                }
+
+                Log.d("디테일", "이미지 있음 ${content.replace("★", "")}");
+            } else {
+                Text(
+                    modifier = Modifier.padding(horizontal = 36.dp),
+                    text = content.toString(),
+                    style = boardContent
+                )
+            }
+//                }
+
+        }
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            Box(modifier = Modifier.padding(horizontal = 36.dp)){
+                TagLists(uiState.tags.toImmutableList(), mini = true)
+
+            }
             Spacer(modifier = Modifier.height(5.dp))
-            Row {
+            Row(modifier = Modifier.padding(horizontal = 36.dp)) {
                 Row {
                     CommentButton(onClick = { navController.navigate("${NavGroup.COMMENT}/phone=ddddddd") })
                     Spacer(modifier = Modifier.width(4.dp))
@@ -150,9 +154,11 @@ fun DetailScreen(
                     )
                 }
             }
-        }
-    }
 
+
+        }
+
+    }
 }
 
 

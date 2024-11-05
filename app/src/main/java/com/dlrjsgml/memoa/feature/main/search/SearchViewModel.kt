@@ -98,10 +98,15 @@ class SearchViewModel(
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = room!!.searchHistoryDao().getAll()
-            updateSearchHistory(data)
-            _uiEffect.emit(SearchSideEffect.BeforeSearch)
-            Log.d("ㅎㅇ", "${data}");
+            try{
+                val data = room!!.searchHistoryDao().getAll()
+                updateSearchHistory(data)
+                _uiEffect.emit(SearchSideEffect.BeforeSearch)
+                Log.d("ㅎㅇ", "${data}");
+            } catch (e:Exception){
+
+            }
+
         }
     }
 
