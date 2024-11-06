@@ -31,7 +31,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -68,6 +68,7 @@ dependencies {
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.zoomable)
     implementation (libs.androidx.room.runtime)
+    ksp( libs.androidx.room.compiler)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.paging.compose.android)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API

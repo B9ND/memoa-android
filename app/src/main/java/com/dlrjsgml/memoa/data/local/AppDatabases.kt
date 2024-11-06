@@ -11,12 +11,11 @@ import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 
 
 @Database(
-    entities = [SearchHistoryEntity::class,BookMarkEntity::class],
+    entities = [SearchHistoryEntity::class],
     version = 1
 )
 abstract class UserDatabase: RoomDatabase() {
     abstract fun searchHistoryDao(): SearchHistoryDao
-    abstract fun bookMarkDao(): BookMarkDao
 
     companion object {
         private var instance: UserDatabase? = null

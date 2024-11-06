@@ -26,6 +26,7 @@ pagingRuntimeKtx = "3.3.2"
 retrofit = "2.11.0"
 roomCompiler = "2.6.1"
 appcompat = "1.7.0"
+roomCompilerVersion = "2.6.4"
 zoomable = "1.6.2"
 pagingComposeAndroid = "3.3.2"
 

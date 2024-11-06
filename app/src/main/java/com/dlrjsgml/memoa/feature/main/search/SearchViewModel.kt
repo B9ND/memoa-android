@@ -84,7 +84,7 @@ class SearchViewModel(
             val newDataObject = SearchHistoryEntity(
                 history = searchHistory
             )
-            room!!.searchHistoryDao().insert(newDataObject)
+            room!!.searchHistoryDao().insertWithLimit(newDataObject)
             getData()
         }
     }
@@ -102,7 +102,7 @@ class SearchViewModel(
                 val data = room!!.searchHistoryDao().getAll()
                 updateSearchHistory(data)
                 _uiEffect.emit(SearchSideEffect.BeforeSearch)
-                Log.d("ㅎㅇ", "${data}");
+                Log.d("ㅎㅇ", "$data");
             } catch (e:Exception){
 
             }

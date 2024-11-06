@@ -7,7 +7,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.dlrjsgml.memoa.data.local.UserDatabase
 import com.dlrjsgml.memoa.data.local.bookmark.BookMarkEntity
 import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
 import com.dlrjsgml.memoa.network.main.ArticleResponse
@@ -48,8 +47,6 @@ class MainViewModel : ViewModel() {
 
     private val _bookMarkUiEffect = MutableSharedFlow<BookMarkDoSideEffect>()
     val bookMarkUiEffect = _bookMarkUiEffect.asSharedFlow()
-
-    private val room = UserDatabase.getInstance()
 
     fun getArticles() {
         viewModelScope.launch(Dispatchers.IO) {
