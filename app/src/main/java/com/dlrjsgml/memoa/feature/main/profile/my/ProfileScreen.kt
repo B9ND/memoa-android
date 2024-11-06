@@ -130,7 +130,7 @@ fun ProfileScreen(
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        FollowNumber(number = followUiState.follower, text = "팔로우", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true")})
+                        FollowNumber(number = followUiState.follower, text = "팔로워", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true")})
                         Spacer(modifier = Modifier.width(35.dp))
                         FollowNumber(number = followUiState.following, text = "팔로잉", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false")})
                     }

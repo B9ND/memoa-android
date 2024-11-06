@@ -46,6 +46,19 @@ fun ImageDetailScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .align(Alignment.Center)
+                .zoomable(zoomState)
+        ) {
+            AsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = imgUrl,
+                contentDescription = null
+            )
+        }
         Box(modifier = Modifier.padding(top = 32.dp, start = 20.dp)){
             Row(
                 modifier = Modifier.noRippleClickable(
@@ -72,19 +85,7 @@ fun ImageDetailScreen(
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .align(Alignment.Center)
-                .zoomable(zoomState)
-        ) {
-            AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = imgUrl,
-                contentDescription = null
-            )
-        }
+
     }
 
 

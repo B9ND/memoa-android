@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 
@@ -59,6 +60,7 @@ fun BookMarkScreen(
                 ArticleList(
                     name = bookMark.nickname,
                     date = bookMark.createdAt,
+                    onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}")} ,
                     )
             }
         }

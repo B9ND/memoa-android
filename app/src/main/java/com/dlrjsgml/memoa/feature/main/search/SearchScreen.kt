@@ -117,7 +117,12 @@ fun SearchScreen(
                     is FetchFlow.Success -> {
                         val articlesItems = state.data.collectAsLazyPagingItems()
                         if (articlesItems.itemCount == 0) {
-                            Text("검색한 결과 없음", style = boardContent1)
+                            LazyColumn {
+                                items(5){
+                                    JJapList()
+
+                                }
+                            }
                         } else {
                             LazyColumn {
                                 items(articlesItems.itemCount) {
@@ -136,8 +141,8 @@ fun SearchScreen(
 //                                                viewModel.bookmark(article.id)
                                             },
                                             onCommentClick = {},
-                                            onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
-                                            onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
+                                            onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                                            onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
                                         )
                                     }
                                 }
@@ -149,6 +154,7 @@ fun SearchScreen(
         }
     }
 }
+
 
 suspend fun returnTrueAfterDelay(): Boolean {
     delay(1000) // 1000ms (1초) 지연

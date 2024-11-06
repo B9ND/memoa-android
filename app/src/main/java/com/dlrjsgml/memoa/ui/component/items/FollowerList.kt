@@ -44,12 +44,12 @@ fun FollowerList(
             Box {
                 Box(
                     modifier = Modifier
-                        .size(62.dp)
+                        .size(52.dp)
                         .background(color = Gray20, CircleShape)
                 )
                 AsyncImage(
                     modifier = Modifier
-                        .size(62.dp)
+                        .size(52.dp)
                         .clip(CircleShape),
                     model = profile,
                     contentDescription = null,
