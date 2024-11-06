@@ -36,7 +36,7 @@ class  ArticlePagingSource(
             // withContext(Dispatcher.IO) { ... } block since Retrofit's Coroutine
             // CallAdapter dispatches on a worker thread.
             val response =
-                RetrofitClient.getMainService.getArticles(search = searchQuery, tags = arrayListOf("기타"),
+                RetrofitClient.getMainService.getArticles(search = searchQuery, tags = arrayListOf("대구소프트웨어마이스터고등학교"),
                     page = pageNumber,
                     size = 10
                 )

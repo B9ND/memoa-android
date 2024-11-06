@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.items.FollowerList
 import kotlinx.collections.immutable.persistentListOf
@@ -78,14 +79,20 @@ fun FollowerScreen(
                 items(uiState.value.followings.size) {
                     FollowerList(
                         name = uiState.value.followings[it].nickname,
-                        profile = uiState.value.followings[it].profileImage
+                        profile = uiState.value.followings[it].profileImage,
+                        onClick = {
+                            navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followings[it].nickname}")
+                        }
                     )
                 }
             } else {
                 items(uiState.value.followers.size) {
                     FollowerList(
                         name = uiState.value.followers[it].nickname,
-                        profile = uiState.value.followers[it].profileImage
+                        profile = uiState.value.followers[it].profileImage,
+                        onClick = {
+                            navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followers[it].nickname}")
+                        }
                     )
                 }
             }

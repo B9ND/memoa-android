@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.FollowerButton
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray20
@@ -32,9 +33,9 @@ import com.dlrjsgml.memoa.ui.theme.boardName
 fun FollowerList(
     name: String = "ERROR",
     profile: String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyB_Y4x_2qADG2TQ2-lR8BB53v9UpL7a2Cjg&s",
+    onClick: () -> Unit = {}
 ) {
     Column {
-
         Row(
             modifier = Modifier
                 .background(Color.White)
@@ -50,7 +51,8 @@ fun FollowerList(
                 AsyncImage(
                     modifier = Modifier
                         .size(52.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .noRippleClickable { onClick() },
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop
@@ -59,6 +61,7 @@ fun FollowerList(
 
             Text(modifier = Modifier
                 .align(Alignment.CenterVertically)
+
                 .padding(start = 16.dp), text = name, style = boardName)
             Spacer(modifier = Modifier.weight(1f))
             FollowerButton(modifier = Modifier.align(Alignment.CenterVertically)) {

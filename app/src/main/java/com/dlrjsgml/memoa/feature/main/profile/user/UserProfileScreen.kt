@@ -77,7 +77,6 @@ fun UserProfileScreen(
         }
     }
 
-    BackHandlers(navController = navController)
     Box{
         LazyColumn(
             modifier = Modifier
@@ -89,15 +88,10 @@ fun UserProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    Image(
+                    Spacer(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .padding(top = 24.dp, end = 12.dp)
-                            .noRippleClickable {
-                                navController.navigate(NavGroup.SETTING)
-                            },
-                        painter = painterResource(id = R.drawable.ic_setting),
-                        contentDescription = null
+                            .padding(top = 46.dp, end = 12.dp)
                     )
                 }
             }

@@ -15,6 +15,7 @@ android {
     namespace = "com.dlrjsgml.memoa"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.dlrjsgml.memoa"
         minSdk = 24
