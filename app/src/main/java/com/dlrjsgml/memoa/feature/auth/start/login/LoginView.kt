@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.login
+package com.dlrjsgml.memoa.feature.auth.start.login
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -43,13 +43,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
 
-
-import com.dlrjsgml.memoa.feature.SignUp.email.addFocusCleaner
-import com.dlrjsgml.memoa.root.NavGroup
-
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.addFocusCleaner
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -151,7 +150,7 @@ fun LoginScreen(
                     onValueChange = viewModel::updateEmail,
                     hint = emailText,
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester)
+                    modifier = Modifier.focusRequester(focusRequester),
                 )
                 Spacer(Modifier.height(10.dp))
                 MemoaTextField(

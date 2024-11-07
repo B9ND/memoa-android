@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.data
+package com.dlrjsgml.memoa.network.data
 
 data class LoginRequest (
     val email : String,

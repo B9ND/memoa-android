@@ -1,6 +1,8 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
+import android.provider.ContactsContract.CommonDataKinds.Email
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,9 +29,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.feature.SignUp.email.EmailScreen
-import com.dlrjsgml.memoa.feature.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
+import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
 import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
 import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
@@ -37,7 +39,6 @@ import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileScreen
-import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
@@ -83,7 +84,7 @@ fun NavGraph(
                                 White,
                             )
                             .padding(horizontal = 16.dp)
-                            .padding(bottom = 10.dp, top = 0.dp)
+                            .padding(bottom = 15.dp, top = 4.dp)
                     ) {
                         BottomNavItem(
                             modifier = Modifier
@@ -134,7 +135,7 @@ fun NavGraph(
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .offset(y = (-24).dp)
+                            .offset(y = (-28).dp)
                             .noRippleClickable(onClick = {
                                 navController.navigate(NavGroup.WRITE)
                             })
@@ -218,16 +219,6 @@ fun NavGraph(
                 }
                 composable(NavGroup.PROFILE) {
                     ProfileScreen(navController)
-                }
-                composable(route = "${NavGroup.USERPROFILE}?{name}",
-                    arguments = listOf(
-                        navArgument("name") { NavType.StringType }
-                    )){
-                    isShowNavBar = false
-                    val name =  it.arguments?.getString("name")?: ""
-                    UserProfileScreen(userName = name,
-                        navController = navController,
-                    )
                 }
                 composable(route = "${NavGroup.FOLLOWER}?{phone}?{checker}",
                     arguments = listOf(
