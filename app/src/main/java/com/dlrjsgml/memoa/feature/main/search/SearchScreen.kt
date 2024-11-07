@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.feature.main.search
 
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -111,6 +112,7 @@ fun SearchScreen(
 
                     is FetchFlow.Success -> {
                         val articlesItems = state.data.collectAsLazyPagingItems()
+                        BackHandler { viewModel.startFetching() }
                         if (articlesItems.itemCount == 0) {
                             LazyColumn {
                                 items(5){

@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -215,19 +216,19 @@ fun ArticleImage(image: String, onImageClick : () -> Unit) {
     }
 }
 
-//
-//@Preview
-//@Composable
-//fun ArticleListPreview() {
-//    ArticleList(
-//        name = "김은찬",
-//        date = "2024년 8월 13일",
-//        title = "국어, 과학 필기 공유합니다!",
-//        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
-//        tag = persistentListOf("국어", "과학"),
-//        image = persistentListOf(
-//            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
-//            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
-//        )
-//    )
-//}
+
+@Preview
+@Composable
+fun ArticleListPreview() {
+    ArticleList(
+        name = "김은찬",
+        date = "2024년 8월 13일",
+        title = "국어, 과학 필기 공유합니다!",
+        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
+        tag = persistentListOf("국어", "과학"),
+        image = persistentListOf(
+            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
+            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
+        )
+    )
+}

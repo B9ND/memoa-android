@@ -1,26 +1,43 @@
 package com.dlrjsgml.memoa.feature.main.main
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -32,6 +49,7 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.JJapList
+import com.dlrjsgml.memoa.ui.theme.Gray10
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
@@ -44,6 +62,7 @@ fun MainScreen(
     LaunchedEffect(Unit) {
         viewModel.getArticles()
     }
+    val lazyState = rememberLazyListState()
     val id = 1 // 특정 ID를 사용하여 글 가져오기
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
@@ -53,6 +72,7 @@ fun MainScreen(
         viewModel.getArticles()
         pullRefreshState.endRefresh()
     }
+    val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
     Box(
         modifier = Modifier
@@ -61,32 +81,57 @@ fun MainScreen(
     )
     Box(
         modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)
-    ){
+    ) {
 
         Column(
         ) {
             HomeBackOnPressed()
-            Row(
-                modifier = Modifier
-                    .background(Color.White)
-                    .padding(start = 25.dp, end = 27.dp, top = 10.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                MemoaDropDown(
-                    selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
-                    modifier = Modifier.weight(6f)
-                ) {
-                }
-                MemoaDropDown(
-                    selectList = listOf("1학년", "2학년", "3학년"),
-                    modifier = Modifier.weight(2.4f)
 
-                ) {
+            AnimatedVisibility(
+                visible = lazyState.isScrollingUp().value,
+                enter = slideInVertically {
+                    // Slide in from 40 dp from the top.
+                    with(density) { -40.dp.roundToPx() }
+                } + expandVertically(
+                    // Expand from the top.
+                    expandFrom = Alignment.Top
+                ) + fadeIn(
+                    // Fade in with the initial alpha of 0.3f.
+                    initialAlpha = 0.5f
+                ),
+                exit = slideOutVertically() + shrinkVertically() + fadeOut()
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .background(Color.White)
+                            .padding(start = 25.dp, end = 27.dp, top = 10.dp)
+                            .padding(vertical = 8.dp)
+                    ) {
+                        MemoaDropDown(
+                            selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
+                            modifier = Modifier.weight(6f)
+                        ) {
+                        }
+                        MemoaDropDown(
+                            selectList = listOf("1학년", "2학년", "3학년"),
+                            modifier = Modifier.weight(2.4f)
+
+                        ) {
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Gray10)
+                    )
                 }
+
             }
 
-
             LazyColumn(
+                state = lazyState
 //            userScrollEnabled = true
             ) {
                 when {
@@ -114,13 +159,13 @@ fun MainScreen(
                                 profile = article.authorProfileImage,
                                 tag = article.tags.toImmutableList(),
                                 comment = 1,
-                                onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${article.author}")},
+                                onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
                                 onBookmarkClick = {
                                     viewModel.bookmark(article.id)
                                 },
                                 onCommentClick = {},
-                                onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
-                                onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
+                                onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                                onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
                             )
                         }
                     }
@@ -139,4 +184,22 @@ fun MainScreen(
         )
     }
 
+}
+
+@Composable
+fun LazyListState.isScrollingUp(): State<Boolean> {
+    return produceState(initialValue = true) {
+        var lastIndex = 0
+        var lastScroll = Int.MAX_VALUE
+        snapshotFlow {
+            firstVisibleItemIndex to firstVisibleItemScrollOffset
+        }.collect { (currentIndex, currentScroll) ->
+            if (currentIndex != lastIndex || currentScroll != lastScroll) {
+                value = currentIndex < lastIndex ||
+                        (currentIndex == lastIndex && currentScroll < lastScroll)
+                lastIndex = currentIndex
+                lastScroll = currentScroll
+            }
+        }
+    }
 }
