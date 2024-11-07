@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.remote
 
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -19,6 +20,9 @@ class ResponseInterceptor : Interceptor {
             }
             402 -> {
                 // todo Control Error for Payment Required
+            }
+            403 -> {
+                Log.d("인터셉터", "403 에러");
             }
         }
         return response

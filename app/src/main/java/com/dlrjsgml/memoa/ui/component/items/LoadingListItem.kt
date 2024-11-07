@@ -112,13 +112,6 @@ fun JJapList(
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
                     modifier = Modifier
-                        .width(260.dp)
-                        .height(18.dp)
-                        .shimmerEffect()
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
                         .width(160.dp)
                         .height(18.dp)
                         .shimmerEffect()

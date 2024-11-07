@@ -8,6 +8,7 @@ import androidx.paging.PagingState
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.remote.TemporaryToken
+import kotlinx.coroutines.delay
 import java.io.IOException
 
 /**
@@ -26,6 +27,7 @@ class  ArticlePagingSource(
         // failures, or HttpException for any non-2xx HTTP status codes. This code reports all
         // errors to the UI, but you can inspect/wrap the exceptions to provide more context.
         return try {
+            delay(0)
             // Key may be null during a refresh, if no explicit key is passed into Pager
             // construction. Use 0 as default, because our API is indexed started at index 0
             val pageNumber = params.key ?: 0
@@ -33,6 +35,7 @@ class  ArticlePagingSource(
             // Suspending network load via Retrofit. This doesn't need to be wrapped in a
             // withContext(Dispatcher.IO) { ... } block since Retrofit's Coroutine
             // CallAdapter dispatches on a worker thread.
+
             val response =
                 RetrofitClient.getMainService.getArticles(search = searchQuery, tags = arrayListOf("대구소프트웨어마이스터고등학교"),
                     page = pageNumber,

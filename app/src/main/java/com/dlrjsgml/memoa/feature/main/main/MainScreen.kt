@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,10 +27,13 @@ import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
+import com.dlrjsgml.memoa.remote.RetrofitClient
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,16 +44,16 @@ fun MainScreen(
     LaunchedEffect(Unit) {
         viewModel.getArticles()
     }
-
     val id = 1 // 특정 ID를 사용하여 글 가져오기
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
     val pullRefreshState = rememberPullToRefreshState()
+    val coroutineScope = rememberCoroutineScope()
     if (pullRefreshState.isRefreshing) {
         viewModel.getArticles()
         pullRefreshState.endRefresh()
     }
-    Log.d("글보기 ", "헬로우월ㄷ ${lazyPagingItems.itemCount}");
+    Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,6 +62,7 @@ fun MainScreen(
     Box(
         modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)
     ){
+
         Column(
         ) {
             HomeBackOnPressed()
@@ -89,12 +95,11 @@ fun MainScreen(
                             JJapList()
                         }
                     }
-
-                    lazyPagingItems.loadState.append is LoadState.Loading -> {
-                        items(10) {
-                            JJapList()
-                        }
-                    }
+//                    lazyPagingItems.loadState.append is LoadState.Loading -> {
+//                        items(10) {
+//                            JJapList()
+//                        }
+//                    }
                 }
                 if (lazyPagingItems.itemCount != 0) {
                     items(lazyPagingItems.itemCount) {
@@ -109,9 +114,13 @@ fun MainScreen(
                                 profile = article.authorProfileImage,
                                 tag = article.tags.toImmutableList(),
                                 comment = 1,
-                                bookmarkClick = { },
-                                commentClick = {},
-                                navController = navController
+                                onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${article.author}")},
+                                onBookmarkClick = {
+                                    viewModel.bookmark(article.id)
+                                },
+                                onCommentClick = {},
+                                onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
+                                onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
                             )
                         }
                     }
@@ -125,6 +134,8 @@ fun MainScreen(
         PullToRefreshContainer(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
+            containerColor = Color.White,
+            contentColor = Color.Black
         )
     }
 

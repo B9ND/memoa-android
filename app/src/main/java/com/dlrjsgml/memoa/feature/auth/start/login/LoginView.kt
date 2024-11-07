@@ -174,23 +174,12 @@ fun LoginScreen(
 
                     onClick = {
                         viewModel.login(uiState.email, uiState.password)
+                        navController.navigate(NavGroup.MAIN)
                     }
                 )
 
 
             }
-            MemoaButton(
-                modifier = modifier
-                    .align(alignment = Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(55.dp),
-                text = "넘어가기",
-                enabled = true,
-
-                onClick = {
-                    navController.navigate(NavGroup.MAIN)
-                }
-            )
         }
     }
 }
