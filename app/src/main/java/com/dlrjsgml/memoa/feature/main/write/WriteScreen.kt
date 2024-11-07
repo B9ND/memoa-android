@@ -1,12 +1,10 @@
 package com.dlrjsgml.memoa.feature.main.write
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -41,15 +39,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
@@ -58,19 +56,16 @@ import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
 import com.dlrjsgml.memoa.ui.component.items.ArticleImage
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -83,6 +78,7 @@ fun WriteScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -139,7 +135,6 @@ fun WriteScreen(
                 }
                 is UpLoadImageSideEffect.Success -> {
                     viewModel.wrigingErrorAlert("이미지 업로드 성공")
-
                 }
             }
 
@@ -206,7 +201,7 @@ fun WriteScreen(
         Box {
             SimpleTextField(
                 hintColorWhite = true,
-                modifier = Modifier.padding(horizontal = 21.dp),
+                modifier = Modifier.padding(horizontal = 21.dp).focusRequester(focusRequester),
                 singleLine = false,
                 minLines = 14,
                 maxLines = 14,
@@ -264,6 +259,7 @@ fun WriteScreen(
                     disabledCheckedIconColor = Color.White,
                     disabledUncheckedThumbColor = Color.White,
                     disabledUncheckedTrackColor = Gray10,
+
                     disabledUncheckedBorderColor = Gray10,
                     disabledUncheckedIconColor = Gray10,
                 )
@@ -272,7 +268,8 @@ fun WriteScreen(
         Spacer(modifier = Modifier.height(20.dp))
         LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
             items(uiState.image.size){
-                ArticleImage(image = uiState.image[it], navController = navController)
+                ArticleImage(image = uiState.image[it],
+                    onImageClick = {navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.image[it]}")})
             }
         }
         Spacer(modifier = Modifier.height(200.dp))
@@ -283,6 +280,9 @@ fun WriteScreen(
             )
         }
     }
+//    LaunchedEffect(uiState.image) {
+//        focusRequester.requestFocus()
+//    }
 }
 
 @Preview
@@ -290,3 +290,4 @@ fun WriteScreen(
 private fun afdjadfj() {
 //    WriteScreen()
 }
+

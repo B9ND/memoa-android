@@ -1,7 +1,6 @@
 package com.dlrjsgml.memoa.ui.component.items
 
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,15 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
@@ -46,12 +41,13 @@ import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Gray40
 import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardName
+import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ArticleList(
-    id : Int = 0,
+    id: Int = 0,
     name: String = "로딩",
     date: String = "로딩",
     title: String = "로딩",
@@ -59,12 +55,14 @@ fun ArticleList(
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),
     comment: Long = 0,
-    bookmarkClick: () -> Unit = {},
-    commentClick: () -> Unit = {},
-    navController: NavHostController
+    onProfileClick: () -> Unit = {},
+    onBookmarkClick: () -> Unit = {},
+    onCommentClick: () -> Unit = {},
+    onArticleClick: () -> Unit = {},
+    onImageClick: () -> Unit ={}
 ) {
 
-
+    
     Column(
         modifier = Modifier
             .clickable(
@@ -75,7 +73,10 @@ fun ArticleList(
                 ),
                 interactionSource = remember { MutableInteractionSource() },
                 enabled = true,
-                onClick = {navController.navigate("${NavGroup.DETAIL}?$id")}
+                onClick = {
+                    onArticleClick()
+//                    navController.navigate("${NavGroup.DETAIL}?$id")
+                }
             )
     ) {
         Box(
@@ -101,7 +102,8 @@ fun ArticleList(
                 AsyncImage(
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(CircleShape),  // 원형으로 이미지를 클립
+                        .clip(CircleShape)
+                        .noRippleClickable { onProfileClick() },  // 원형으로 이미지를 클립
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,  // 이미지를 원에 맞춰 자르기,
@@ -139,7 +141,10 @@ fun ArticleList(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     LazyRow {
                         items(image.size) {
-                            ArticleImage(image = image[it], navController = navController)
+                            ArticleImage(image = image[it],
+                                onImageClick = {onImageClick()}
+                                //navController = navController
+                                )
                             Spacer(modifier = Modifier.width(6.dp))
                         }
                     }
@@ -149,7 +154,7 @@ fun ArticleList(
                 Spacer(modifier = Modifier.height(6.dp))
                 Row {
                     Row {
-                        CommentButton(onClick = commentClick)
+                        CommentButton(onClick = onCommentClick)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             modifier = Modifier.align(Alignment.CenterVertically),
@@ -162,7 +167,7 @@ fun ArticleList(
                     Row {
                         BookMarkButton(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            onClick = bookmarkClick
+                            onClick = {onBookmarkClick()}
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
@@ -179,7 +184,7 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleImage(image: String,navController: NavHostController, ) {
+fun ArticleImage(image: String, onImageClick : () -> Unit) {
     var isImageLoaded by remember { mutableStateOf(false) }
 
     Box {
@@ -199,8 +204,8 @@ fun ArticleImage(image: String,navController: NavHostController, ) {
                 .height(240.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .noRippleClickable {
-                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
-
+//                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
+                    onImageClick()
                 },
             model = image,
             contentDescription = null,

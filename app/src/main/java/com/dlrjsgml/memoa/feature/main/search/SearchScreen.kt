@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,27 +21,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
-import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
+import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
-import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.component.items.SearchHistoryList
 import com.dlrjsgml.memoa.ui.component.textfield.SearchTextField
 import com.dlrjsgml.memoa.ui.theme.boardContent1
-import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -59,7 +47,6 @@ fun SearchScreen(
         viewModel.getData()
         viewModel.beforeSearch()
     }
-<<<<<<< HEAD
 
     Column(
         Modifier
@@ -67,27 +54,12 @@ fun SearchScreen(
             .background(Color.White)
     ) {
         BackHandlers(navController = navController)
-=======
-    val searchText = buildAnnotatedString {
-        withStyle(
-            SpanStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        ) {
-            append("검색어")
-        }
-        append("를 입력하세요")
-    }
-    Column(Modifier.fillMaxSize().background(Color.White).verticalScroll(scrollState)) {
-//        BackHandlers(navController = navController)
->>>>>>> d5aeb34 (feat: singUpScreen)
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier.padding(horizontal = 24.dp),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,
-            hint = searchText,
+            hint = "검색어를 입력하세요",
             onClick = {
                 if (uiState.search.isNotEmpty()) {
                     viewModel.getSearchArticles()
@@ -151,12 +123,15 @@ fun SearchScreen(
                                             date = article.createdAt,
                                             title = article.title,
                                             image = article.images.toImmutableList(),
-                                            profile = "https://image.kmib.co.kr/online_image/2020/0920/611718110015025888_4.jpg",
+                                            profile = article.authorProfileImage,
                                             tag = article.tags.toImmutableList(),
                                             comment = 1,
-                                            bookmarkClick = { },
-                                            commentClick = {},
-                                            navController = navController
+                                            onBookmarkClick = {
+//                                                viewModel.bookmark(article.id)
+                                            },
+                                            onCommentClick = {},
+                                            onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                                            onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
                                         )
                                     }
                                 }

@@ -40,6 +40,7 @@ data class WriteState(
 
 
 
+
 data class CustomAlertDialogState(
     val content: String = "",
     val onClickConfirm: () -> Unit = {},
@@ -64,12 +65,15 @@ class WriteViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(WriteState())
     val uiState = _uiState.asStateFlow()
 
+
+
     val customAlertDialogState: MutableState<CustomAlertDialogState> =
         mutableStateOf<CustomAlertDialogState>(
             CustomAlertDialogState()
         )
 
 
+    // 다이얼로그
     fun wrigingErrorAlert(text : String) {
         customAlertDialogState.value = CustomAlertDialogState(
             content = text,
@@ -79,6 +83,7 @@ class WriteViewModel : ViewModel() {
         )
     }
 
+    // 다 적어주세요.
     fun plsAllWrite() {
         customAlertDialogState.value = CustomAlertDialogState(
             content = "제목과 내용을 다 적어 주세요",
@@ -93,6 +98,7 @@ class WriteViewModel : ViewModel() {
         customAlertDialogState.value = CustomAlertDialogState()
     }
 
+    // 태그 넣기
     fun fillTags(tag: String) {
         _uiState.update {
             if (tag in it.tags) {
@@ -104,6 +110,7 @@ class WriteViewModel : ViewModel() {
         Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
     }
 
+    // 이미지 압축
     private fun convertResizeImage(context: Context, imageUri: Uri): Uri? {
         val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
         val resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
@@ -145,7 +152,7 @@ class WriteViewModel : ViewModel() {
         return contentUri
     }
 
-
+    // 이미지 올리기
     fun uploadImage(uri: Uri, context: Context,fileBitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
@@ -165,7 +172,14 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "Uploading file: ${multipartImage}")
                 Log.d("글쓰기", "ㅇㅇㅇㅇㅇ: ${response.url}")
                 _uiState.update { it.copy(image = it.image + response.url) }
-                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
+//                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
+                _uiState.update { it.copy(content = it.content + "\n📷${_uiState.value.image.size} 번째에 들어갈 이미지 입니다!\n") }
+
+                Log.d("글글", "ui 하나 : ${_uiState.value.content}");
+
+
+
+
                 _uiEffect.emit(UpLoadImageSideEffect.Success)
 //                if(response.isSuccessful){
 //                    Log.d("글쓰기", "성공: ${response.body()}")
@@ -175,7 +189,6 @@ class WriteViewModel : ViewModel() {
 //                }else{
 //                    Log.d("글쓰기", "실패: ${response.body()}")
 //                }
-
             } catch (e: Exception) {
                 if(e.message == null){
                     _uiEffect.emit(UpLoadImageSideEffect.CompressionFailure)
@@ -188,10 +201,25 @@ class WriteViewModel : ViewModel() {
         }
     }
 
-
+    // 글 올리기
     fun postWrite() {
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                _uiState.update { state ->
+                    // 현재 content 값을 가져와 정규식을 통해 바꿔줌
+                    val updatedContent = state.content.replace(Regex("📷(\\d+) 번째에 들어갈 이미지 입니다!")) { matchResult ->
+                        // 정규식에서 숫자 부분을 추출하여 인덱스로 사용
+                        val index = (matchResult.groupValues[1].toIntOrNull() ?: 1) - 1
+                        // image 리스트의 index에 해당하는 값을 가져오거나 기본값 설정
+                        val image = _uiState.value.image.getOrNull(index) ?: "이미지 없음"
+                        // 교체할 텍스트 생성
+                        "✔★$image✔"
+                    }
+                    // 업데이트된 content 값으로 state 복사
+                    state.copy(content = updatedContent)
+                }
+
                 val writeData = WriteDTO(
                     title = uiState.value.title,
                     content = uiState.value.content,
@@ -221,5 +249,8 @@ class WriteViewModel : ViewModel() {
 
     fun updateContent(content: String) {
         _uiState.update { it.copy(content = content) }
+//        _contentWriteState.update { it.copy(content = content) }
+
     }
+
 }
