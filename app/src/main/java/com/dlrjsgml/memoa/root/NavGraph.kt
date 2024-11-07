@@ -40,6 +40,7 @@ import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
 import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
+import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -201,7 +202,9 @@ fun NavGraph(
                     SearchScreen(navController = navController)
                 }
                 composable(NavGroup.WRITE) {
-                    WriteScreen(navController = navController)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        WriteScreen(navController = navController)
+                    }
                 }
                 composable(NavGroup.BOOKMARK) {
                     BookMarkScreen(navController = navController)
@@ -220,6 +223,18 @@ fun NavGraph(
                 composable(NavGroup.PROFILE) {
                     ProfileScreen(navController)
                 }
+                composable(route = "${NavGroup.USERPROFILE}?{phone}",
+                    arguments = listOf(
+                        navArgument("phone") { NavType.StringType }
+                    )){
+                    isShowNavBar = false
+                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    UserProfileScreen(
+                        navController = navController,
+                        userName = phoneNum
+                    )
+                }
+
                 composable(route = "${NavGroup.FOLLOWER}?{phone}?{checker}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType },
