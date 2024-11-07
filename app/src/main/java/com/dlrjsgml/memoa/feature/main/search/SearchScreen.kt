@@ -30,6 +30,7 @@ import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
+import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.component.items.SearchHistoryList
 import com.dlrjsgml.memoa.ui.component.textfield.SearchTextField
 import com.dlrjsgml.memoa.ui.theme.boardContent1
@@ -111,7 +112,11 @@ fun SearchScreen(
                     is FetchFlow.Success -> {
                         val articlesItems = state.data.collectAsLazyPagingItems()
                         if (articlesItems.itemCount == 0) {
-                            Text("검색한 결과 없음", style = boardContent1)
+                            LazyColumn {
+                                items(5){
+                                    JJapList()
+                                }
+                            }
                         } else {
                             LazyColumn {
                                 items(articlesItems.itemCount) {

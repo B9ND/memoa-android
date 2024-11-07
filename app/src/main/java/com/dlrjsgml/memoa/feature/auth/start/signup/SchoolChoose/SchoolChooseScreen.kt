@@ -272,7 +272,7 @@ fun SchoolChooseScreen(
                     SearchTextField(
                         value = uiState.school,
                         onValueChange = viewModel::updateSchool,
-                        hint = schoolText,
+                        hint = schoolText.toString(),
                         maxLines = 1,
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )

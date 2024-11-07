@@ -108,7 +108,7 @@ private fun SearchTextFieldPreview() {
         onValueChange = {},
         hint = buildAnnotatedString {
             append("학교입력해라 게이야")
-        }
+        }.toString()
     )
 
 
