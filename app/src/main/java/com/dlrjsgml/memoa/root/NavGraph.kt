@@ -62,7 +62,7 @@ fun NavGraph(
         NavGroup.SIGNUP_SCHOOL,
         NavGroup.SIGNUP_SCHOOL_NOT_FOUND,
         NavGroup.WRITE,
-        NavGroup.IMAGEDETAIL
+        NavGroup.IMAGE_DETAIL
     )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
@@ -205,7 +205,7 @@ fun NavGraph(
                 composable(NavGroup.BOOKMARK) {
                     BookMarkScreen(navController = navController)
                 }
-                composable(route = "${NavGroup.IMAGEDETAIL}?{phone}",
+                composable(route = "${NavGroup.IMAGE_DETAIL}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )){

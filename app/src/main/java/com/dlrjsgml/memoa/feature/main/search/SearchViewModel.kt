@@ -89,6 +89,10 @@ class SearchViewModel(
         }
     }
 
+    fun startFetching() {
+        _uiState.update { it.copy(articles = FetchFlow.Fetching()) }
+    }
+
     fun deleteAllData(){
         viewModelScope.launch(Dispatchers.IO) {
             room!!.searchHistoryDao().deleteAll()

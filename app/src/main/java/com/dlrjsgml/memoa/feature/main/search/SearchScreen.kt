@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.feature.main.search
 
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -115,15 +117,23 @@ fun SearchScreen(
                     }
 
                     is FetchFlow.Success -> {
+                        Log.d("백백", "성공~");
+                        BackHandler {
+                            viewModel.startFetching()
+                            viewModel.getData()
+                            viewModel.beforeSearch()
+                            Log.d("백백", "ㅇㅇ : ");
+                        }
                         val articlesItems = state.data.collectAsLazyPagingItems()
                         if (articlesItems.itemCount == 0) {
                             LazyColumn {
                                 items(5){
                                     JJapList()
-
                                 }
                             }
                         } else {
+
+                            Log.d("백백", "레이지컬럼");
                             LazyColumn {
                                 items(articlesItems.itemCount) {
                                     val article = articlesItems[it]
@@ -160,3 +170,14 @@ suspend fun returnTrueAfterDelay(): Boolean {
     delay(1000) // 1000ms (1초) 지연
     return true
 }
+//
+//
+//@Preview
+//@Composable
+//private fun afdjkadjkfad(){
+//    SearchScreen(
+//        viewModel = viewModel(),
+//        navController = NavHostController(n)
+//    )
+//}
+//

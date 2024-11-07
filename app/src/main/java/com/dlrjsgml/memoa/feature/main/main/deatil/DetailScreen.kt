@@ -1,10 +1,8 @@
 package com.dlrjsgml.memoa.feature.main.main.deatil
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,16 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.feature.main.main.ArticlesSideEffect
-import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
@@ -40,13 +30,8 @@ import com.dlrjsgml.memoa.ui.component.items.ArticleImage
 import com.dlrjsgml.memoa.ui.component.items.CommentList
 import com.dlrjsgml.memoa.ui.component.items.TagLists
 import com.dlrjsgml.memoa.ui.theme.Gray40
-import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardContent
-import com.dlrjsgml.memoa.ui.theme.boardContent1
-import com.dlrjsgml.memoa.ui.theme.caption1Regular
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun DetailScreen(
@@ -54,7 +39,6 @@ fun DetailScreen(
     navController: NavHostController,
     boardNumber: String,
 ) {
-
     val uiState by viewModel.uiState.collectAsState()
     val boards = uiState.content.split("✔")
     LaunchedEffect(Unit) {
@@ -107,7 +91,7 @@ fun DetailScreen(
                 Box(modifier = Modifier.padding(horizontal = 36.dp)) {
                     ArticleImage(
                         image = imageUrl,
-                        onImageClick = { navController.navigate("${NavGroup.IMAGEDETAIL}?$imageUrl") }
+                        onImageClick = { navController.navigate("${NavGroup.IMAGE_DETAIL}?$imageUrl") }
                     )
                 }
 
@@ -126,7 +110,6 @@ fun DetailScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier.padding(horizontal = 36.dp)){
                 TagLists(uiState.tags.toImmutableList(), mini = true)
-
             }
             Spacer(modifier = Modifier.height(5.dp))
             Row(modifier = Modifier.padding(horizontal = 36.dp)) {

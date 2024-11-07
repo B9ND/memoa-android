@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         val imageLoader = ImageLoader.Builder(this)
             .memoryCache {
                 MemoryCache.Builder(this)
-                    .maxSizePercent(0.1) // 메모리 캐시 최대 크기 (앱 메모리의 10%)
+                    .maxSizePercent(0.10) // 메모리 캐시 최대 크기 (앱 메모리의 10%)
                     .build()
             }
             .diskCache {

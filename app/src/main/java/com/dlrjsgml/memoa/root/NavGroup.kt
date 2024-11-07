@@ -18,6 +18,6 @@ object NavGroup {
     const val USERPROFILE = "userprofile"
     const val SETTING = "setting"
     const val FOLLOWER = "follower"
-    const val IMAGEDETAIL = "imagedetail"
+    const val IMAGE_DETAIL = "imagedetail"
 
 }
