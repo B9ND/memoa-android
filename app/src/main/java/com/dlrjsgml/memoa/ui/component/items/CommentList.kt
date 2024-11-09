@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -22,8 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -74,7 +77,8 @@ fun CommentList(
             ) {
                 Row() {
                     Column {
-                        Text(modifier = Modifier, text = name, style = boardName)
+                        Text(modifier = Modifier.widthIn(max=130.dp), text = name, style = boardName,
+                            maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
@@ -109,7 +113,7 @@ fun CommentList(
 @Composable
 fun jadjf() {
     CommentList(
-        name = "김은찬",
+        name = "김은찬ddddddddd",
         date = "2024년 8월 13일",
         title = "국어, 과학 필기 공유합니다!",
         profile = "https://i.namu.wiki/i/PLZBtADX5SaHJjlBEq2PDLknUdpCM2mzRDdZhmnALxIDuxnypcMP0C3vq_vCa-HsQ50ECb0kFB48w8mFTz0nU6-v0ijnzMHKwzg2-JCi0dQ4XZYLIhNh-rcE_JnBEJbLHIW04BOSODr9x4rhR64S-Q.webp"

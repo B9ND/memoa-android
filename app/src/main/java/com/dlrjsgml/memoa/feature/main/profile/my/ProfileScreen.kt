@@ -106,7 +106,10 @@ fun ProfileScreen(
                 CircleProfile(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .offset(y = -60.dp),
+                        .offset(y = -60.dp)
+                        .noRippleClickable {
+                            navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.profileImage}")
+                        },
                     profile = uiState.profileImage
                 )
 

@@ -136,4 +136,8 @@ class UserProfileViewModel : ViewModel() {
             }
         }
     }
+
+    fun follow() {
+        viewModelScope.launch {  }
+    }
 }
