@@ -8,36 +8,41 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,14 +50,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
-import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.theme.Gray10
+import com.dlrjsgml.memoa.ui.theme.caption1
+import com.dlrjsgml.memoa.ui.theme.caption1Regular
+import com.dlrjsgml.memoa.ui.theme.caption2
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,6 +84,7 @@ fun MainScreen(
         pullRefreshState.endRefresh()
     }
 
+    Log.d("ㅎㅇ", "dlrjsgml44 Ok ${lazyPagingItems.loadState}");
     val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
     Box(
@@ -118,7 +128,7 @@ fun MainScreen(
                             viewModel.fillTags(it)
                         }
                         MemoaDropDown(
-                            selectList = listOf("국어","영어","수학","사회", "과학", "기타"),
+                            selectList = listOf("국어", "영어", "수학", "사회", "과학", "기타"),
                             modifier = Modifier.weight(1.85f)
                         ) {
                             viewModel.fillTags(it)
@@ -152,40 +162,61 @@ fun MainScreen(
                             JJapList()
                         }
                     }
+
+                    lazyPagingItems.loadState.refresh is LoadState.NotLoading -> {
+                        if (lazyPagingItems.itemCount != 0) {
+                            items(lazyPagingItems.itemCount) {
+                                val article = lazyPagingItems[it]
+                                if (article != null) {
+                                    ArticleList(
+                                        id = article.id,
+                                        name = article.author,
+                                        date = article.createdAt,
+                                        title = article.title,
+                                        image = article.images.toImmutableList(),
+                                        profile = article.authorProfileImage,
+                                        tag = article.tags.toImmutableList(),
+                                        comment = 1,
+                                        onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
+                                        onBookmarkClick = {
+                                            viewModel.bookmark(article.id)
+                                        },
+                                        onCommentClick = {},
+                                        onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                                        onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
+                                    )
+                                }
+                            }
+                        } else {
+                            items(1) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .align(Alignment.CenterHorizontally)
+                                )
+                                {
+                                    Spacer(modifier = Modifier.height(200.dp))
+                                    Image(
+                                        modifier = Modifier.align(Alignment.CenterHorizontally).size(180.dp),
+                                        painter = painterResource(id = R.drawable.no_article_man),
+                                        contentDescription = null
+                                    )
+                                    Text(
+                                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                                        text = "글이 없습니다.",
+                                        style = caption2
+                                    )
+                                }
+                            }
+                        }
+                    }
 //                    lazyPagingItems.loadState.append is LoadState.Loading -> {
 //                        items(10) {
 //                            JJapList()
 //                        }
 //                    }
                 }
-                if (lazyPagingItems.itemCount != 0) {
-                    items(lazyPagingItems.itemCount) {
-                        val article = lazyPagingItems[it]
-                        if (article != null) {
-                            ArticleList(
-                                id = article.id,
-                                name = article.author,
-                                date = article.createdAt,
-                                title = article.title,
-                                image = article.images.toImmutableList(),
-                                profile = article.authorProfileImage,
-                                tag = article.tags.toImmutableList(),
-                                comment = 1,
-                                onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
-                                onBookmarkClick = {
-                                    viewModel.bookmark(article.id)
-                                },
-                                onCommentClick = {},
-                                onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
-                                onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
-                            )
-                        }
-                    }
-                } else {
-                    items(10) {
-                        JJapList()
-                    }
-                }
+
             }
         }
         PullToRefreshContainer(
@@ -218,7 +249,7 @@ fun LazyListState.isScrollingUp(): State<Boolean> {
 
 @Preview
 @Composable
-private fun adfjkafdjkadfjkadfkj(){
+private fun adfjkafdjkadfjkadfkj() {
     MainScreen(
         viewModel = viewModel(),
         navController = rememberNavController()
