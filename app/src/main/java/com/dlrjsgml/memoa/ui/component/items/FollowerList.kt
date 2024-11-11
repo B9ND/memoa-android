@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -41,6 +42,8 @@ fun FollowerList(
                 .background(Color.White)
                 .fillMaxWidth()
                 .padding(start = 21.dp, top = 15.dp, bottom = 14.dp, end = 15.dp)
+                .noRippleClickable { onClick() },
+
         ) {
             Box {
                 Box(
@@ -51,21 +54,23 @@ fun FollowerList(
                 AsyncImage(
                     modifier = Modifier
                         .size(52.dp)
-                        .clip(CircleShape)
-                        .noRippleClickable { onClick() },
+                        .clip(CircleShape),
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )
             }
-
-            Text(modifier = Modifier
+            Box(modifier = Modifier.width(170.dp)
                 .align(Alignment.CenterVertically)
-
-                .padding(start = 16.dp), text = name, style = boardName)
+            ){
+                Text(modifier = Modifier
+                    .padding(start = 16.dp), text = name, style = boardName,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
             Spacer(modifier = Modifier.weight(1f))
             FollowerButton(modifier = Modifier.align(Alignment.CenterVertically)) {
             }
+
 
         }
         Box(

@@ -41,6 +41,7 @@ import com.dlrjsgml.memoa.ui.component.items.CircleProfile
 import com.dlrjsgml.memoa.ui.component.items.FollowNumber
 import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
 import com.dlrjsgml.memoa.ui.theme.Purple60
+import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
 import kotlinx.collections.immutable.toImmutableList
 
@@ -96,7 +97,7 @@ fun ProfileScreen(
         item {
             Box(
                 modifier = Modifier
-                    .padding(top = 120.dp)
+                    .padding(top = 94.dp)
                     .fillMaxWidth()
                     .background(
                         Color.White,
@@ -106,7 +107,10 @@ fun ProfileScreen(
                 CircleProfile(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .offset(y = -60.dp),
+                        .offset(y = -60.dp)
+                        .noRippleClickable {
+                            navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.profileImage}")
+                        },
                     profile = uiState.profileImage
                 )
 
@@ -116,11 +120,13 @@ fun ProfileScreen(
                         .padding(top = 60.dp)
                 ) {
                     Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        ChangeEditText(
-                            value = text.value,
-                            onValueChange = { text.value = it },
-                            hint = "gddg"
-                        )
+                        Text(text = uiState.nickname, style = boardName)
+
+//                        ChangeEditText(
+//                            value = text.value,
+//                            onValueChange = { text.value = it },
+//                            hint = "gddg"
+//                        )
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(

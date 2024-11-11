@@ -26,6 +26,10 @@ data class ArticlesState(
     val articles: Flow<PagingData<ArticleResponse>> = flowOf(),
 )
 
+data class TagState(
+    val tags: List<String> = arrayListOf(),
+)
+
 sealed interface ArticlesSideEffect {
     data object Success : ArticlesSideEffect
     data object Failure : ArticlesSideEffect
@@ -42,6 +46,9 @@ class MainViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ArticlesState())
     val uiState = _uiState.asStateFlow()
 
+    private val _tagUiState = MutableStateFlow(TagState())
+    val tagUiState = _tagUiState.asStateFlow()
+
     private val _uiEffect = MutableSharedFlow<ArticlesSideEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
@@ -56,15 +63,26 @@ class MainViewModel : ViewModel() {
                     enablePlaceholders = false,
                     initialLoadSize = 10
                 ),
-                    pagingSourceFactory = { ArticlePagingSource("") }).flow.cachedIn(viewModelScope)
+                    pagingSourceFactory = { ArticlePagingSource("",_tagUiState.value.tags) }).flow.cachedIn(viewModelScope)
                 _uiState.update { it.copy(articles = data) }
-                Log.d("메인", "뭐가문제임");
+                Log.d("메인", "${_tagUiState.value.tags}");
                 _uiEffect.emit(ArticlesSideEffect.Success)
             } catch (e: Exception) {
                 Log.d("태그", "dlrjsgml44 Ok");
                 _uiEffect.emit(ArticlesSideEffect.Failure)
             }
         }
+    }
+
+    fun fillTags(tag: String) {
+        _tagUiState.update {
+            if (tag in it.tags) {
+                it.copy(tags = it.tags)
+            } else {
+                it.copy(tags =  arrayListOf(tag))
+            }
+        }
+        getArticles()
     }
 
     fun bookmark(id: Int) {

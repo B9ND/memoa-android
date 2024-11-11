@@ -37,7 +37,7 @@ fun BottomNavItem(
         Image(
             modifier = Modifier
                 .size(
-                    30.dp
+                    26.dp
                 )
                 .align(Alignment.CenterHorizontally),
             painter = painterResource(id = resId),

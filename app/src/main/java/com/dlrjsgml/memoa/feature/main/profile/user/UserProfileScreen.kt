@@ -33,12 +33,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
+import com.dlrjsgml.memoa.ui.component.button.FollowerButton
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.CircleProfile
 import com.dlrjsgml.memoa.ui.component.items.FollowNumber
@@ -77,7 +79,7 @@ fun UserProfileScreen(
         }
     }
 
-    Box{
+    Box {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -109,7 +111,10 @@ fun UserProfileScreen(
                     CircleProfile(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
-                            .offset(y = -60.dp),
+                            .offset(y = -60.dp)
+                            .noRippleClickable {
+                                navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.profileImage}")
+                            },
                         profile = uiState.profileImage
                     )
 
@@ -139,7 +144,12 @@ fun UserProfileScreen(
                                 text = "팔로잉",
                                 onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false") })
                         }
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(15.dp))
+                        FollowerButton(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
+                            viewModel.follow()
+                        })
+                        Spacer(modifier = Modifier.height(25.dp))
+
                     }
                 }
             }
@@ -156,18 +166,25 @@ fun UserProfileScreen(
                         profile = article.authorProfileImage,
                         tag = article.tags.toImmutableList(),
                         comment = 1,
-                        onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${article.author}")},
+                        onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
                         onBookmarkClick = {
 //                        viewModel.bookmark(article.id)
                         },
                         onCommentClick = {},
-                        onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
-                        onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
+                        onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                        onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
                     )
                 }
             }
-            if(uiState.articles.size <= 5) {
-                items(3) { Box(modifier = Modifier.fillMaxWidth().height(300.dp).background(Color.White))  }
+            if (uiState.articles.size <= 5) {
+                items(3) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .background(Color.White)
+                    )
+                }
             }
         }
     }
@@ -178,6 +195,11 @@ fun UserProfileScreen(
 @Preview
 @Composable
 private fun afjkldadlkjfsdakljf() {
-//    ProfileScreen()
+    val navHostController = rememberNavController()
+
+    UserProfileScreen(
+        userName = "이건희",
+        navController = navHostController,
+    )
 }
 

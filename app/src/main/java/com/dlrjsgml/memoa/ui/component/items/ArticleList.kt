@@ -63,7 +63,7 @@ fun ArticleList(
     onImageClick: () -> Unit ={}
 ) {
 
-    
+
     Column(
         modifier = Modifier
             .clickable(

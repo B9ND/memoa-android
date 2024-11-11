@@ -23,7 +23,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object RetrofitClient {
 
     private const val BASE_URL = BuildConfig.API_KEY
-    var gson= GsonBuilder().setLenient().create()
+    var gson = GsonBuilder().setLenient().create()
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BASIC // 요청 메서드 및 URL만 로그에 남기기
     }
@@ -40,21 +40,25 @@ object RetrofitClient {
             .baseUrl(BASE_URL)
             .client(client)
             .client(interceptorClient)
-            .addConverterFactory(ScalarsConverterFactory.create() )
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
 
-    val writeService : WriteService by lazy { instance.create(WriteService::class.java) }
-    val upLoadImgService : UpLoadImgService by lazy { instance.create(UpLoadImgService::class.java) }
-    val getMainService : GetMainService by lazy { instance.create(GetMainService::class.java) }
-    val getDetailService : DetailService by lazy { instance.create(DetailService::class.java) }
-    val getProfileService : GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
-    val getUserProfileService : GetUserProfileInfoService by lazy { instance.create(GetUserProfileInfoService::class.java) }
-    val getFollowingService : GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
-    val getFollowersService : GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
-    val getBookMarkService : GetBookMarkService by lazy { instance.create(GetBookMarkService::class.java) }
-    val postBookMarkService : PostBookMarkService by lazy { instance.create(PostBookMarkService::class.java) }
-    val getUserArticles : GetUserArticles by lazy { instance.create(GetUserArticles::class.java) }
+    val writeService: WriteService by lazy { instance.create(WriteService::class.java) }
+    val upLoadImgService: UpLoadImgService by lazy { instance.create(UpLoadImgService::class.java) }
+    val getMainService: GetMainService by lazy { instance.create(GetMainService::class.java) }
+    val getDetailService: DetailService by lazy { instance.create(DetailService::class.java) }
+    val getProfileService: GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
+    val getUserProfileService: GetUserProfileInfoService by lazy {
+        instance.create(
+            GetUserProfileInfoService::class.java
+        )
+    }
+    val getFollowingService: GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
+    val getFollowersService: GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
+    val getBookMarkService: GetBookMarkService by lazy { instance.create(GetBookMarkService::class.java) }
+    val postBookMarkService: PostBookMarkService by lazy { instance.create(PostBookMarkService::class.java) }
+    val getUserArticles: GetUserArticles by lazy { instance.create(GetUserArticles::class.java) }
 }

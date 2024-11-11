@@ -66,7 +66,9 @@ class SearchViewModel(
                     enablePlaceholders = false,
                     initialLoadSize = 10
                 ),
-                    pagingSourceFactory = { ArticlePagingSource(uiState.value.search) }).flow.cachedIn(viewModelScope)
+                    pagingSourceFactory = { ArticlePagingSource(uiState.value.search,
+                        arrayListOf()
+                    ) }).flow.cachedIn(viewModelScope)
                 Log.d("확인", uiState.value.search);
                 _uiState.update { it.copy(articles = FetchFlow.Success(data)) }
                 _uiEffect.emit(SearchSideEffect.Success)

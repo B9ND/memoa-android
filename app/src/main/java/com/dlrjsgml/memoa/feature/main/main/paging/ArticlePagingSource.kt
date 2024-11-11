@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.feature.main.main.paging
 
 import android.net.http.HttpException
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresExtension
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -19,7 +20,8 @@ import java.io.IOException
  * Note that the key type is Int, since we're using page number to load a page.
  */
 class  ArticlePagingSource(
-    val searchQuery : String
+    private val searchQuery : String,
+    private val searchTag : List<String>
 ) : PagingSource<Int, ArticleResponse>() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleResponse> {
@@ -37,10 +39,12 @@ class  ArticlePagingSource(
             // CallAdapter dispatches on a worker thread.
 
             val response =
-                RetrofitClient.getMainService.getArticles(search = searchQuery, tags = arrayListOf("대구소프트웨어마이스터고등학교"),
+                RetrofitClient.getMainService.getArticles(search = searchQuery, tags = if(searchTag.isEmpty()) arrayListOf("대구소프트웨어마이스터고등학교") else searchTag ,
                     page = pageNumber,
                     size = 10
                 )
+            Log.d("메인", "${arrayListOf("대구소프트웨어마이스터고등학교")+searchTag}");
+
 
             // Since 0 is the lowest page number, return null to signify no more pages should
             // be loaded before it.

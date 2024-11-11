@@ -6,8 +6,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -20,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -35,6 +39,7 @@ import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.theme.Purple20
 import com.dlrjsgml.memoa.ui.theme.boardContent1
+import com.dlrjsgml.memoa.ui.theme.caption1Regular
 
 @Composable
 fun MemoaDropDown(
@@ -46,7 +51,6 @@ fun MemoaDropDown(
 ) {
     var expandStatus by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(selectList[0]) }
-
     val isSelected = remember { mutableStateOf(true) }
 
 
@@ -59,26 +63,36 @@ fun MemoaDropDown(
         })
         .background(color = Purple20, shape = shape)
     ) {
-        Image(
+        Row(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-                .rotate(if (expandStatus) 0F else 180F), painter = painterResource(
-                id = R.drawable.ic_dropdown
-            ), contentDescription = null
-        )
+                .align(Alignment.Center)
+                .padding(vertical = 7.dp)
+                .padding(start = 14.dp, end = 10.dp)
 
-        Text(
-            text = selectedText,
-            color = Black,
-            style = boardContent1.copy(fontWeight = FontWeight.Medium),
-            maxLines = 1,
-            modifier = Modifier
-                .padding(start = 24.dp, end = 30.dp)
-                .padding(vertical = 8.dp)
-                .align(Alignment.Center),
-            overflow = TextOverflow.Ellipsis
-        )
+        ) {
+
+            Text(
+                text = selectedText,
+                color = Black,
+                style = caption1Regular.copy(fontSize = 16.sp),
+                maxLines = 1,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.width(2.dp))
+            Image(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .rotate(if (expandStatus) 0F else 180F), painter = painterResource(
+                    id = R.drawable.ic_dropdown
+
+                ), contentDescription = null
+            )
+
+        }
+
+
 
 
 
@@ -120,10 +134,23 @@ fun MemoaDropDown(
 @Preview
 @Composable
 private fun DropDownTwoPreView() {
-    MemoaDropDown(
-        selectList = listOf("대구소프트웨어마이스터고등학교", "2학년", "3학년"),
-        modifier = Modifier.width(340.dp),
+    Row(
+        modifier = Modifier
+            .background(Color.White)
+            .padding(start = 8.dp, end = 16.dp, top = 10.dp)
+            .padding(vertical = 8.dp)
     ) {
-
+        MemoaDropDown(
+            selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
+        ) {
+        }
+        MemoaDropDown(
+            selectList = listOf("과목", "2학년", "3학년"),
+        ) {
+        }
+        MemoaDropDown(
+            selectList = listOf("1학년", "2학년", "3학년"),
+        ) {
+        }
     }
 }

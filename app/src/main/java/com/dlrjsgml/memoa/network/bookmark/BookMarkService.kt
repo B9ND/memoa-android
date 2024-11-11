@@ -7,7 +7,10 @@ import retrofit2.http.Query
 data class BookMarkResponse(
     val nickname : String,
     val postId : Int,
+    val title : String,
+    val profileImage : String,
     val createdAt : String,
+
 )
 
 interface GetBookMarkService {

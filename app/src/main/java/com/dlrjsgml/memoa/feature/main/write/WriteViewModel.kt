@@ -33,7 +33,7 @@ import java.io.FileOutputStream
 data class WriteState(
     val title: String = "",
     val content: String = "",
-    val tags: List<String> = arrayListOf("대구소프트웨어마이스터고등학교"),
+    val tags: List<String> = arrayListOf("대구소프트웨어마이스터고등학교","1학년"),
     val image: List<String> = emptyList(),
     val isReleased : Boolean = true
 )
