@@ -28,15 +28,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
 import com.dlrjsgml.memoa.root.NavGroup
+import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.component.items.SearchHistoryList
@@ -104,7 +107,6 @@ fun SearchScreen(
                                     uiState.searchHistory.reversed()
                                         .forEachIndexed { index, searchHistory ->
                                             if (index >= 4) return@forEachIndexed
-
                                             if (searchHistory.history.isNotEmpty()) {
                                                 SearchHistoryList(
                                                     content = searchHistory.history,
@@ -117,6 +119,10 @@ fun SearchScreen(
                                             }
                                         }
                                 }
+                                Box(modifier = Modifier.fillMaxWidth().weight(1f).noRippleClickable {
+                                    keyboardController?.hide()
+
+                                })
                             }
                         }
                     }
@@ -165,7 +171,9 @@ fun SearchScreen(
                                     )
                                     {
                                         Image(
-                                            modifier = Modifier.align(Alignment.CenterHorizontally).size(180.dp),
+                                            modifier = Modifier
+                                                .align(Alignment.CenterHorizontally)
+                                                .size(180.dp),
                                             painter = painterResource(id = R.drawable.no_article_man),
                                             contentDescription = null
                                         )
