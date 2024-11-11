@@ -72,7 +72,7 @@ fun UserProfileScreen(
 
                 UserProfileEffect.Success -> {
                     viewModel.getUsersArticles(uiState.nickname)
-                    viewModel.getFollowSize(uiState.nickname)
+                    viewModel.getFollowSize()
 
                 }
             }

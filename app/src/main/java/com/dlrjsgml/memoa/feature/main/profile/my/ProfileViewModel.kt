@@ -103,10 +103,10 @@ class ProfileViewModel : ViewModel() {
     fun getFollowSize(user:String){
         viewModelScope.launch(Dispatchers.IO){
             try {
-                val followingResponse = RetrofitClient.getFollowingService.getFollowingList(TemporaryToken.AccessToken,user)
+                val followingResponse = RetrofitClient.getFollowingService.getFollowingList(user)
                 Log.d("팔로우", "팔로잉 : $followingResponse");
 
-                val followersResponse = RetrofitClient.getFollowersService.getFollowersList(TemporaryToken.AccessToken,user)
+                val followersResponse = RetrofitClient.getFollowersService.getFollowersList(user)
                 Log.d("팔로우", "팔로우 : $followersResponse");
 
 
