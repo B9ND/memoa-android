@@ -59,7 +59,9 @@ fun BookMarkScreen(
                 val bookMark = uiState.bookMarks[it]
                 ArticleList(
                     name = bookMark.nickname,
+                    profile = bookMark.profileImage,
                     date = bookMark.createdAt,
+                    title = bookMark.title,
                     onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}")} ,
                     )
             }

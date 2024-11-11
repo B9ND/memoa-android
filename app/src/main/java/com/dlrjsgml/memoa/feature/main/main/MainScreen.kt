@@ -38,9 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
@@ -72,6 +74,7 @@ fun MainScreen(
         viewModel.getArticles()
         pullRefreshState.endRefresh()
     }
+
     val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
     Box(
@@ -105,19 +108,28 @@ fun MainScreen(
                     Row(
                         modifier = Modifier
                             .background(Color.White)
-                            .padding(start = 25.dp, end = 27.dp, top = 10.dp)
-                            .padding(vertical = 8.dp)
+                            .padding(top = 10.dp)
+                            .padding(vertical = 8.dp, horizontal = 14.dp)
                     ) {
                         MemoaDropDown(
                             selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
-                            modifier = Modifier.weight(6f)
+                            modifier = Modifier.weight(5.5f)
                         ) {
+                            viewModel.fillTags(it)
+                        }
+                        MemoaDropDown(
+                            selectList = listOf("국어","영어","수학","사회", "과학", "기타"),
+                            modifier = Modifier.weight(1.85f)
+                        ) {
+                            viewModel.fillTags(it)
+
                         }
                         MemoaDropDown(
                             selectList = listOf("1학년", "2학년", "3학년"),
-                            modifier = Modifier.weight(2.4f)
-
+                            modifier = Modifier.weight(2.1f)
                         ) {
+                            viewModel.fillTags(it)
+
                         }
                     }
                     Box(
@@ -202,4 +214,13 @@ fun LazyListState.isScrollingUp(): State<Boolean> {
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun adfjkafdjkadfjkadfkj(){
+    MainScreen(
+        viewModel = viewModel(),
+        navController = rememberNavController()
+    )
 }
