@@ -43,98 +43,75 @@ import com.dlrjsgml.memoa.ui.theme.caption2
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MemoaTextField(
+fun MemoaDropDownTextField(
     modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
+    value: String, // This value can potentially be removed if not used
+    onValueChange: (String) -> Unit = {}, // This function can potentially be removed if not used
     hint: AnnotatedString,
     enabled: Boolean = true,
-    singleLine: Boolean = true,
-    maxLines: Int = 1,
     shape: Shape = RoundedCornerShape(12.dp),
     textButton: Boolean = false,
-    textButtonVal: String = "",
     textButtonOnClick: () -> Unit = {},
     firstFocus: Boolean
 ) {
     var isFocused by remember { mutableStateOf(false) }
 
-    Box {
-        BasicTextField(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color.White,
-                    shape = shape
-                )
-                .onFocusChanged {
-                    isFocused = it.isFocused
-                }
-            ,
-            value = value,
-            onValueChange = onValueChange,
-            enabled = enabled,
-            singleLine = singleLine,
-            textStyle = caption2,
-            maxLines = maxLines,
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = modifier
-                        .padding(vertical = 14.dp)
-                        .padding(start = 55.dp, end = 12.dp)
-                ) {
-                    if (value.isEmpty()) {
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterStart),
-                            text = hint, style = caption2.copy(fontSize = 14.sp),
-                            color = Color.Gray
-                        )
-                    }
-                    innerTextField()
-                }
-            },
-            keyboardOptions = if(firstFocus) KeyboardOptions( imeAction = ImeAction.Next ) else KeyboardOptions( imeAction = ImeAction.Done ),
-        )
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = Color.White,
+                shape = shape
+            )
+            .onFocusChanged {
+                isFocused = it.isFocused
+            }
+            .clickable (
+                onClick = textButtonOnClick
+            )
+    ) {
         Row(
             modifier = modifier
                 .align(Alignment.CenterStart)
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 modifier = modifier
                     .padding(start = 6.dp)
-                    ,
+                ,
                 painter = painterResource(id = R.drawable.ic_token_id_text_field),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.weight(1f))
 
-            if (textButton) {
-                TextButton(onClick = textButtonOnClick) {
-                    Text(text = textButtonVal, style = caption1, color = Purple60)
-                }
-            }
+            Image(painter = painterResource(R.drawable.dropdown),contentDescription = null, Modifier.size(10.dp), contentScale = ContentScale.Crop)
 
         }
-
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(vertical = 14.dp)
+                .padding(start = 55.dp, end = 12.dp),
+            text = hint,
+            style = caption2.copy(fontSize = 14.sp),
+            color = Color.Gray
+        )
     }
 
 }
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-fun MemoaTextFieldPreview() {
-    MemoaTextField(
-        value = "",
-        onValueChange = {},
+fun MemoaDropDownTextFieldPreview() {
+    MemoaDropDownTextField(
+        value = "Test Value", // This can be an empty string if not used
+        onValueChange = {}, // This can be an empty function if not used
         hint = buildAnnotatedString {
             append("dgod")
         },
         textButton = true,
-        textButtonVal = "인증",
         firstFocus = true
     )
 }

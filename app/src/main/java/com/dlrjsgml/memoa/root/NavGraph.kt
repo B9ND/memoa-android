@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -34,11 +33,15 @@ import com.dlrjsgml.memoa.feature.main.profile.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.SchoolChoose.SchoolChooseScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailViewModel
 import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreenViewModel
 import com.dlrjsgml.memoa.feature.auth.start.signup.noschool.NoSchoolScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreenViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
@@ -158,14 +161,26 @@ fun NavGraph(
                 composable(NavGroup.SIGNUP_EMAIL) {
                     EmailScreen(navController = navController)
                 }
-                composable(NavGroup.SIGNUP_PASSWORD) {
-                    PasswordScreen(navController = navController)
+                composable("${NavGroup.SIGNUP_PASSWORD}?{email}") {
+                    val email = it.arguments?.getString("email")?: ""
+                    PasswordScreen(navController = navController, email = email)
                 }
-                composable(NavGroup.SIGNUP_NICKNAME) {
-                    NameScreen(navController = navController)
+                composable("${NavGroup.SIGNUP_NICKNAME}?{email}?{password}") {
+                    val email = it.arguments?.getString("email")?: ""
+                    val password = it.arguments?.getString("password")?: ""
+                    NameScreen(navController = navController, email = email, password = password)
                 }
-                composable(NavGroup.SIGNUP_SCHOOL) {
-                    SchoolChooseScreen(navController = navController)
+                composable("${NavGroup.SIGNUP_SCHOOL}?{email}?{password}?{nickname}") {
+                    val email = it.arguments?.getString("email")?: ""
+                    val password = it.arguments?.getString("password")?: ""
+                    val nickname = it.arguments?.getString("nickname")?: ""
+                    SchoolChooseScreen(
+                        navController = navController,
+                        viewModel = SchoolChooseScreenViewModel(),
+                        email = email,
+                        password = password,
+                        nickname = nickname
+                    )
                 }
                 composable(NavGroup.SIGNUP_SCHOOL_NOT_FOUND) {
                     NoSchoolScreen(navController = navController)
@@ -198,7 +213,9 @@ fun NavGraph(
                     SearchScreen(navController = navController)
                 }
                 composable(NavGroup.WRITE) {
-                    WriteScreen(navController = navController)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        WriteScreen(navController = navController)
+                    }
                 }
                 composable(NavGroup.BOOKMARK) {
                     BookMarkScreen(navController = navController)

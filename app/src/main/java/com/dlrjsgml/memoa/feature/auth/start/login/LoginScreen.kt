@@ -48,8 +48,6 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)

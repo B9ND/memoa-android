@@ -1,20 +1,16 @@
 package com.dlrjsgml.memoa.feature.auth.start.login
 
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.network.data.ApiService
-import com.dlrjsgml.memoa.network.data.LoginRequest
+import com.dlrjsgml.memoa.network.data.login.LoginRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
-import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 data class TextState(
     val email: String = "leegeh1213@gmail.com",
@@ -34,10 +30,6 @@ class LoginViewModel : ViewModel() {
         _uiState.update { it.copy(password = password) }
     }
 
-    private val retrofit = RetrofitClient.instance
-
-    private val apiService = retrofit.create(ApiService::class.java)
-
     private val _loginState = MutableStateFlow("")
     val loginState = _loginState.asStateFlow()
 
@@ -45,7 +37,7 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val loginRequest = LoginRequest(email, password)
-                val response = apiService.login(loginRequest)
+                val response = RetrofitClient.getLoginService.login(loginRequest)
                 Log.d("login", "성공 : ${response.access}")
             } catch (e: HttpException) {
                 Log.d("login", e.code().toString())

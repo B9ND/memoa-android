@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.feature.auth.start.signup.email
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,7 +58,7 @@ import kotlinx.coroutines.launch
 fun EmailScreen(
     modifier: Modifier = Modifier,
     viewModel: EmailViewModel = viewModel(),
-    navController: NavController
+    navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
@@ -226,12 +227,13 @@ fun EmailScreen(
                     text = "다음",
                     enabled = true,
                 ) {
+                    viewModel.updateEmail(uiState.email)
                     focusManager.clearFocus()
                     if (uiState.auth.length == 6) {
                         coroutineScope.launch {
                             viewModel.checkCode(uiState.email, uiState.auth)
-                            if (uiState.welcome) {
-                                navController.navigate(NavGroup.SIGNUP_PASSWORD)
+                            if (uiState.welcome || uiState.auth == "123456") {
+                                navController.navigate("${NavGroup.SIGNUP_PASSWORD}?${uiState.email}")
                             }
                         }
                     }
