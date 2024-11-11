@@ -4,19 +4,15 @@ package com.dlrjsgml.memoa.feature.main.profile.user
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
-import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -48,6 +44,11 @@ sealed interface UserArticlesSideEffect {
     data object Failed : UserArticlesSideEffect
 }
 
+sealed interface FollowEffect {
+    data object Success : FollowEffect
+    data object Failed : FollowEffect
+}
+
 
 class UserProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UserProfileState())
@@ -65,6 +66,8 @@ class UserProfileViewModel : ViewModel() {
     private val _userArticlesSideEffect = MutableSharedFlow<UserArticlesSideEffect>()
     val userArticlesSideEffect: SharedFlow<UserArticlesSideEffect> = _userArticlesSideEffect.asSharedFlow()
 
+    private val _followEffect = MutableSharedFlow<FollowEffect>()
+    val followEffect: SharedFlow<FollowEffect> = _followEffect.asSharedFlow()
 
     fun getUsersArticles(author: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -106,26 +109,26 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    fun getFollowSize(user: String) {
+    fun getFollowSize() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val followingResponse = RetrofitClient.getFollowingService.getFollowingList(
-                    TemporaryToken.AccessToken,
-                    user
+                val userFollowingResponse = RetrofitClient.getFollowingService.getFollowingList(
+                    _uiState.value.nickname
                 )
-                Log.d("팔로우", "팔로잉 : $followingResponse");
+                Log.d("팔로우", "팔로잉 : ${_uiState.value.nickname}");
+                Log.d("팔로우", "팔로잉 : ${userFollowingResponse}");
 
-                val followersResponse = RetrofitClient.getFollowersService.getFollowersList(
-                    TemporaryToken.AccessToken,
-                    user
+
+                val userFollowersResponse = RetrofitClient.getFollowersService.getFollowersList(
+                    _uiState.value.nickname
                 )
-                Log.d("팔로우", "팔로우 : $followersResponse");
+                Log.d("팔로우", "팔로워 : $userFollowersResponse");
 
 
                 _followUiState.update {
                     it.copy(
-                        following = followingResponse.size,
-                        follower = followersResponse.size
+                        following = userFollowingResponse.size,
+                        follower = userFollowersResponse.size
                     )
                 }
                 _followingUiEffect.emit(UserFollowingEffect.Success)
@@ -138,6 +141,15 @@ class UserProfileViewModel : ViewModel() {
     }
 
     fun follow() {
-        viewModelScope.launch {  }
+        viewModelScope.launch(Dispatchers.IO) {
+            try{
+                val response = RetrofitClient.followService.follow(uiState.value.nickname)
+                Log.d("팔로우", "팔로우 : $response");
+                getFollowSize()
+                _followEffect.emit(FollowEffect.Success)
+            } catch (e:Exception){
+                _followEffect.emit(FollowEffect.Failed)
+            }
+        }
     }
 }

@@ -28,8 +28,8 @@ class MainActivity : ComponentActivity() {
             }
             .diskCache {
                 DiskCache.Builder()
-                    .directory(cacheDir.resolve("coil_cache")) // 캐시 디렉토리 지정
-                    .maxSizeBytes(10L * 200L * 200L) // 디스크 캐시 최대 크기 10MB
+                    .directory(cacheDir.resolve("coil_cache"))
+                    .maxSizeBytes(10L * 300L * 300L)
                     .build()
             }
             .build()

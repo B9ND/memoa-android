@@ -42,9 +42,9 @@ class FollowViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO){
             try {
                 val followingResponse = RetrofitClient.getFollowingService.getFollowingList(
-                    TemporaryToken.AccessToken,user)
+                    user)
                 val followersResponse = RetrofitClient.getFollowersService.getFollowersList(
-                    TemporaryToken.AccessToken,user)
+                    user)
                 _uiState.update {
                     it.copy(
                         followings = followingResponse,

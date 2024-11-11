@@ -41,20 +41,10 @@ fun BookMarkScreen(
             .background(color = Color.White)
     ) {
         BackHandlers(navController = navController)
-        Spacer(modifier = Modifier.height(30.dp))
-        LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
-            items(selectTags.size) {
-                MemoaCheckBox(
-                    text = selectTags[it],
-                    onClick = { viewModel.fillTags(selectTags[it]) } // Pass the single tag
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
         LazyColumn {
+            item{
+                Spacer(modifier = Modifier.height(30.dp))
+            }
             items(uiState.bookMarks.size){
                 val bookMark = uiState.bookMarks[it]
                 ArticleList(
