@@ -31,18 +31,6 @@ class BookMarkViewModel : ViewModel() {
     private val _uiEffect = MutableSharedFlow<BookMarkSideEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
-    fun fillTags(tag: String) {
-        _uiState.update {
-            if(tag in it.tags){
-                it.copy(tags = it.tags - arrayListOf(tag).toSet())
-            }
-            else{
-                it.copy(tags = it.tags + arrayListOf(tag))
-            }
-        }
-        Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
-    }
-
     fun getBookMarks(){
         viewModelScope.launch(Dispatchers.IO) {
             try {
