@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
@@ -208,9 +209,13 @@ fun Modifier.addFocusCleaner(
     }
 }
 //
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//@Preview
-//fun EmailScreenPreview() {
-//    PasswordScreen()
-//}
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+@Preview
+fun EmailScreenPreview() {
+    PasswordScreen(
+        modifier = Modifier,
+        navController = rememberNavController(),
+        email = "fdadf"
+    )
+}

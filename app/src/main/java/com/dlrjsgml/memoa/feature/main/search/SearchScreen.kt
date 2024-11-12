@@ -25,15 +25,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-<<<<<<< HEAD
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-=======
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
->>>>>>> origin/feature/SignUpServer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -77,13 +73,9 @@ fun SearchScreen(
             modifier = Modifier.padding(horizontal = 24.dp),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,
-<<<<<<< HEAD
-            hint = "검색어를 입력하세요",
-=======
             hint = buildAnnotatedString {
                 append("검색어를 입력하세요")
-            },
->>>>>>> origin/feature/SignUpServer
+            }.toString(),
             onClick = {
                 if (uiState.search.isNotEmpty()) {
                     keyboardController?.hide()

@@ -35,10 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
-<<<<<<< HEAD:app/src/main/java/com/dlrjsgml/memoa/feature/auth/start/signup/SchoolChoose/SchoolChooseScreen.kt
 import androidx.compose.ui.focus.FocusRequester
-=======
->>>>>>> origin/feature/SignUpServer:app/src/main/java/com/dlrjsgml/memoa/feature/auth/start/signup/schoolchoose/SchoolChooseScreen.kt
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput

@@ -1,17 +1,14 @@
 package com.dlrjsgml.memoa.remote
 
 import com.dlrjsgml.memoa.BuildConfig
-<<<<<<< HEAD
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
 import com.dlrjsgml.memoa.network.follow.FollowService
-=======
 import com.dlrjsgml.memoa.network.data.login.LoginService
 import com.dlrjsgml.memoa.network.data.school.SchoolService
 import com.dlrjsgml.memoa.network.data.signup.GetCodeService
 import com.dlrjsgml.memoa.network.data.signup.LastSignupService
 import com.dlrjsgml.memoa.network.data.signup.SendCodeService
->>>>>>> origin/feature/SignUpServer
 import com.dlrjsgml.memoa.network.follow.GetFollowersService
 import com.dlrjsgml.memoa.network.follow.GetFollowingService
 import com.dlrjsgml.memoa.network.main.GetMainService
@@ -31,27 +28,17 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 object RetrofitClient {
-<<<<<<< HEAD
 
     private const val BASE_URL = BuildConfig.API_KEY
     var gson = GsonBuilder().setLenient().create()
-=======
-    private val BASE_URL = BuildConfig.API_KEY
-    var gson= GsonBuilder().setLenient().create()
->>>>>>> origin/feature/SignUpServer
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY // 요청 메서드 및 URL만 로그에 남기기
     }
 
-<<<<<<< HEAD
     val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
         .addInterceptor(ResponseInterceptor()).build()
 
     val client = OkHttpClient.Builder()
-=======
-    val interceptorClient = OkHttpClient().newBuilder()
-        .addInterceptor(ResponseInterceptor())
->>>>>>> origin/feature/SignUpServer
         .addInterceptor(logging)
         .build()
 
@@ -65,7 +52,6 @@ object RetrofitClient {
     }
 
 
-<<<<<<< HEAD
     val writeService: WriteService by lazy { instance.create(WriteService::class.java) }
     val upLoadImgService: UpLoadImgService by lazy { instance.create(UpLoadImgService::class.java) }
     val getMainService: GetMainService by lazy { instance.create(GetMainService::class.java) }
@@ -82,18 +68,13 @@ object RetrofitClient {
     val getBookMarkService: GetBookMarkService by lazy { instance.create(GetBookMarkService::class.java) }
     val postBookMarkService: PostBookMarkService by lazy { instance.create(PostBookMarkService::class.java) }
     val getUserArticles: GetUserArticles by lazy { instance.create(GetUserArticles::class.java) }
-=======
-    val writeService : WriteService by lazy { instance.create(WriteService::class.java) }
-    val upLoadImgService : UpLoadImgService by lazy { instance.create(UpLoadImgService::class.java) }
-    val getMainService : GetMainService by lazy { instance.create(GetMainService::class.java) }
-    val getDetailService : DetailService by lazy { instance.create(DetailService::class.java) }
-    val getProfileService : GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
-    val getFollowingService : GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
-    val getFollowersService : GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
     val getSchoolService: SchoolService by lazy { instance.create(SchoolService::class.java) }
+
     val getLoginService: LoginService by lazy { instance.create(LoginService::class.java) }
+
     val sendCodeService: SendCodeService by lazy { instance.create(SendCodeService::class.java) }
+
     val getCodeService: GetCodeService by lazy { instance.create(GetCodeService::class.java) }
+
     val signupService: LastSignupService by lazy { instance.create(LastSignupService::class.java) }
->>>>>>> origin/feature/SignUpServer
 }
