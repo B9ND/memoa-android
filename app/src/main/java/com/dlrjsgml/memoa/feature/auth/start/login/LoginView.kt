@@ -57,13 +57,23 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = viewModel(),
-    navController: NavController
+    navController: NavController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val loginState by viewModel.loginState.collectAsState()
+    LaunchedEffect(viewModel) {
+        viewModel.uiEffect.collect { effect ->
+            when (effect) {
+                LoginSideEffect.Success -> {
+                    navController.navigate(NavGroup.MAIN)
+                }
 
+                LoginSideEffect.Failed -> {}
+            }
+        }
+    }
 
     val emailText = buildAnnotatedString {
         withStyle(
@@ -175,7 +185,7 @@ fun LoginScreen(
 
                     onClick = {
                         viewModel.login(uiState.email, uiState.password)
-                        navController.navigate(NavGroup.MAIN)
+//                        navController.navigate(NavGroup.MAIN)
                     }
                 )
 
@@ -184,9 +194,11 @@ fun LoginScreen(
         }
     }
 }
+
 fun Modifier.addFocusCleaner(
     focusManager: FocusManager,
-    doOnClear: () -> Unit = {}): Modifier {
+    doOnClear: () -> Unit = {},
+): Modifier {
     return this.pointerInput(Unit) {
         detectTapGestures(onTap = {
             doOnClear()
