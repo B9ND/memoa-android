@@ -3,6 +3,7 @@ package com.dlrjsgml.memoa.feature.main.follower
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.memoa.feature.main.profile.user.FollowEffect
 import com.dlrjsgml.memoa.network.profile.ProfileResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.remote.TemporaryToken
@@ -38,7 +39,6 @@ class FollowViewModel : ViewModel() {
 
     fun getFollow(user:String) : String{
         Log.d("팔로우", "함수를 부름");
-
         viewModelScope.launch(Dispatchers.IO){
             try {
                 val followingResponse = RetrofitClient.getFollowingService.getFollowingList(
@@ -51,6 +51,7 @@ class FollowViewModel : ViewModel() {
                         followers = followersResponse
                     )
                 }
+
                 _uiEffect.emit(FollowSideEffect.Success)
             }catch (e:Exception){
                 Log.d("팔로우", "뷰모델에서 에러 : $e");
@@ -60,7 +61,15 @@ class FollowViewModel : ViewModel() {
         return "했음"
     }
 
-
+    fun follow(userName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try{
+                val response = RetrofitClient.followService.follow(userName)
+                Log.d("팔로우", "팔로우 : $response");
+            } catch (e:Exception){
+            }
+        }
+    }
 
     fun changeToFollowers() {
         viewModelScope.launch(Dispatchers.IO) {

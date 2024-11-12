@@ -59,7 +59,7 @@ fun UserProfileScreen(
     val text = remember { mutableStateOf("이건희") }
     val uiState by viewModel.uiState.collectAsState()
     val followUiState by viewModel.followUiState.collectAsState()
-
+    Log.d("성공", "dlrjsgml44 Ok ${uiState.followed}");
     LaunchedEffect(Unit) {
         viewModel.getUserProfileInfo(userName)
     }
@@ -145,9 +145,12 @@ fun UserProfileScreen(
                                 onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false") })
                         }
                         Spacer(modifier = Modifier.height(15.dp))
-                        FollowerButton(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                            viewModel.follow()
-                        })
+                        FollowerButton(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            enabled = uiState.followed,
+                            onClick = {
+                                viewModel.follow(uiState.nickname)
+                            })
                         Spacer(modifier = Modifier.height(25.dp))
 
                     }

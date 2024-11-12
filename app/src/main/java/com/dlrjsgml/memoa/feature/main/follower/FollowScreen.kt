@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -41,11 +40,13 @@ fun FollowerScreen(
 
     val uiState = viewModel.uiState.collectAsState()
     Log.d("팔팔", userId);
-    var selectedItem by remember { mutableStateOf(if(followingChecker == "true") "팔로우" else "팔로잉") }
+    var selectedItem by remember { mutableStateOf(if (followingChecker == "true") "팔로우" else "팔로잉") }
     LaunchedEffect(Unit) {
         if (followingChecker == "true") viewModel.changeToFollowers() else viewModel.changeToFollowings()
         viewModel.getFollow(userId)
     }
+    Log.d("팔로우", "팔로잉 ㅎㅇ ${uiState.value.followings}");
+    Log.d("팔로우", "팔로잉 ㅎㅇ ${uiState.value.followers}");
 
     Column(
         modifier = Modifier
@@ -61,15 +62,19 @@ fun FollowerScreen(
         DodamSegmentedButton(
             segments = persistentListOf(
                 DodamSegment(
-                    selected = selectedItem.isOut(),
-                    onClick = { selectedItem = "팔로우"
-                              viewModel.changeToFollowers()},
+                    selected = selectedItem.isFollow(),
+                    onClick = {
+                        selectedItem = "팔로우"
+                        viewModel.changeToFollowers()
+                    },
                     text = "팔로우",
                 ),
                 DodamSegment(
-                    selected = !selectedItem.isOut(),
-                    onClick = { selectedItem = "팔로잉"
-                              viewModel.changeToFollowings()},
+                    selected = !selectedItem.isFollow(),
+                    onClick = {
+                        selectedItem = "팔로잉"
+                        viewModel.changeToFollowings()
+                    },
                     text = "팔로잉",
                 ),
             ),
@@ -82,6 +87,10 @@ fun FollowerScreen(
                         profile = uiState.value.followings[it].profileImage,
                         onClick = {
                             navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followings[it].nickname}")
+                        },
+                        onFollowClick = {
+                            viewModel.follow(uiState.value.followings[it].nickname)
+                            viewModel.getFollow(userId)
                         }
                     )
                 }
@@ -90,8 +99,13 @@ fun FollowerScreen(
                     FollowerList(
                         name = uiState.value.followers[it].nickname,
                         profile = uiState.value.followers[it].profileImage,
+                        buttonEnabled = uiState.value.followers[it].followed,
                         onClick = {
                             navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followers[it].nickname}")
+                        },
+                        onFollowClick = {
+                            viewModel.follow(uiState.value.followers[it].nickname)
+                            viewModel.getFollow(userId)
                         }
                     )
                 }
@@ -99,7 +113,8 @@ fun FollowerScreen(
         }
     }
 }
-private fun String.isOut() = this == "팔로우"
+
+private fun String.isFollow() = this == "팔로우"
 
 @Preview
 @Composable

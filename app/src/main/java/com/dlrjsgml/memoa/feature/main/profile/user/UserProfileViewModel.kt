@@ -22,6 +22,7 @@ data class UserProfileState(
     val description: String? = "",
     val profileImage: String = "",
     val articles: List<ArticleResponse> = listOf(),
+    val followed : Boolean = false
 )
 
 data class UserFollowingState(
@@ -98,7 +99,8 @@ class UserProfileViewModel : ViewModel() {
                         email = response.email,
                         nickname = response.nickname,
                         description = response.description,
-                        profileImage = response.profileImage
+                        profileImage = response.profileImage,
+                        followed = response.followed
                     )
                 }
                 _uiEffect.emit(UserProfileEffect.Success)
@@ -140,12 +142,13 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    fun follow() {
+    fun follow(userName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try{
                 val response = RetrofitClient.followService.follow(uiState.value.nickname)
                 Log.d("팔로우", "팔로우 : $response");
                 getFollowSize()
+                getUserProfileInfo(userName = userName)
                 _followEffect.emit(FollowEffect.Success)
             } catch (e:Exception){
                 _followEffect.emit(FollowEffect.Failed)

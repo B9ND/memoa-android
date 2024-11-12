@@ -37,7 +37,6 @@ fun FollowerButton(
     shape: Shape = RoundedCornerShape(10.dp),
     onClick: () -> Unit,
 ) {
-    val isEnable = remember { mutableStateOf(enabled) }
     Box(
         modifier = modifier
             .clickable(
@@ -47,12 +46,10 @@ fun FollowerButton(
                     radius = RoundedCornerShape(8.dp)
                 ),
                 interactionSource = remember { MutableInteractionSource() },
-                enabled = true,
-                onClick = {onClick()
-                isEnable.value = !isEnable.value}
+                onClick = {onClick() }
             )
-            .background(color = if (isEnable.value) Purple60 else Color.White, shape = shape)
-            .border(width = if(isEnable.value) 0.dp else 2.dp, color = Gray60, shape = shape)
+            .background(color = if (!enabled) Purple60 else Color.White, shape = shape)
+            .border(width = if(!enabled) 0.dp else 2.dp, color = Gray60, shape = shape)
             .width(105.dp)
     )
 
@@ -60,10 +57,9 @@ fun FollowerButton(
         Text(
             modifier = Modifier.padding(vertical = 5.dp, horizontal = 13.dp).align(Alignment.Center),
             style = miniCaption1.copy(fontSize = 13.sp),
-            text = if(isEnable.value) "팔로우" else "언팔로우",
-            color = if (isEnable.value) Color.White else Gray60
+            text = if(!enabled) "팔로우" else "언팔로우",
+            color = if (!enabled) Color.White else Gray60
         )
-
     }
 }
 

@@ -34,7 +34,9 @@ import com.dlrjsgml.memoa.ui.theme.boardName
 fun FollowerList(
     name: String = "ERROR",
     profile: String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyB_Y4x_2qADG2TQ2-lR8BB53v9UpL7a2Cjg&s",
-    onClick: () -> Unit = {}
+    buttonEnabled: Boolean = true,
+    onClick: () -> Unit = {},
+    onFollowClick: () -> Unit = {},
 ) {
     Column {
         Row(
@@ -44,7 +46,7 @@ fun FollowerList(
                 .padding(start = 21.dp, top = 15.dp, bottom = 14.dp, end = 15.dp)
                 .noRippleClickable { onClick() },
 
-        ) {
+            ) {
             Box {
                 Box(
                     modifier = Modifier
@@ -60,18 +62,22 @@ fun FollowerList(
                     contentScale = ContentScale.Crop
                 )
             }
-            Box(modifier = Modifier.width(170.dp)
-                .align(Alignment.CenterVertically)
-            ){
-                Text(modifier = Modifier
-                    .padding(start = 16.dp), text = name, style = boardName,
-                    maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Box(
+                modifier = Modifier
+                    .width(170.dp)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp), text = name, style = boardName,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis
+                )
             }
             Spacer(modifier = Modifier.weight(1f))
-            FollowerButton(modifier = Modifier.align(Alignment.CenterVertically)) {
+            FollowerButton(modifier = Modifier.align(Alignment.CenterVertically),
+                enabled = buttonEnabled) {
+                onFollowClick()
             }
-
-
         }
         Box(
             modifier = Modifier
@@ -84,6 +90,6 @@ fun FollowerList(
 
 @Preview
 @Composable
-private fun afdjkdfakj(){
+private fun afdjkdfakj() {
     FollowerList()
 }
