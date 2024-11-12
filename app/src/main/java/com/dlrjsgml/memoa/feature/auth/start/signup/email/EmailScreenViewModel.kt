@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.network.data.ApiService
-import com.dlrjsgml.memoa.network.data.AuthRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +34,17 @@ class EmailViewModel : ViewModel() {
         if (auth.length < 7) _uiState.update { it.copy(auth = auth) } else _uiState
     }
 
-    private val retrofit = RetrofitClient.instance
+    fun getEmail(): String {
+        return uiState.value.email
+    }
 
-    private val apiService = retrofit.create(ApiService::class.java)
+
 
     suspend fun sendCode(email: String) {
         return withContext(Dispatchers.IO) {
             viewModelScope.launch {
                 try {
-                    val response = apiService.sendAuthCode(email)
+                    val response = RetrofitClient.getCodeService.sendAuthCode(email = email)
                 } catch (e: HttpException) {
                     Log.d("sign", e.code().toString())
                 }
@@ -54,7 +55,7 @@ class EmailViewModel : ViewModel() {
         return withContext(Dispatchers.IO) {
             viewModelScope.launch {
                 try {
-                    val response = apiService.checkAuthCode(email, code)
+                    val response = RetrofitClient.sendCodeService.checkAuthCode(email, code)
                     _uiState.update { it.copy(welcome = true) }
 
                 } catch (e: HttpException) {

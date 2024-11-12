@@ -54,7 +54,8 @@ import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 fun PasswordScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: PasswordScreenViewModel = viewModel()
+    viewModel: PasswordScreenViewModel = viewModel(),
+    email: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
@@ -190,7 +191,7 @@ fun PasswordScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    navController.navigate(NavGroup.SIGNUP_NICKNAME)
+                    navController.navigate("${NavGroup.SIGNUP_NICKNAME}?${email}?${uiState.password}")
                 }
             }
         }

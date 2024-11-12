@@ -53,7 +53,9 @@ import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 fun NameScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: NameScreenViewModel = viewModel()
+    viewModel: NameScreenViewModel = viewModel(),
+    email: String,
+    password: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
@@ -190,7 +192,7 @@ fun NameScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    navController.navigate(NavGroup.SIGNUP_SCHOOL)
+                    navController.navigate("${NavGroup.SIGNUP_SCHOOL}?${email}?${password}?${uiState.name}")
                 }
             }
         }

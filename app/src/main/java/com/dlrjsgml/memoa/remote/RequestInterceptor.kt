@@ -13,6 +13,7 @@ class RequestInterceptor() : Interceptor {
             when(request.url.encodedPath){
                 "/auth/me" -> {}
                 "/auth/signup" -> {}
+                "/school/search" -> {}
                 else -> return chain.proceed(request)
             }
 

@@ -1,8 +1,11 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
+<<<<<<< HEAD
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
+=======
+>>>>>>> origin/feature/SignUpServer
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,7 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+<<<<<<< HEAD
 import androidx.compose.ui.graphics.Color.Companion.White
+=======
+import androidx.compose.ui.graphics.Color
+>>>>>>> origin/feature/SignUpServer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -43,6 +50,18 @@ import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
+<<<<<<< HEAD
+=======
+import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreenViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.noschool.NoSchoolScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreenViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
+>>>>>>> origin/feature/SignUpServer
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
@@ -162,6 +181,7 @@ fun NavGraph(
                 composable(NavGroup.SIGNUP_EMAIL) {
                     EmailScreen(navController = navController)
                 }
+<<<<<<< HEAD
                 composable(NavGroup.SIGNUP_PASSWORD) {
 
                 }
@@ -170,6 +190,28 @@ fun NavGraph(
                 }
                 composable(NavGroup.SIGNUP_SCHOOL) {
 
+=======
+                composable("${NavGroup.SIGNUP_PASSWORD}?{email}") {
+                    val email = it.arguments?.getString("email")?: ""
+                    PasswordScreen(navController = navController, email = email)
+                }
+                composable("${NavGroup.SIGNUP_NICKNAME}?{email}?{password}") {
+                    val email = it.arguments?.getString("email")?: ""
+                    val password = it.arguments?.getString("password")?: ""
+                    NameScreen(navController = navController, email = email, password = password)
+                }
+                composable("${NavGroup.SIGNUP_SCHOOL}?{email}?{password}?{nickname}") {
+                    val email = it.arguments?.getString("email")?: ""
+                    val password = it.arguments?.getString("password")?: ""
+                    val nickname = it.arguments?.getString("nickname")?: ""
+                    SchoolChooseScreen(
+                        navController = navController,
+                        viewModel = SchoolChooseScreenViewModel(),
+                        email = email,
+                        password = password,
+                        nickname = nickname
+                    )
+>>>>>>> origin/feature/SignUpServer
                 }
                 composable(NavGroup.SIGNUP_SCHOOL_NOT_FOUND) {
 

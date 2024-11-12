@@ -1,6 +1,7 @@
-package com.dlrjsgml.memoa.feature.auth.start.signup.SchoolChoose
+package com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -25,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,7 +35,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
+<<<<<<< HEAD:app/src/main/java/com/dlrjsgml/memoa/feature/auth/start/signup/SchoolChoose/SchoolChooseScreen.kt
 import androidx.compose.ui.focus.FocusRequester
+=======
+>>>>>>> origin/feature/SignUpServer:app/src/main/java/com/dlrjsgml/memoa/feature/auth/start/signup/schoolchoose/SchoolChooseScreen.kt
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -47,13 +53,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.root.NavGroup
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreenViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreenViewModel
+import com.dlrjsgml.memoa.network.data.school.Department
+import com.dlrjsgml.memoa.network.data.school.SchoolSearchResponse
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.button.SchoolButton
+import com.dlrjsgml.memoa.ui.component.items.DepartmentList
+import com.dlrjsgml.memoa.ui.component.items.SchoolList
+import com.dlrjsgml.memoa.ui.component.textfield.MemoaDropDownTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.component.textfield.SearchTextField
 import kotlinx.coroutines.launch
@@ -64,23 +78,39 @@ import kotlinx.coroutines.launch
 fun SchoolChooseScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: SchoolChooseScreenViewModel = viewModel()
+    viewModel: SchoolChooseScreenViewModel,
+    email: String,
+    password: String,
+    nickname: String
 ) {
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val uiState by viewModel.uiState.collectAsState()
-    val isLaidOut by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedGrade by remember { mutableStateOf<String?>(null) }
+    var selectedGrade by remember { mutableStateOf("1학년") }
+    val coroutineScope = rememberCoroutineScope()
+    var selectedItem by remember { mutableIntStateOf(-1) }
+    var selectedDepartment by remember { mutableIntStateOf(-1) }
+    val touchScope = rememberCoroutineScope()
+    var isExpanded by remember { mutableStateOf(false) }
+    val selectedGradeInt = selectedGrade[0].toString().toInt()
+    var departmentList = emptyList<String>()
+    val schoolName = uiState.response.map { it.name }
+    var departmentSelected by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+
+    }
+    Log.d("이게되겟노1", "${selectedGrade[0].toString().toInt()}")
+    Log.d("이게되겟노2", "${schoolName}")
+    viewModel.updateResponse(uiState.response)
     LaunchedEffect(showBottomSheet) {
         if (showBottomSheet) {
-            scope.launch {
+            coroutineScope.launch {
                 sheetState.show()
             }
         } else {
-            scope.launch {
+            coroutineScope.launch {
                 sheetState.hide()
             }
         }
@@ -148,10 +178,21 @@ fun SchoolChooseScreen(
             append("를 선택하세요")
         }
     }
-
-    LaunchedEffect(key1 = isLaidOut) {
-        if (isLaidOut) {
-            focusRequester.requestFocus()
+    val subjectText = buildAnnotatedString {
+        withStyle(
+            SpanStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        ) {
+            append("학과")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 16.sp
+            )
+        ) {
+            append("를 선택하세요")
         }
     }
 
@@ -214,21 +255,28 @@ fun SchoolChooseScreen(
                             text = "1학년",
                             isSelected = selectedGrade == "1학년"
                         ) { isSelected ->
-                            if (isSelected) selectedGrade = "1학년"
+                            if (isSelected) {
+                                selectedGrade = "1학년"
+                            }
+
                         }
                         Spacer(Modifier.width(10.dp))
                         SchoolButton(
                             text = "2학년",
                             isSelected = selectedGrade == "2학년"
                         ) { isSelected ->
-                            if (isSelected) selectedGrade = "2학년"
+                            if (isSelected) {
+                                selectedGrade = "2학년"
+                            }
                         }
                         Spacer(Modifier.width(10.dp))
                         SchoolButton(
                             text = "3학년",
                             isSelected = selectedGrade == "3학년"
                         ) { isSelected ->
-                            if (isSelected) selectedGrade = "3학년"
+                            if (isSelected) {
+                                selectedGrade = "3학년"
+                            }
                         }
                     }
                     Spacer(Modifier.height(20.dp))
@@ -237,12 +285,50 @@ fun SchoolChooseScreen(
                         value = uiState.school,
                         onValueChange = viewModel::updateSchool,
                         hint = schoolText,
-                        modifier = Modifier.clickable (
+                        modifier = Modifier.clickable(
                             onClick = {
                                 showBottomSheet = true
+                                isExpanded = false
                             }
                         )
                     )
+                    Spacer(Modifier.height(10.dp))
+                    MemoaDropDownTextField(
+                        firstFocus = false,
+                        value = "",
+                        onValueChange = viewModel::updateSchool,
+                        hint = subjectText,
+                        textButton = false,
+                        modifier = Modifier.clickable {
+                            isExpanded = true
+                        }
+                    )
+                    Spacer(Modifier.height(3.dp))
+                    if (isExpanded) {
+                        LazyColumn {
+                            departmentList = getDepartmentNames(getDepartmNames(response = uiState.response, name = uiState.response[selectedItem].name), selectedGradeInt)
+                            items(count = departmentList.size) { index ->
+                                DepartmentList(
+                                    modifier = Modifier
+                                        .clickable {
+                                            selectedDepartment = index
+                                            viewModel.updateResponse(uiState.response)
+                                            departmentSelected = true
+                                            isExpanded = false
+                                            getDepartmNames(response = uiState.response, name = uiState.response[selectedItem].name)?.get(selectedDepartment)?.id?.let {
+                                                viewModel.updateId(
+                                                    it
+                                                )
+                                            }
+                                        },
+                                    text = departmentList[index],
+                                    top = index == 0,
+                                    bottom = index == departmentList.size - 1,
+                                    selected = false
+                                )
+                            }
+                        }
+                    }
                 }
             }
             Column(
@@ -258,24 +344,53 @@ fun SchoolChooseScreen(
                     modifier = modifier
                         .fillMaxWidth()
                         .height(55.dp),
-                    text = "다음",
+                    text = "회원가입",
                     enabled = true,
                 ) {
-                    navController.navigate(NavGroup.SIGNUP_SCHOOL_NOT_FOUND)
+                    viewModel.lastSignup(email = email, nickname = nickname, password = password, departmentId = uiState.departmentId)
+                    Log.d("이거안되면접음", email)
+                    Log.d("이거안되면접음", password)
+                    Log.d("이거안되면접음", nickname)
+                    Log.d("이거안되면접음", "${uiState.schoolNames}")
                 }
             }
             if (showBottomSheet) {
                 ModalBottomSheet(
                     onDismissRequest = { showBottomSheet = false },
-                    sheetState = sheetState,
+                    sheetState = sheetState
                 ) {
                     SearchTextField(
                         value = uiState.school,
                         onValueChange = viewModel::updateSchool,
                         hint = schoolText.toString(),
                         maxLines = 1,
-                        modifier = Modifier.padding(horizontal = 10.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        onClick = {
+                            touchScope.launch {
+                                viewModel.schoolSearch(uiState.school)
+                            }
+                        }
                     )
+                    Spacer(Modifier.height(10.dp))
+                    Spacer(
+                        Modifier
+                            .height(1.dp)
+                            .background(Color(0xFFF0F0F0))
+                            .fillMaxWidth()
+                    )
+                    LazyColumn {
+                        items(count = schoolName.size) { index ->
+                            SchoolList(
+                                modifier = Modifier
+                                    .clickable {
+                                        selectedItem = index
+                                        showBottomSheet = false
+
+                                    },
+                                schoolName = schoolName[index]
+                            )
+                        }
+                    }
                     Spacer(Modifier.height(30.dp))
                 }
             }
@@ -294,6 +409,20 @@ fun Modifier.addFocusCleaner(
         })
     }
 }
+
+
+
+fun getDepartmentNames(response: List<Department>?, grade: Int): List<String> {
+    return response?.filter { it.grade == grade }?.map { it.name } ?: emptyList()
+}
+
+fun getDepartmNames(response: List<SchoolSearchResponse>, name: String): List<Department>? {
+    return response.find { it.name == name }?.departments
+}
+
+
+
+
 
 //@RequiresApi(Build.VERSION_CODES.O)
 //@Composable
