@@ -50,6 +50,8 @@ import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
+import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
+import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
@@ -65,22 +67,22 @@ fun NavGraph(
     val showNavBarList = arrayListOf(
         NavGroup.MAIN,
         NavGroup.DETAIL,
-        NavGroup.SEARCH,
+        "${NavGroup.SEARCH}?{search}",
+        NavGroup.BEFORE_SEARCH,
         NavGroup.BOOKMARK,
         NavGroup.PROFILE,
         NavGroup.FOLLOWER,
         "${NavGroup.USERPROFILE}?{phone}",
-
         "${NavGroup.DETAIL}?{phone}",
         "userprofile?{phone}", "${NavGroup.USERPROFILE}?{phone}"
 
     )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
-    Log.d("현재경로", "안녕 : $selectRoute" );
+    Log.d("현재경로", "안녕 : $selectRoute");
 
     var isShowNavBar = selectRoute in showNavBarList
-    Log.d("현재경로", "ggg : $isShowNavBar" );
+    Log.d("현재경로", "ggg : $isShowNavBar");
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -106,7 +108,7 @@ fun NavGraph(
                                     navController.navigate(NavGroup.MAIN)
                                 }),
                             resId = R.drawable.ic_home,
-                            isSelected = selectRoute == NavGroup.MAIN || NavGroup.DETAIL in selectRoute.toString() ,
+                            isSelected = selectRoute == NavGroup.MAIN || NavGroup.DETAIL in selectRoute.toString(),
                             text = "메인"
                         )
                         BottomNavItem(
@@ -114,10 +116,10 @@ fun NavGraph(
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
                                     navController.popBackStack()
-                                    navController.navigate(NavGroup.SEARCH)
+                                    navController.navigate(NavGroup.BEFORE_SEARCH)
                                 }),
                             resId = R.drawable.ic_search,
-                            isSelected = selectRoute == NavGroup.SEARCH,
+                            isSelected = selectRoute == "${NavGroup.SEARCH}?{search}" || NavGroup.BEFORE_SEARCH in selectRoute.toString(),
                             text = "검색"
                         )
                         Spacer(modifier = Modifier.weight(1f))
@@ -174,18 +176,18 @@ fun NavGraph(
                     EmailScreen(navController = navController)
                 }
                 composable("${NavGroup.SIGNUP_PASSWORD}?{email}") {
-                    val email = it.arguments?.getString("email")?: ""
+                    val email = it.arguments?.getString("email") ?: ""
                     PasswordScreen(navController = navController, email = email)
                 }
                 composable("${NavGroup.SIGNUP_NICKNAME}?{email}?{password}") {
-                    val email = it.arguments?.getString("email")?: ""
-                    val password = it.arguments?.getString("password")?: ""
+                    val email = it.arguments?.getString("email") ?: ""
+                    val password = it.arguments?.getString("password") ?: ""
                     NameScreen(navController = navController, email = email, password = password)
                 }
                 composable("${NavGroup.SIGNUP_SCHOOL}?{email}?{password}?{nickname}") {
-                    val email = it.arguments?.getString("email")?: ""
-                    val password = it.arguments?.getString("password")?: ""
-                    val nickname = it.arguments?.getString("nickname")?: ""
+                    val email = it.arguments?.getString("email") ?: ""
+                    val password = it.arguments?.getString("password") ?: ""
+                    val nickname = it.arguments?.getString("nickname") ?: ""
                     SchoolChooseScreen(
                         navController = navController,
                         viewModel = SchoolChooseScreenViewModel(),
@@ -203,9 +205,9 @@ fun NavGraph(
                 composable(route = "${NavGroup.DETAIL}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
-                    )){
+                    )) {
 
-                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    val phoneNum = it.arguments?.getString("phone") ?: ""
                     DetailScreen(
                         navController = navController,
                         boardNumber = phoneNum
@@ -214,15 +216,28 @@ fun NavGraph(
                 composable(route = "${NavGroup.COMMENT}/phone={phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
-                    )){
-                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    )) {
+                    val phoneNum = it.arguments?.getString("phone") ?: ""
                     CommentScreen(
                         navController = navController,
                         boardNumber = phoneNum
                     )
                 }
-                composable(NavGroup.SEARCH) {
-                    SearchScreen(navController = navController)
+                composable(route = "${NavGroup.SEARCH}?{search}",
+                    arguments = listOf(
+                        navArgument("search") { NavType.StringType }
+                    )) {
+                    val search = it.arguments?.getString("search") ?: ""
+                    SearchScreen(
+                        navController = navController,
+                        search = search
+                    )
+                }
+                composable(NavGroup.BEFORE_SEARCH) {
+                    BeforeSearchScreen(navController = navController)
+                }
+                composable(NavGroup.SEARCHING) {
+                    SearchingScreen(navController = navController)
                 }
                 composable(NavGroup.WRITE) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -235,8 +250,8 @@ fun NavGraph(
                 composable(route = "${NavGroup.IMAGE_DETAIL}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
-                    )){
-                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    )) {
+                    val phoneNum = it.arguments?.getString("phone") ?: ""
                     ImageDetailScreen(
                         navController = navController,
                         imgUrl = phoneNum
@@ -248,8 +263,8 @@ fun NavGraph(
                 composable(route = "${NavGroup.USERPROFILE}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
-                    )){
-                    val phoneNum =  it.arguments?.getString("phone")?: ""
+                    )) {
+                    val phoneNum = it.arguments?.getString("phone") ?: ""
                     UserProfileScreen(
                         navController = navController,
                         userName = phoneNum
@@ -260,9 +275,9 @@ fun NavGraph(
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType },
                         navArgument("checker") { NavType.StringType }
-                    )){
-                    val phoneNum =  it.arguments?.getString("phone")?: ""
-                    val checkers = it.arguments?.getString("checker")?: "false"
+                    )) {
+                    val phoneNum = it.arguments?.getString("phone") ?: ""
+                    val checkers = it.arguments?.getString("checker") ?: "false"
                     FollowerScreen(
                         userId = phoneNum, followingChecker = checkers,
                         navController = navController

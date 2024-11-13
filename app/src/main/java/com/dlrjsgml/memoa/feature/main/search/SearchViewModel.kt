@@ -57,7 +57,7 @@ class SearchViewModel(
         Log.d("확인", "${_uiEffect.toString()}");
 
     }
-    fun getSearchArticles(){
+    fun getSearchArticles(search : String){
         Log.d("확인", "검색전");
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -66,7 +66,7 @@ class SearchViewModel(
                     enablePlaceholders = false,
                     initialLoadSize = 10
                 ),
-                    pagingSourceFactory = { ArticlePagingSource(uiState.value.search,
+                    pagingSourceFactory = { ArticlePagingSource(search,
                         arrayListOf()
                     ) }).flow.cachedIn(viewModelScope)
                 Log.d("확인", uiState.value.search);

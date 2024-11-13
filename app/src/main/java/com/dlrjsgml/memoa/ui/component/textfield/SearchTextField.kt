@@ -3,6 +3,7 @@ package com.dlrjsgml.memoa.ui.component.textfield
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.MemoaImageButton
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray25
@@ -43,18 +45,20 @@ fun SearchTextField(
     hint: String,
     singleLine: Boolean = true,
     hintColorWhite: Boolean = false,
+    enabled: Boolean = true,
     maxLines: Int = 1,
     minLines: Int = 1,
     shape: Shape = RoundedCornerShape(30.dp),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onClick: () -> Unit = {},
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    onUiClick:() -> Unit = {},
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val animBorderColor by animateColorAsState(
         targetValue = if (isFocused) Purple60 else Gray30,
         label = "",
     )
-    Box {
+    Box(modifier = Modifier.noRippleClickable { onUiClick() }) {
         BasicTextField(modifier = modifier
             .fillMaxWidth()
             .background(Gray10, shape = shape)
@@ -66,6 +70,7 @@ fun SearchTextField(
             .padding(vertical = 10.dp),
             value = value,
             minLines = minLines,
+            enabled = enabled,
             singleLine = singleLine,
             onValueChange = onValueChange,
             textStyle = searchMini.copy(color = Gray40),
@@ -92,7 +97,6 @@ fun SearchTextField(
             },
             content = painterResource(id = R.drawable.ic_searchcolor)
         )
-
     }
 
 }

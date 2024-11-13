@@ -51,92 +51,79 @@ import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SearchScreen (
+fun SearchScreen(
     viewModel: SearchViewModel = viewModel(),
     navController: NavHostController,
+    search: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
-        viewModel.getData()
-        viewModel.beforeSearch()
+        viewModel.getSearchArticles(search)
     }
-
+    BackHandler { navController.navigate(NavGroup.BEFORE_SEARCH) }
     Column(
         Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        BackHandlers(navController = navController)
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
-            modifier = Modifier.padding(horizontal = 24.dp),
+            modifier = Modifier
+                .padding(horizontal = 24.dp),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,
-            hint ="검색어를 입력하세요"
-
-//            buildAnnotatedString {
-//                append("검색어를 입력하세요")
-//            }.toString()
-//
-            ,
-            onClick = {
-                if (uiState.search.isNotEmpty()) {
-                    keyboardController?.hide()
-                    viewModel.getSearchArticles()
-                    viewModel.addData(uiState.search)
-                }
-            },
-            keyboardActions = KeyboardActions(onDone = {
-                if (uiState.search.isNotEmpty()) {
-                    keyboardController?.hide()
-                    viewModel.getSearchArticles()
-                    viewModel.addData(uiState.search)
-                }
-            })
+            enabled = false,
+            hint = "검색어를 입력하세요",
+            onClick = { navController.navigate(NavGroup.SEARCHING) },
+            onUiClick = { navController.navigate(NavGroup.SEARCHING) }
         )
         Spacer(modifier = Modifier.height(22.dp))
         Box {
             uiState.articles.let { state ->
                 when (state) {
-                    is FetchFlow.Failure -> Log.d("글보기", "오류");
+                    is FetchFlow.Failure -> Text("서버 오류");
                     is FetchFlow.Fetching -> {
-                        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                            Text(
-                                text = "최근 검색어",
-                                style = boardContent1.copy(fontWeight = FontWeight.Normal)
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            if (uiState.searchHistory.isNotEmpty()) {
-                                FlowRow(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    uiState.searchHistory.reversed()
-                                        .forEachIndexed { index, searchHistory ->
-                                            if (index >= 4) return@forEachIndexed
-                                            if (searchHistory.history.isNotEmpty()) {
-                                                SearchHistoryList(
-                                                    content = searchHistory.history,
-                                                    onClick = {
-                                                        keyboardController?.hide()
-                                                        viewModel.updateTitle(searchHistory.history)
-                                                        viewModel.getSearchArticles()
-                                                    }
-                                                )
-                                            }
-                                        }
-                                }
-                                Box(modifier = Modifier.fillMaxWidth().weight(1f).noRippleClickable {
-                                    keyboardController?.hide()
-
-                                })
+                        LazyColumn {
+                            items(5) {
+                                JJapList()
                             }
                         }
-                    }
 
+//                        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+//                            Text(
+//                                text = "최근 검색어",
+//                                style = boardContent1.copy(fontWeight = FontWeight.Normal)
+//                            )
+//                            Spacer(modifier = Modifier.height(12.dp))
+//                            if (uiState.searchHistory.isNotEmpty()) {
+//                                FlowRow(
+//                                    modifier = Modifier.fillMaxWidth()
+//                                ) {
+//                                    uiState.searchHistory.reversed()
+//                                        .forEachIndexed { index, searchHistory ->
+//                                            if (index >= 4) return@forEachIndexed
+//                                            if (searchHistory.history.isNotEmpty()) {
+//                                                SearchHistoryList(
+//                                                    content = searchHistory.history,
+//                                                    onClick = {
+//                                                        keyboardController?.hide()
+//                                                        viewModel.updateTitle(searchHistory.history)
+//                                                        viewModel.getSearchArticles()
+//                                                    }
+//                                                )
+//                                            }
+//                                        }
+//                                }
+//                                Box(modifier = Modifier.fillMaxWidth().weight(1f).noRippleClickable {
+//                                    keyboardController?.hide()
+//
+//                                })
+//                            }
+//                        }
+                    }
                     is FetchFlow.Success -> {
                         val articlesItems = state.data.collectAsLazyPagingItems()
-                        BackHandler { viewModel.startFetching() }
                         when {
                             articlesItems.loadState.refresh is LoadState.Loading -> {
                                 LazyColumn {
@@ -145,8 +132,8 @@ fun SearchScreen (
                                     }
                                 }
                             }
-                            articlesItems.loadState.refresh is LoadState.NotLoading ->{
-                                if (articlesItems.itemCount != 0){
+                            articlesItems.loadState.refresh is LoadState.NotLoading -> {
+                                if (articlesItems.itemCount != 0) {
                                     LazyColumn {
                                         items(articlesItems.itemCount) {
                                             val article = articlesItems[it]
