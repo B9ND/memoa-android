@@ -87,7 +87,6 @@ fun NavGraph(
                                 White,
                             )
                             .padding(horizontal = 16.dp)
-                            .padding(bottom = 2.dp, top = 2.dp)
                     ) {
                         BottomNavItem(
                             modifier = Modifier
@@ -138,7 +137,7 @@ fun NavGraph(
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .offset(y = (-18).dp)
+                            .offset(y = (-14).dp)
                             .noRippleClickable(onClick = {
                                 navController.navigate(NavGroup.WRITE)
                             })
