@@ -72,7 +72,7 @@ fun JJapList(
             Box {
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(42.dp)
                         .background(color = Gray20, CircleShape)
                         .clip(CircleShape)
                         .shimmerEffect()
@@ -88,8 +88,8 @@ fun JJapList(
                     Column {
                         Box(
                             modifier = Modifier
-                                .width(55.dp)
-                                .height(18.dp)
+                                .width(48.dp)
+                                .height(15.dp)
                                 .shimmerEffect()
                         )
                     }
@@ -104,7 +104,7 @@ fun JJapList(
                     Box(
                         modifier = Modifier
                             .width(100.dp)
-                            .height(18.dp)
+                            .height(14.dp)
                             .shimmerEffect()
                     )
 
@@ -113,7 +113,7 @@ fun JJapList(
                 Box(
                     modifier = Modifier
                         .width(160.dp)
-                        .height(18.dp)
+                        .height(14.dp)
                         .shimmerEffect()
                 )
 
@@ -131,14 +131,14 @@ fun JJapList(
                     Box(
                         modifier = Modifier
                             .width(30.dp)
-                            .height(20.dp)
+                            .height(18.dp)
                             .shimmerEffect()
                     )
                     Spacer(Modifier.width(2.dp))
                     Box(
                         modifier = Modifier
                             .width(30.dp)
-                            .height(20.dp)
+                            .height(18.dp)
                             .shimmerEffect()
                     )
                 }

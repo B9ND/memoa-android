@@ -51,7 +51,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SearchScreen(
+fun SearchScreen (
     viewModel: SearchViewModel = viewModel(),
     navController: NavHostController,
 ) {
@@ -73,9 +73,13 @@ fun SearchScreen(
             modifier = Modifier.padding(horizontal = 24.dp),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,
-            hint = buildAnnotatedString {
-                append("검색어를 입력하세요")
-            }.toString(),
+            hint ="검색어를 입력하세요"
+
+//            buildAnnotatedString {
+//                append("검색어를 입력하세요")
+//            }.toString()
+//
+            ,
             onClick = {
                 if (uiState.search.isNotEmpty()) {
                     keyboardController?.hide()

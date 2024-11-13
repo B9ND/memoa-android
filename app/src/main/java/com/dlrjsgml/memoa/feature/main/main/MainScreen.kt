@@ -119,7 +119,7 @@ fun MainScreen(
                         modifier = Modifier
                             .background(Color.White)
                             .padding(top = 10.dp)
-                            .padding(vertical = 8.dp, horizontal = 14.dp)
+                            .padding(vertical = 4.dp, horizontal = 14.dp)
                     ) {
                         MemoaDropDown(
                             selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
@@ -178,9 +178,7 @@ fun MainScreen(
                                         tag = article.tags.toImmutableList(),
                                         comment = 1,
                                         onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
-                                        onBookmarkClick = {
-                                            viewModel.bookmark(article.id)
-                                        },
+                                        onBookmarkClick = { viewModel.bookmark(article.id) },
                                         onCommentClick = {},
                                         onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
                                         onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }

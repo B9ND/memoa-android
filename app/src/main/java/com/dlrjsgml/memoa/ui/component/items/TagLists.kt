@@ -17,7 +17,7 @@ fun TagLists(tag: ImmutableList<String> = persistentListOf(),mini : Boolean = fa
             Text(
                 text = "#${tag[it]}",
                 color = Gray40,
-                style = boardContent.copy(fontSize = if (mini) 12.sp else 16.sp, fontWeight = FontWeight.Medium)
+                style = boardContent.copy(fontSize = if (mini) 12.sp else 12.sp, fontWeight = FontWeight.Medium)
             )
         }
     }

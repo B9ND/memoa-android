@@ -12,6 +12,7 @@ object NavGroup {
     const val DETAIL = "detail"
     const val COMMENT = "comment"
     const val SEARCH = "search"
+    const val BEFORESEARCH = "beforesearch"
     const val WRITE = "write"
     const val BOOKMARK = "bookmark"
     const val PROFILE = "profile"

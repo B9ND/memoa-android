@@ -85,6 +85,7 @@ fun UserProfileScreen(
                 .fillMaxSize()
                 .background(Purple60)
         ) {
+
             item {
                 Box(
                     modifier = Modifier
@@ -101,7 +102,7 @@ fun UserProfileScreen(
             item {
                 Box(
                     modifier = Modifier
-                        .padding(top = 120.dp)
+                        .padding(top = 98.dp)
                         .fillMaxWidth()
                         .background(
                             Color.White,

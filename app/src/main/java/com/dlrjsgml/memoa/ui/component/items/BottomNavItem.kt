@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
@@ -32,12 +33,11 @@ fun BottomNavItem(
     isSelected: Boolean,
     text: String,
 ) {
-    val sizes = if (resId == R.drawable.ic_search) 32.dp else 24.dp
-    Column(modifier = modifier.padding(12.dp)) {
+    Column(modifier = modifier.padding(10.dp)) {
         Image(
             modifier = Modifier
                 .size(
-                    26.dp
+                    24.dp
                 )
                 .align(Alignment.CenterHorizontally),
             painter = painterResource(id = resId),
@@ -48,7 +48,10 @@ fun BottomNavItem(
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = text,
-            style = if (isSelected) miniCaption1.copy(color = Purple60) else miniCaption1.copy(color = Color.Black)
+            style = if (isSelected) miniCaption1.copy(
+                fontSize = 9.sp,
+                color = Purple60
+            ) else miniCaption1.copy(fontSize = 9.sp, color = Color.Black)
         )
     }
 }
@@ -97,24 +100,30 @@ fun BottomCircleTwo(
                 shape = RoundedCornerShape(topStart = 1000.dp, topEnd = 1000.dp),
                 color = Color.White
             )
-            .width(90.dp)
-            .height(70.dp)
+            .width(77.dp)
+            .height(57.dp)
     ) {
-        Image(
-            modifier = modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 17.dp),
-            colorFilter = ColorFilter.tint(if (isSelected) Purple60 else Color.Black),
-            painter = painterResource(id = R.drawable.ic_plus), contentDescription = null
-        )
-        Text(
-            modifier = modifier
-                .padding(top = 50.dp)
-                .align(Alignment.BottomCenter), text = "메모 작성",
-            style = if (isSelected) miniCaption1.copy(color = Purple60) else miniCaption1.copy(
-                color = Color.Black
-            ),
-        )
+        Column(modifier = Modifier.align(Alignment.Center)) {
+            Image(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 15.dp, bottom = 4.5.dp),
+                colorFilter = ColorFilter.tint(if (isSelected) Purple60 else Color.Black),
+                painter = painterResource(id = R.drawable.ic_plus), contentDescription = null
+            )
+            Text(
+                modifier = modifier,
+                text = "메모 작성",
+                style = if (isSelected) miniCaption1.copy(
+                    fontSize = 9.sp,
+                    color = Purple60
+                ) else miniCaption1.copy(
+                    fontSize = 9.sp,
+                    color = Color.Black
+                ),
+            )
+        }
+
     }
 
 }
@@ -124,7 +133,6 @@ fun BottomCircleTwo(
 private fun fajddafj() {
     Column {
         BottomCircleTwo(isSelected = false)
-        BottomCircle(isSelected = false)
     }
 
 

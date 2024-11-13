@@ -16,6 +16,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -66,12 +68,20 @@ fun NavGraph(
         NavGroup.SEARCH,
         NavGroup.BOOKMARK,
         NavGroup.PROFILE,
-        NavGroup.FOLLOWER
+        NavGroup.FOLLOWER,
+        "${NavGroup.USERPROFILE}?{phone}",
+
+        "${NavGroup.DETAIL}?{phone}",
+        "userprofile?{phone}", "${NavGroup.USERPROFILE}?{phone}"
+
     )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
     Log.d("현재경로", "안녕 : $selectRoute" );
+
     var isShowNavBar = selectRoute in showNavBarList
+    Log.d("현재경로", "ggg : $isShowNavBar" );
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -87,7 +97,6 @@ fun NavGraph(
                                 White,
                             )
                             .padding(horizontal = 16.dp)
-                            .padding(bottom = 2.dp, top = 2.dp)
                     ) {
                         BottomNavItem(
                             modifier = Modifier
@@ -131,14 +140,14 @@ fun NavGraph(
                                     navController.navigate(NavGroup.PROFILE)
                                 }),
                             resId = R.drawable.ic_avatar,
-                            isSelected = selectRoute == NavGroup.PROFILE || NavGroup.SETTING in selectRoute.toString(),
+                            isSelected = selectRoute == NavGroup.PROFILE || NavGroup.USERPROFILE in selectRoute.toString(),
                             text = "프로필"
                         )
                     }
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .offset(y = (-18).dp)
+                            .offset(y = (-14).dp)
                             .noRippleClickable(onClick = {
                                 navController.navigate(NavGroup.WRITE)
                             })
@@ -227,7 +236,6 @@ fun NavGraph(
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )){
-                    isShowNavBar = false
                     val phoneNum =  it.arguments?.getString("phone")?: ""
                     ImageDetailScreen(
                         navController = navController,
@@ -241,7 +249,6 @@ fun NavGraph(
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )){
-                    isShowNavBar = false
                     val phoneNum =  it.arguments?.getString("phone")?: ""
                     UserProfileScreen(
                         navController = navController,
