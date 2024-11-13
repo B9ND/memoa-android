@@ -74,7 +74,7 @@ fun MemoaDropDown(
             Text(
                 text = selectedText,
                 color = Black,
-                style = caption1Regular.copy(fontSize = 16.sp),
+                style = caption1Regular.copy(fontSize = 14.sp),
                 maxLines = 1,
                 modifier = Modifier
                     .align(Alignment.CenterVertically),

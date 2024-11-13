@@ -78,7 +78,6 @@ fun DetailScreen(
                 title = uiState.title,
                 profile = uiState.authorProfileImage,
                 onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}") },
-
                 )
             Spacer(modifier = Modifier.height(30.dp))
         }

@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.button.MemoaImageButton
+import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray25
 import com.dlrjsgml.memoa.ui.theme.Gray30
 import com.dlrjsgml.memoa.ui.theme.Gray40
@@ -55,9 +56,8 @@ fun SearchTextField(
     )
     Box {
         BasicTextField(modifier = modifier
-            .shadow(elevation = 3.dp, shape = shape)
             .fillMaxWidth()
-            .background(Gray25, shape = shape)
+            .background(Gray10, shape = shape)
             .onFocusChanged {
                 isFocused = it.isFocused
             }

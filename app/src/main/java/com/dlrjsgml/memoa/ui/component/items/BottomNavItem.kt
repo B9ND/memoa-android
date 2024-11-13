@@ -49,9 +49,9 @@ fun BottomNavItem(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = text,
             style = if (isSelected) miniCaption1.copy(
-                fontSize = 8.sp,
+                fontSize = 9.sp,
                 color = Purple60
-            ) else miniCaption1.copy(fontSize = 8.sp, color = Color.Black)
+            ) else miniCaption1.copy(fontSize = 9.sp, color = Color.Black)
         )
     }
 }
@@ -101,7 +101,7 @@ fun BottomCircleTwo(
                 color = Color.White
             )
             .width(77.dp)
-            .height(56.dp)
+            .height(57.dp)
     ) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Image(
@@ -115,10 +115,10 @@ fun BottomCircleTwo(
                 modifier = modifier,
                 text = "메모 작성",
                 style = if (isSelected) miniCaption1.copy(
-                    fontSize = 8.sp,
+                    fontSize = 9.sp,
                     color = Purple60
                 ) else miniCaption1.copy(
-                    fontSize = 8.sp,
+                    fontSize = 9.sp,
                     color = Color.Black
                 ),
             )

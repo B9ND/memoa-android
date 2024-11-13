@@ -77,7 +77,8 @@ fun CommentList(
             ) {
                 Row() {
                     Column {
-                        Text(modifier = Modifier.widthIn(max=130.dp), text = name, style = boardName,
+                        Text(modifier = Modifier.widthIn(max=130.dp)
+                            .noRippleClickable { onProfileClick() }, text = name, style = boardName,
                             maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
