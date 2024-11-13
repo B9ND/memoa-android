@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
@@ -32,7 +33,6 @@ fun BottomNavItem(
     isSelected: Boolean,
     text: String,
 ) {
-    val sizes = if (resId == R.drawable.ic_search) 32.dp else 24.dp
     Column(modifier = modifier.padding(12.dp)) {
         Image(
             modifier = Modifier
@@ -48,7 +48,7 @@ fun BottomNavItem(
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = text,
-            style = if (isSelected) miniCaption1.copy(color = Purple60) else miniCaption1.copy(color = Color.Black)
+            style = if (isSelected) miniCaption1.copy(fontSize = 8.sp,color = Purple60) else miniCaption1.copy(fontSize = 8.sp,color = Color.Black)
         )
     }
 }

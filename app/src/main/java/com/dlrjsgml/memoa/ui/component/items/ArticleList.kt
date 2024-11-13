@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.root.NavGroup
@@ -95,14 +96,14 @@ fun ArticleList(
             Box {
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(42.dp)
                         .background(color = Gray20, CircleShape)
                         .clip(CircleShape)
                         .shimmerEffect()
                 )
                 AsyncImage(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(42.dp)
                         .clip(CircleShape)
                         .noRippleClickable { onProfileClick() },  // 원형으로 이미지를 클립
                     model = profile,
@@ -119,7 +120,7 @@ fun ArticleList(
             ) {
                 Row() {
                     Column {
-                        Text(modifier = Modifier, text = name, style = boardName)
+                        Text(modifier = Modifier, text = name, style = boardName.copy(fontSize = 16.sp))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
@@ -132,7 +133,7 @@ fun ArticleList(
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
                         text = date,
-                        style = boardContent.copy(fontWeight = FontWeight.Medium),
+                        style = boardContent.copy(fontSize = 15.sp, fontWeight = FontWeight.Medium),
                         color = Color.Gray
                     )
                 }
