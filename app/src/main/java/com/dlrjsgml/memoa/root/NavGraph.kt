@@ -33,6 +33,7 @@ import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.StartScreen
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen
 import com.dlrjsgml.memoa.feature.main.bookmark.BookMarkScreen
 import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
 import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
@@ -44,14 +45,8 @@ import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailViewModel
-import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreenViewModel
-import com.dlrjsgml.memoa.feature.auth.start.signup.noschool.NoSchoolScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreenViewModel
+import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
@@ -66,20 +61,17 @@ fun NavGraph(
     navController: NavHostController,
 ) {
     val showNavBarList = arrayListOf(
-        NavGroup.START,
-        NavGroup.LOGIN,
-        NavGroup.SIGNUP_EMAIL,
-        NavGroup.SIGNUP_PASSWORD,
-        NavGroup.SIGNUP_NICKNAME,
-        NavGroup.SIGNUP_SCHOOL,
-        NavGroup.SIGNUP_SCHOOL_NOT_FOUND,
-        NavGroup.WRITE,
-        NavGroup.IMAGE_DETAIL
+        NavGroup.MAIN,
+        NavGroup.DETAIL,
+        NavGroup.SEARCH,
+        NavGroup.BOOKMARK,
+        NavGroup.PROFILE,
+        NavGroup.FOLLOWER
     )
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
-
-    var isShowNavBar = selectRoute !in showNavBarList
+    Log.d("현재경로", "안녕 : $selectRoute" );
+    var isShowNavBar = selectRoute in showNavBarList
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {

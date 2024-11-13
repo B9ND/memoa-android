@@ -36,7 +36,6 @@ class MainActivity : ComponentActivity() {
 
         Coil.setImageLoader(imageLoader)
 
-
         setContent {
             MemoaTheme {
                 val navHostController = rememberNavController()
