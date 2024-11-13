@@ -60,6 +60,7 @@ fun SearchScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         viewModel.getSearchArticles(search)
+        viewModel.updateTitle(search)
     }
     BackHandler { navController.navigate(NavGroup.BEFORE_SEARCH) }
     Column(

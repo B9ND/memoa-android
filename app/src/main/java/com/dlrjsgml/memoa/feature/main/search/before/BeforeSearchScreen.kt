@@ -105,7 +105,8 @@ fun BeforeSearchScreen(
                                         content = searchHistory.history,
                                         onClick = {
                                             keyboardController?.hide()
-                                            viewModel.updateTitle(searchHistory.history)
+                                            navController.popBackStack()
+                                            navController.navigate("${NavGroup.SEARCH}?${searchHistory.history}")
 //                                            viewModel.getSearchArticles()
                                         }
                                     )

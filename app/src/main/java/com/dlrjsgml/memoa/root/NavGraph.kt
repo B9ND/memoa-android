@@ -286,7 +286,6 @@ fun NavGraph(
                 composable(NavGroup.SETTING) {
                     SettingScreen(navController)
                 }
-
             }
         }
     }
