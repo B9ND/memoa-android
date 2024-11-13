@@ -137,8 +137,6 @@ fun DetailScreen(
                     )
                 }
             }
-
-
         }
 
     }
