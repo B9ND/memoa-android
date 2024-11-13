@@ -286,6 +286,7 @@ fun SchoolChooseScreen(
                             onClick = {
                                 showBottomSheet = true
                                 isExpanded = false
+                                viewModel.schoolSearch(uiState.school)
                             }
                         )
                     )

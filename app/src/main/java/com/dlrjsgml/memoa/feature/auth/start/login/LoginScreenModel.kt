@@ -1,11 +1,14 @@
 package com.dlrjsgml.memoa.feature.auth.start.login
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
-import com.dlrjsgml.memoa.network.data.ApiService
 import com.dlrjsgml.memoa.network.data.login.LoginRequest
+import com.dlrjsgml.memoa.network.data.user.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveRefToken
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -38,6 +41,7 @@ class LoginViewModel : ViewModel() {
     fun updateEmail(content: String) {
         _uiState.update { it.copy(email = content) }
     }
+
     fun updatePassword(password: String) {
         _uiState.update { it.copy(password = password) }
     }
@@ -45,13 +49,18 @@ class LoginViewModel : ViewModel() {
     private val _loginState = MutableStateFlow("")
     val loginState = _loginState.asStateFlow()
 
-    fun login(email: String, password: String) {
+    fun login(context: Context, email: String, password: String) {
         viewModelScope.launch {
             try {
-                val loginData = LoginRequest(email,password)
+                val loginData = LoginRequest(email, password)
                 val response = RetrofitClient.getLoginService.login(loginData)
-                Log.d("로그인", "성공 : ${response.access}")
-                TemporaryToken.AccessToken = response.access
+                if (response.accessToken != null && response.refreshToken != null) {
+                    saveAccToken(context, response.accessToken)
+                    saveRefToken(context, response.refreshToken)
+                }
+                Log.d("로그인", "성공 : ${response.accessToken}")
+                Log.d("로그인", "성공 : ${response.refreshToken}")
+                TemporaryToken.AccessToken = response.accessToken
                 _uiEffect.emit(LoginSideEffect.Success)
             } catch (e: HttpException) {
                 Log.d("login", e.code().toString())

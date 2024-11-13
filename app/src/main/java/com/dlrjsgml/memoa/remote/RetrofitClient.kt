@@ -69,12 +69,8 @@ object RetrofitClient {
     val postBookMarkService: PostBookMarkService by lazy { instance.create(PostBookMarkService::class.java) }
     val getUserArticles: GetUserArticles by lazy { instance.create(GetUserArticles::class.java) }
     val getSchoolService: SchoolService by lazy { instance.create(SchoolService::class.java) }
-
     val getLoginService: LoginService by lazy { instance.create(LoginService::class.java) }
-
     val sendCodeService: SendCodeService by lazy { instance.create(SendCodeService::class.java) }
-
     val getCodeService: GetCodeService by lazy { instance.create(GetCodeService::class.java) }
-
     val signupService: LastSignupService by lazy { instance.create(LastSignupService::class.java) }
 }

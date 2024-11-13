@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -61,6 +62,7 @@ fun LoginScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val loginState by viewModel.loginState.collectAsState()
+    val context = LocalContext.current
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
             when (effect) {
@@ -182,7 +184,7 @@ fun LoginScreen(
                     enabled = true,
 
                     onClick = {
-                        viewModel.login(uiState.email, uiState.password)
+                        viewModel.login(context, uiState.email, uiState.password)
 //                        navController.navigate(NavGroup.MAIN)
                     }
                 )

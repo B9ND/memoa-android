@@ -99,5 +99,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences.v100)
+    implementation(libs.androidx.datastore.preferences.core)
 
 }

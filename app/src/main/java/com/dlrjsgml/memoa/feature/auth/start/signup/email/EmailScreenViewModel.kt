@@ -3,7 +3,6 @@ package com.dlrjsgml.memoa.feature.auth.start.signup.email
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dlrjsgml.memoa.network.data.ApiService
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.Dispatchers
