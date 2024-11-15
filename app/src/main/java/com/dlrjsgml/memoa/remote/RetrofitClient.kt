@@ -1,5 +1,7 @@
 package com.dlrjsgml.memoa.remote
 
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import com.dlrjsgml.memoa.BuildConfig
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
@@ -16,6 +18,7 @@ import com.dlrjsgml.memoa.network.main.detail.DetailService
 import com.dlrjsgml.memoa.network.profile.GetProfileInfoService
 import com.dlrjsgml.memoa.network.profile.GetUserArticles
 import com.dlrjsgml.memoa.network.profile.GetUserProfileInfoService
+import com.dlrjsgml.memoa.network.token.TokenService
 import com.dlrjsgml.memoa.network.write.WriteService
 import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
 import com.google.gson.GsonBuilder
@@ -28,6 +31,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 object RetrofitClient {
+//    private lateinit var appContext: Context
+//    fun initializeContext(context: Context) {
+//        appContext = context.applicationContext
+//    }
+
 
     private const val BASE_URL = BuildConfig.API_KEY
     var gson = GsonBuilder().setLenient().create()
@@ -35,8 +43,11 @@ object RetrofitClient {
         level = HttpLoggingInterceptor.Level.BODY // 요청 메서드 및 URL만 로그에 남기기
     }
 
-    val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
-        .addInterceptor(ResponseInterceptor()).build()
+
+    val interceptorClient = OkHttpClient().newBuilder()
+        .addInterceptor(RequestInterceptor())
+        .addInterceptor(ResponseInterceptor())
+        .build()
 
     val client = OkHttpClient.Builder()
         .addInterceptor(logging)
@@ -73,4 +84,5 @@ object RetrofitClient {
     val sendCodeService: SendCodeService by lazy { instance.create(SendCodeService::class.java) }
     val getCodeService: GetCodeService by lazy { instance.create(GetCodeService::class.java) }
     val signupService: LastSignupService by lazy { instance.create(LastSignupService::class.java) }
+    val tokenService: TokenService by lazy { instance.create(TokenService::class.java) }
 }

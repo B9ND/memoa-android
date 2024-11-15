@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.user.FollowEffect
 import com.dlrjsgml.memoa.network.profile.ProfileResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
-import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

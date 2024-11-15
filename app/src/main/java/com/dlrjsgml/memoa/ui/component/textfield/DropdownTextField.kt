@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.ui.component.textfield
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,8 +18,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,17 +48,16 @@ import com.dlrjsgml.memoa.ui.theme.caption2
 @Composable
 fun MemoaDropDownTextField(
     modifier: Modifier = Modifier,
-    value: String, // This value can potentially be removed if not used
-    onValueChange: (String) -> Unit = {}, // This function can potentially be removed if not used
     hint: AnnotatedString,
-    enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(12.dp),
-    textButton: Boolean = false,
     textButtonOnClick: () -> Unit = {},
-    firstFocus: Boolean
+    value: String = "",
+    selected: Boolean = false
 ) {
     var isFocused by remember { mutableStateOf(false) }
-
+    val (nothing,good) = remember { mutableStateOf("") }
+    var dp by remember { mutableStateOf("") }
+    dp = ""
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -66,7 +68,7 @@ fun MemoaDropDownTextField(
             .onFocusChanged {
                 isFocused = it.isFocused
             }
-            .clickable (
+            .clickable(
                 onClick = textButtonOnClick
             )
     ) {
@@ -78,40 +80,56 @@ fun MemoaDropDownTextField(
         ) {
             Image(
                 modifier = modifier
-                    .padding(start = 6.dp)
-                ,
+                    .padding(start = 6.dp),
                 painter = painterResource(id = R.drawable.ic_token_id_text_field),
                 contentDescription = null
             )
-            Spacer(modifier = Modifier.weight(1f))
-
-            Image(painter = painterResource(R.drawable.dropdown),contentDescription = null, Modifier.size(10.dp), contentScale = ContentScale.Crop)
+            BasicTextField(
+                value = nothing,
+                onValueChange = {},
+                textStyle = caption2,
+                readOnly = true,
+                maxLines = 1,
+                singleLine = true,
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = modifier
+                            .padding(start = 10.dp, end = 12.dp)
+                            .width(290.dp)
+                    ) {
+                        if (value.isEmpty()) {
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterStart),
+                                text = hint,
+                                style = caption2.copy(fontSize = 20.sp),
+                                color = if (selected) Color.Gray else Color.Black,
+                            )
+                        }
+                        innerTextField()
+                    }
+                },
+            )
+            Image(
+                painter = painterResource(R.drawable.dropdown),
+                contentDescription = null,
+                Modifier.size(10.dp),
+                contentScale = ContentScale.Crop
+            )
 
         }
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(vertical = 14.dp)
-                .padding(start = 55.dp, end = 12.dp),
-            text = hint,
-            style = caption2.copy(fontSize = 14.sp),
-            color = Color.Gray
-        )
-    }
 
+    }
 }
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun MemoaDropDownTextFieldPreview() {
     MemoaDropDownTextField(
-        value = "Test Value", // This can be an empty string if not used
-        onValueChange = {}, // This can be an empty function if not used
         hint = buildAnnotatedString {
             append("dgod")
         },
-        textButton = true,
-        firstFocus = true
     )
 }

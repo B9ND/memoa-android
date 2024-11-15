@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.feature.auth.start.login
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,6 +46,10 @@ import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
 
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.addFocusCleaner
+import com.dlrjsgml.memoa.network.data.user.getAccToken
+import com.dlrjsgml.memoa.network.data.user.getRefToken
+import com.dlrjsgml.memoa.network.data.user.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveRefToken
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
@@ -61,12 +66,12 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    val loginState by viewModel.loginState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
             when (effect) {
                 LoginSideEffect.Success -> {
+                    viewModel.saveTokens(context)
                     navController.navigate(NavGroup.MAIN)
                 }
 
@@ -184,7 +189,12 @@ fun LoginScreen(
                     enabled = true,
 
                     onClick = {
-                        viewModel.login(context, uiState.email, uiState.password)
+                        viewModel.login(uiState.email, uiState.password)
+                        viewModel.updateToken(uiState.access, uiState.refresh)
+                        Log.d("acc", "LoginScreen: ${uiState.access}")
+                        Log.d("acc", "LoginScreen: ${uiState.refresh}")
+                        Log.d("gettoken", "${getAccToken(context)}")
+                        Log.d("gettoken", "${getRefToken(context)}")
 //                        navController.navigate(NavGroup.MAIN)
                     }
                 )

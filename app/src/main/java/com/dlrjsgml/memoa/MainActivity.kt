@@ -1,7 +1,9 @@
 package com.dlrjsgml.memoa
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -12,6 +14,7 @@ import coil.Coil
 import coil.ImageLoader
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
 

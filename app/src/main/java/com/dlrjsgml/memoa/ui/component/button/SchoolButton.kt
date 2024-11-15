@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.ui.component.button
 
+import android.content.res.Resources.Theme
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -30,8 +31,10 @@ import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.ui.theme.button_purple
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -62,7 +65,7 @@ fun SchoolButton(
             .background(color = Color.White, shape = shape)
             .width(87.dp)
             .height(83.dp)
-            .border(width = if (isSelected) 5.dp else 0.dp, color = colorResource(R.color.grade_btn), shape = shape)
+            .border(width = if (isSelected) 5.dp else 0.dp, color = Color(0xFFC2B9FF), shape = shape)
     ) {
         Box(
             modifier = Modifier

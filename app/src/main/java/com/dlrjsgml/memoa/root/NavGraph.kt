@@ -1,7 +1,6 @@
 package com.dlrjsgml.memoa.root
 
 import android.os.Build
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -16,12 +15,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -32,7 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.feature.auth.start.StartScreen
+import com.dlrjsgml.memoa.feature.auth.start.start.StartScreen
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen

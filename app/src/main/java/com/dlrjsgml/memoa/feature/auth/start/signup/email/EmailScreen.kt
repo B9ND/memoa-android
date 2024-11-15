@@ -231,12 +231,18 @@ fun EmailScreen(
                     focusManager.clearFocus()
                     if (uiState.auth.length == 6) {
                         coroutineScope.launch {
-                            viewModel.checkCode(uiState.email, uiState.auth)
-                            if (uiState.welcome || uiState.auth == "123456") {
-                                navController.navigate("${NavGroup.SIGNUP_PASSWORD}?${uiState.email}")
+                            try {
+                                viewModel.checkCode(uiState.email, uiState.auth)
+                                if (uiState.welcome || uiState.auth == "123456") {
+                                    navController.navigate("${NavGroup.SIGNUP_PASSWORD}?${uiState.email}")
+                                }
+                            } catch (e: Exception) {
+                                Log.e("Auth Check", "Error during checkCode: ${e.message}")
+                                e.printStackTrace()
                             }
                         }
                     }
+
                 }
             }
         }
