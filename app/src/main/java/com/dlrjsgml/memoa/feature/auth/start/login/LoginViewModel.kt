@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 data class TextState(
-    val email: String = "kmjmj8769@gmail.com",
-    val password: String = "kmj8769@",
+    val email: String = "leegeh1213@dgsw.hs.kr",
+    val password: String = "1234",
     val access: String = "",
     val refresh: String = ""
 )

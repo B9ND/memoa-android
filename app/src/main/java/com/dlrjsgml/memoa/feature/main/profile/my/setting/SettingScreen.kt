@@ -143,15 +143,10 @@ fun SettingScreen(
         ) {
 
             ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "이름 변경") {
-
+                navController.navigate(NavGroup.NAME_SETTING)
             }
             Spacer(modifier = Modifier.height(12.dp))
             ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "자기소개 변경") {
-
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "소속 변경") {
 
             }
             Spacer(modifier = Modifier.height(12.dp))

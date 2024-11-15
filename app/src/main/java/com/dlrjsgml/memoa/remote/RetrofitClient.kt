@@ -1,7 +1,5 @@
 package com.dlrjsgml.memoa.remote
 
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import com.dlrjsgml.memoa.BuildConfig
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
@@ -15,6 +13,7 @@ import com.dlrjsgml.memoa.network.follow.GetFollowersService
 import com.dlrjsgml.memoa.network.follow.GetFollowingService
 import com.dlrjsgml.memoa.network.main.GetMainService
 import com.dlrjsgml.memoa.network.main.detail.DetailService
+import com.dlrjsgml.memoa.network.profile.PatchUserInfo
 import com.dlrjsgml.memoa.network.profile.GetProfileInfoService
 import com.dlrjsgml.memoa.network.profile.GetUserArticles
 import com.dlrjsgml.memoa.network.profile.GetUserProfileInfoService
@@ -22,7 +21,6 @@ import com.dlrjsgml.memoa.network.token.TokenService
 import com.dlrjsgml.memoa.network.write.WriteService
 import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
 import com.google.gson.GsonBuilder
-import com.google.gson.internal.GsonBuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -44,22 +42,15 @@ object RetrofitClient {
     }
 
 
-    val interceptorClient = OkHttpClient().newBuilder()
-        .addInterceptor(RequestInterceptor())
-        .addInterceptor(ResponseInterceptor())
-        .build()
+    val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
+        .addInterceptor(ResponseInterceptor()).build()
 
-    val client = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build()
+    val client = OkHttpClient.Builder().addInterceptor(logging).build()
 
     val instance: Retrofit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(interceptorClient)
+        Retrofit.Builder().baseUrl(BASE_URL).client(interceptorClient)
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+            .addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
 
@@ -68,11 +59,8 @@ object RetrofitClient {
     val getMainService: GetMainService by lazy { instance.create(GetMainService::class.java) }
     val getDetailService: DetailService by lazy { instance.create(DetailService::class.java) }
     val getProfileService: GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
-    val getUserProfileService: GetUserProfileInfoService by lazy {
-        instance.create(
-            GetUserProfileInfoService::class.java
-        )
-    }
+    val getUserProfileService: GetUserProfileInfoService by lazy { instance.create(GetUserProfileInfoService::class.java) }
+    val patchProfileService: PatchUserInfo by lazy { instance.create(PatchUserInfo::class.java) }
     val getFollowingService: GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
     val getFollowersService: GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
     val followService: FollowService by lazy { instance.create(FollowService::class.java) }

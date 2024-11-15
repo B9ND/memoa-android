@@ -46,6 +46,7 @@ import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
+import com.dlrjsgml.memoa.feature.main.profile.my.setting.name.NameSettingScreen
 import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -281,6 +282,9 @@ fun NavGraph(
                 }
                 composable(NavGroup.SETTING) {
                     SettingScreen(navController)
+                }
+                composable(NavGroup.NAME_SETTING){
+                    NameSettingScreen(navController)
                 }
             }
         }

@@ -21,7 +21,7 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 
 @Composable
 fun BackButton(
-
+    text : String = "뒤로가기",
     onClick: () -> Unit,
 ) {
     Row(
@@ -40,7 +40,7 @@ fun BackButton(
 
         Text(
             modifier = Modifier.padding(start = 9.dp),
-            text = "뒤로가기",
+            text = text,
             style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
         )
     }
