@@ -16,7 +16,6 @@ class RequestInterceptor() : Interceptor {
                 "/school/search" -> {}
                 else -> return chain.proceed(request)
             }
-
         }
 
         // 그 외의 요청에는 토큰을 추가

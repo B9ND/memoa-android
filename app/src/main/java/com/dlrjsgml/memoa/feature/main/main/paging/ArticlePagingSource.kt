@@ -58,10 +58,12 @@ class  ArticlePagingSource(
                 prevKey = prevKey,
                 nextKey = nextKey
             )
-        } catch (e: IOException) {
-            LoadResult.Error(e)
         } catch (e: HttpException) {
-            LoadResult.Error(e)
+            LoadResult.Page(
+                data = emptyList(),
+                prevKey = null,
+                nextKey = null
+            )
         }
     }
 

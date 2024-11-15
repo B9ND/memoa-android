@@ -22,7 +22,7 @@ data class DetailInfoState(
     val tags : List<String> = emptyList(),
     val createdAt : String = "2008.12.13",
     val images: List<String> = emptyList(),
-
+    val isBookmarked : Boolean = false
 )
 
 sealed interface DetailInfoSideEffect {
@@ -49,7 +49,8 @@ class DetailViewModel : ViewModel() {
                 authorProfileImage = response.authorProfileImage,
                 tags = response.tags,
                 createdAt = response.createdAt,
-                images = response.images
+                images = response.images,
+                isBookmarked = response.isBookmarked
             )  }
             _uiEffect.emit(DetailInfoSideEffect.Success)
 

@@ -56,6 +56,7 @@ import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
@@ -285,9 +286,13 @@ fun WriteScreen(
 //    }
 }
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Preview
 @Composable
 private fun afdjadfj() {
-//    WriteScreen()
+    WriteScreen(
+        viewModel = viewModel(),
+        navController = rememberNavController()
+    )
 }
 
