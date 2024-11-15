@@ -19,16 +19,6 @@ class RequestInterceptor : Interceptor {
                 request.url.encodedPath.contains("/school") ||
                 request.url.encodedPath.contains("/auth/login")
 
-<<<<<<< HEAD
-        // 특정 경로나 조건에 따라 헤더를 추가하지 않음
-        if (request.url.encodedPath.contains("/auth")) {
-            when(request.url.encodedPath){
-                "/auth/me" -> {}
-                "/auth/signup" -> {}
-                "/school/search" -> {}
-                else -> return chain.proceed(request)
-            }
-=======
         Log.d("데이터스토어 최종본", "intercept: ${getAccToken(context)}")
         val newRequest = if (shouldSkipHeader) {
             request.newBuilder().build()
@@ -36,7 +26,6 @@ class RequestInterceptor : Interceptor {
             request.newBuilder()
                 .addHeader("Authorization", "Bearer ${getAccToken(context)}")
                 .build()
->>>>>>> feature/token
         }
         println("Request URL: ${newRequest.url}")
         println("Headers: ${newRequest.headers}")
