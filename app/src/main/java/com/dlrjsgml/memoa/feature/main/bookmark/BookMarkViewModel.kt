@@ -42,9 +42,7 @@ class BookMarkViewModel : ViewModel() {
 
             } catch (e:Exception){
                 _uiEffect.emit(BookMarkSideEffect.Failure)
-
             }
-
         }
     }
 }

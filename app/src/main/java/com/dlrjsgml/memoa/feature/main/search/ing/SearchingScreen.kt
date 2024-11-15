@@ -62,7 +62,7 @@ fun SearchingScreen(
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 18.dp)
                 .focusRequester(focusRequester),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,

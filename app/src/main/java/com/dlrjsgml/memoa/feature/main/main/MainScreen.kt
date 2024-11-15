@@ -94,6 +94,7 @@ fun MainScreen(
     )
     Box(
         modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)
+
     ) {
 
         Column(
@@ -132,14 +133,12 @@ fun MainScreen(
                             modifier = Modifier.weight(1.85f)
                         ) {
                             viewModel.fillTags(it)
-
                         }
                         MemoaDropDown(
                             selectList = listOf("1학년", "2학년", "3학년"),
                             modifier = Modifier.weight(2.1f)
                         ) {
                             viewModel.fillTags(it)
-
                         }
                     }
                     Box(
@@ -177,6 +176,7 @@ fun MainScreen(
                                         profile = article.authorProfileImage,
                                         tag = article.tags.toImmutableList(),
                                         comment = 1,
+                                        bookmarked = article.isBookmarked,
                                         onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
                                         onBookmarkClick = { viewModel.bookmark(article.id) },
                                         onCommentClick = {},

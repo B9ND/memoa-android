@@ -57,13 +57,13 @@ fun ArticleList(
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),
     comment: Long = 0,
+    bookmarked : Boolean = false,
     onProfileClick: () -> Unit = {},
     onBookmarkClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onArticleClick: () -> Unit = {},
     onImageClick: () -> Unit ={}
 ) {
-
 
     Column(
         modifier = Modifier
@@ -169,7 +169,9 @@ fun ArticleList(
                     Row {
                         BookMarkButton(
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            onClick = {onBookmarkClick()}
+                            bookmarked = bookmarked,
+                            onClick = {onBookmarkClick()
+                            }
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(

@@ -73,7 +73,7 @@ fun BeforeSearchScreen(
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 18.dp),
             value = uiState.search,
             onValueChange = viewModel::updateTitle,
             enabled = false,

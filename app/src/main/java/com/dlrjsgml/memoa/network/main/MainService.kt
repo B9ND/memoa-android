@@ -14,16 +14,17 @@ data class ArticleResponse(
     val authorProfileImage : String,
     val tags: List<String>,
     val createdAt : String,
-    val images : List<String>
+    val images : List<String>,
+    val isBookmarked : Boolean
 )
 
 
-data class ArticleDataRequest(
-    val search: String?,
-    val tags: List<String?>?,
-    val page: Int?,
-    val size: Int?,
-)
+//data class ArticleDataRequest(
+//    val search: String?,
+//    val tags: List<String?>?,
+//    val page: Int?,
+//    val size: Int?,
+//)
 
 interface GetMainService {
     @GET("/post")

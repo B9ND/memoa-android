@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,10 +26,13 @@ import kotlinx.coroutines.launch
 data class SearchState(
     val search: String = "",
     val searchHistory: List<SearchHistoryEntity> = emptyList(),
-    val articles : FetchFlow<Flow<PagingData<ArticleResponse>>> = FetchFlow.Fetching()
-)
+    val tags: List<String> = arrayListOf("대구소프트웨어마이스터고등학교","1학년"),
+//    val articles : FetchFlow<Flow<PagingData<ArticleResponse>>> = FetchFlow.Fetching()
+    val articles: Flow<PagingData<ArticleResponse>> = flowOf(),
 
-sealed interface SearchSideEffect{
+    )
+
+sealed interface SearchSideEffect {
     data object BeforeSearch : SearchSideEffect
     data object Success : SearchSideEffect
     data object Failure : SearchSideEffect
@@ -49,7 +53,7 @@ class SearchViewModel(
     private val room = UserDatabase.getInstance()
 
 
-    fun beforeSearch(){
+    fun beforeSearch() {
         Log.d("확인", "비포");
         viewModelScope.launch {
             _uiEffect.emit(SearchSideEffect.BeforeSearch)
@@ -57,7 +61,8 @@ class SearchViewModel(
         Log.d("확인", "${_uiEffect.toString()}");
 
     }
-    fun getSearchArticles(search : String){
+
+    fun getSearchArticles(search: String) {
         Log.d("확인", "검색전");
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -66,14 +71,17 @@ class SearchViewModel(
                     enablePlaceholders = false,
                     initialLoadSize = 10
                 ),
-                    pagingSourceFactory = { ArticlePagingSource(search,
-                        arrayListOf()
-                    ) }).flow.cachedIn(viewModelScope)
+                    pagingSourceFactory = {
+                        ArticlePagingSource(
+                            search,
+                            arrayListOf()
+                        )
+                    }).flow.cachedIn(viewModelScope)
                 Log.d("확인", uiState.value.search);
-                _uiState.update { it.copy(articles = FetchFlow.Success(data)) }
+                _uiState.update { it.copy(articles = data) }
                 _uiEffect.emit(SearchSideEffect.Success)
-            } catch (e:Exception){
-                _uiState.update { it.copy(articles = FetchFlow.Failure()) }
+            } catch (e: Exception) {
+//                _uiState.update { it.copy(articles = FetchFlow.Failure()) }
                 _uiEffect.emit(SearchSideEffect.Failure)
             }
         }
@@ -92,10 +100,20 @@ class SearchViewModel(
     }
 
     fun startFetching() {
-        _uiState.update { it.copy(articles = FetchFlow.Fetching()) }
+//        _uiState.update { it.copy(articles = FetchFlow.Fetching()) }
+    }
+    fun fillTags(tag: String) {
+        _uiState.update {
+            if (tag in it.tags) {
+                it.copy(tags = it.tags - arrayListOf(tag))
+            } else {
+                it.copy(tags = it.tags + arrayListOf(tag))
+            }
+        }
+        Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
     }
 
-    fun deleteAllData(){
+    fun deleteAllData() {
         viewModelScope.launch(Dispatchers.IO) {
             room!!.searchHistoryDao().deleteAll()
             getData()
@@ -104,12 +122,12 @@ class SearchViewModel(
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
-            try{
+            try {
                 val data = room!!.searchHistoryDao().getAll()
                 updateSearchHistory(data)
                 _uiEffect.emit(SearchSideEffect.BeforeSearch)
                 Log.d("ㅎㅇ", "$data");
-            } catch (e:Exception){
+            } catch (e: Exception) {
 
             }
 

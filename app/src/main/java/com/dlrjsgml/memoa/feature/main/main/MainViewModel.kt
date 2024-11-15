@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.data.local.bookmark.BookMarkEntity
 import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
 import com.dlrjsgml.memoa.network.main.ArticleResponse
@@ -42,6 +43,7 @@ sealed interface BookMarkDoSideEffect {
 
 
 class MainViewModel : ViewModel() {
+
 
     private val _uiState = MutableStateFlow(ArticlesState())
     val uiState = _uiState.asStateFlow()
@@ -97,7 +99,6 @@ class MainViewModel : ViewModel() {
                 Log.d("북마크", e.message.toString());
                 _bookMarkUiEffect.emit(BookMarkDoSideEffect.Failure)
             }
-
         }
     }
 
