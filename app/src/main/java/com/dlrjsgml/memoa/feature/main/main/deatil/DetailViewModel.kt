@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.dlrjsgml.memoa.feature.main.main.ArticlesSideEffect
 import com.dlrjsgml.memoa.feature.main.main.ArticlesState
 import com.dlrjsgml.memoa.remote.RetrofitClient
-import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -8,7 +8,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
-import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.delay
 import java.io.IOException
 

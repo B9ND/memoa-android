@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.user.UserArticlesSideEffect
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
-import com.dlrjsgml.memoa.remote.TemporaryToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

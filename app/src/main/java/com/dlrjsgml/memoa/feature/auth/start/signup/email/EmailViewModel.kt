@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import retrofit2.HttpException
 
 data class TextState(
@@ -18,7 +17,6 @@ data class TextState(
     val auth: String = "",
     val welcome: Boolean = false
 )
-
 
 
 class EmailViewModel : ViewModel() {
@@ -33,34 +31,30 @@ class EmailViewModel : ViewModel() {
         if (auth.length < 7) _uiState.update { it.copy(auth = auth) } else _uiState
     }
 
-    fun getEmail(): String {
-        return uiState.value.email
-    }
-
 
 
     suspend fun sendCode(email: String) {
         return withContext(Dispatchers.IO) {
-            viewModelScope.launch {
-                try {
-                    val response = RetrofitClient.getCodeService.sendAuthCode(email = email)
-                } catch (e: HttpException) {
-                    Log.d("sign", e.code().toString())
-                }
+            try {
+                val response = RetrofitClient.getCodeService.sendAuthCode(email = email)
+            } catch (e: HttpException) {
+                Log.d("sign", e.code().toString())
             }
         }
     }
-    suspend fun checkCode(email: String, code: String) {
-        return withContext(Dispatchers.IO) {
-            viewModelScope.launch {
-                try {
-                    val response = RetrofitClient.sendCodeService.checkAuthCode(email, code)
-                    _uiState.update { it.copy(welcome = true) }
 
-                } catch (e: HttpException) {
-                    Log.d("sign", e.code().toString())
-                }
+    fun checkCode(email: String, code: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.sendCodeService.checkAuthCode(email, code)
+                _uiState.update { it.copy(welcome = true) }
+            } catch (e: HttpException) {
+                Log.d("sign", "HttpException: ${e.code()}") // HttpException 처리
+            } catch (e: Exception) {
+                Log.d("sign", "Exception: ${e.message}") // 다른 예외 처리
+                e.printStackTrace() // 예외의 상세 정보 출력
             }
         }
     }
+
 }

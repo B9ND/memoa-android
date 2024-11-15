@@ -1,5 +1,0 @@
-package com.dlrjsgml.memoa.remote
-
-object TemporaryToken {
-    var AccessToken : String = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsImVtYWlsIjoibGVlZ2VoMTIxM0BnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiZGV2aWNlIjoib2todHRwLzQuMTIuMF8yMjMuMzkuMjM4LjE5IiwiaWF0IjoxNzMxMzMwNTYyLCJleHAiOjE3MzEzMzExNjJ9.Id0Mk-PHGHgmJ6TcfJyAlyNdZ4kfYpGS5vtcUGqL_y0"
-}
