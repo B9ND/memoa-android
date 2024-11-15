@@ -1,9 +1,11 @@
 package com.dlrjsgml.memoa.feature.main.bookmark
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -19,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
@@ -38,25 +42,17 @@ fun BookMarkScreen(
     LaunchedEffect(Unit) {
         viewModel.getBookMarks()
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White)
-    ) {
-        BackHandlers(navController = navController)
-        LazyColumn {
-            item {
-                Spacer(modifier = Modifier.height(58.dp))
-            }
-            if (uiState.bookMarks.isEmpty()) {
+    Box(modifier = Modifier.fillMaxSize()){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White)
+        ) {
+            BackHandlers(navController = navController)
+            LazyColumn {
                 item {
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = "북마크가 없습니다",
-                        style = caption1
-                    )
+                    Spacer(modifier = Modifier.height(58.dp))
                 }
-            } else {
                 items(uiState.bookMarks.size) {
                     val bookMark = uiState.bookMarks[it]
                     ArticleList(
@@ -68,7 +64,10 @@ fun BookMarkScreen(
                     )
                 }
             }
+        }
 
+        if (uiState.bookMarks.isEmpty()){
+            Text(modifier = Modifier.align(Alignment.Center), text = "선택된 북마크가 없습니다.", style = caption1.copy(fontSize = 24.sp))
         }
     }
 }
@@ -76,5 +75,8 @@ fun BookMarkScreen(
 @Preview
 @Composable
 private fun fdjajfk() {
-//    BookMarkScreen()
+    BookMarkScreen(
+        viewModel = viewModel(),
+        navController = rememberNavController()
+    )
 }

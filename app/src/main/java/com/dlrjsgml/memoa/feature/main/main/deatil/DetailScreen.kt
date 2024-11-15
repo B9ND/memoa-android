@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.dlrjsgml.memoa.feature.main.main.MainViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
@@ -36,6 +37,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 fun DetailScreen(
     viewModel: DetailViewModel = viewModel(),
+    bookMarkViewModel: MainViewModel = viewModel(),
     navController: NavHostController,
     boardNumber: String,
 ) {
@@ -78,7 +80,7 @@ fun DetailScreen(
                 title = uiState.title,
                 profile = uiState.authorProfileImage,
                 onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}") },
-                )
+            )
             Spacer(modifier = Modifier.height(30.dp))
         }
 
@@ -102,12 +104,10 @@ fun DetailScreen(
                     style = boardContent
                 )
             }
-//                }
-
         }
         item {
             Spacer(modifier = Modifier.height(20.dp))
-            Box(modifier = Modifier.padding(horizontal = 36.dp)){
+            Box(modifier = Modifier.padding(horizontal = 36.dp)) {
                 TagLists(uiState.tags.toImmutableList(), mini = true)
             }
             Spacer(modifier = Modifier.height(5.dp))
@@ -126,7 +126,8 @@ fun DetailScreen(
                 Row {
                     BookMarkButton(
                         modifier = Modifier.align(Alignment.CenterVertically),
-                        onClick = {})
+                        bookmarked = uiState.isBookmarked,
+                        onClick = {bookMarkViewModel.bookmark(uiState.id)})
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
@@ -137,7 +138,6 @@ fun DetailScreen(
                 }
             }
         }
-
     }
 }
 
