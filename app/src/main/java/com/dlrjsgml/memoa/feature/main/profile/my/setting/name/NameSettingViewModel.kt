@@ -22,7 +22,7 @@ class NameSettingViewModel : ViewModel() {
         try{
              viewModelScope.launch(Dispatchers.IO) {
 
-                 val response = RetrofitClient.patchProfileService.changeUserInfo()
+//                 val response = RetrofitClient.patchProfileService.changeUserInfo()
              }
         } catch (e:Exception){
             throw e

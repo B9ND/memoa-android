@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -87,142 +88,146 @@ fun MainScreen(
     Log.d("ㅎㅇ", "dlrjsgml44 Ok ${lazyPagingItems.loadState}");
     val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    )
-    Box(
-        modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)
 
-    ) {
-
-        Column(
+    Scaffold(topBar = {
+        AnimatedVisibility(
+            visible = lazyState.isScrollingUp().value,
+            enter = slideInVertically {
+                // Slide in from 40 dp from the top.
+                with(density) { -40.dp.roundToPx() }
+            } + expandVertically(
+                // Expand from the top.
+                expandFrom = Alignment.Top
+            ) + fadeIn(
+                // Fade in with the initial alpha of 0.3f.
+                initialAlpha = 0.5f
+            ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut()
         ) {
-            HomeBackOnPressed()
-
-            AnimatedVisibility(
-                visible = lazyState.isScrollingUp().value,
-                enter = slideInVertically {
-                    // Slide in from 40 dp from the top.
-                    with(density) { -40.dp.roundToPx() }
-                } + expandVertically(
-                    // Expand from the top.
-                    expandFrom = Alignment.Top
-                ) + fadeIn(
-                    // Fade in with the initial alpha of 0.3f.
-                    initialAlpha = 0.5f
-                ),
-                exit = slideOutVertically() + shrinkVertically() + fadeOut()
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .background(Color.White)
-                            .padding(top = 10.dp)
-                            .padding(vertical = 4.dp, horizontal = 14.dp)
+            Column {
+                Row(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .padding(top = 10.dp)
+                        .padding(vertical = 4.dp, horizontal = 14.dp)
+                ) {
+                    MemoaDropDown(
+                        selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
+                        modifier = Modifier.weight(5.5f)
                     ) {
-                        MemoaDropDown(
-                            selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
-                            modifier = Modifier.weight(5.5f)
-                        ) {
-                            viewModel.fillTags(it)
-                        }
-                        MemoaDropDown(
-                            selectList = listOf("국어", "영어", "수학", "사회", "과학", "기타"),
-                            modifier = Modifier.weight(1.85f)
-                        ) {
-                            viewModel.fillTags(it)
-                        }
-                        MemoaDropDown(
-                            selectList = listOf("1학년", "2학년", "3학년"),
-                            modifier = Modifier.weight(2.1f)
-                        ) {
-                            viewModel.fillTags(it)
-                        }
+                        viewModel.fillTags(it)
                     }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Gray10)
-                    )
+                    MemoaDropDown(
+                        selectList = listOf("국어", "영어", "수학", "사회", "과학", "기타"),
+                        modifier = Modifier.weight(1.85f)
+                    ) {
+                        viewModel.fillTags(it)
+                    }
+                    MemoaDropDown(
+                        selectList = listOf("1학년", "2학년", "3학년"),
+                        modifier = Modifier.weight(2.1f)
+                    ) {
+                        viewModel.fillTags(it)
+                    }
                 }
-
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Gray10)
+                )
             }
 
-            LazyColumn(
-                state = lazyState
-//            userScrollEnabled = true
+        }
+    }) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        )
+        Box(
+            modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection).padding(innerPadding)
+        ) {
+            Column(
             ) {
-                when {
-                    lazyPagingItems.loadState.refresh is LoadState.Loading -> {
-                        items(10) {
-                            JJapList()
-                        }
-                    }
+                HomeBackOnPressed()
 
-                    lazyPagingItems.loadState.refresh is LoadState.NotLoading -> {
-                        if (lazyPagingItems.itemCount != 0) {
-                            items(lazyPagingItems.itemCount) {
-                                val article = lazyPagingItems[it]
-                                if (article != null) {
-                                    ArticleList(
-                                        id = article.id,
-                                        name = article.author,
-                                        date = article.createdAt,
-                                        title = article.title,
-                                        image = article.images.toImmutableList(),
-                                        profile = article.authorProfileImage,
-                                        tag = article.tags.toImmutableList(),
-                                        comment = 1,
-                                        bookmarked = article.isBookmarked,
-                                        onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
-                                        onBookmarkClick = { viewModel.bookmark(article.id) },
-                                        onCommentClick = {},
-                                        onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
-                                        onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
-                                    )
-                                }
+
+
+                LazyColumn(
+                    state = lazyState
+//            userScrollEnabled = true
+                ) {
+                    when {
+                        lazyPagingItems.loadState.refresh is LoadState.Loading -> {
+                            items(10) {
+                                JJapList()
                             }
-                        } else {
-                            items(1) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .align(Alignment.CenterHorizontally)
-                                )
-                                {
-                                    Spacer(modifier = Modifier.height(200.dp))
-                                    Image(
-                                        modifier = Modifier.align(Alignment.CenterHorizontally).size(180.dp),
-                                        painter = painterResource(id = R.drawable.no_article_man),
-                                        contentDescription = null
+                        }
+
+                        lazyPagingItems.loadState.refresh is LoadState.NotLoading -> {
+                            if (lazyPagingItems.itemCount != 0) {
+                                items(lazyPagingItems.itemCount) {
+                                    val article = lazyPagingItems[it]
+                                    if (article != null) {
+                                        ArticleList(
+                                            id = article.id,
+                                            name = article.author,
+                                            date = article.createdAt,
+                                            title = article.title,
+                                            image = article.images.toImmutableList(),
+                                            profile = article.authorProfileImage,
+                                            tag = article.tags.toImmutableList(),
+                                            comment = 1,
+                                            bookmarked = article.isBookmarked,
+                                            onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
+                                            onBookmarkClick = { viewModel.bookmark(article.id) },
+                                            onCommentClick = {},
+                                            onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                                            onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
+                                        )
+                                    }
+                                }
+                            } else {
+                                items(1) {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .align(Alignment.CenterHorizontally)
                                     )
-                                    Text(
-                                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                                        text = "글이 없습니다.",
-                                        style = caption2
-                                    )
+                                    {
+                                        Spacer(modifier = Modifier.height(200.dp))
+                                        Image(
+                                            modifier = Modifier.align(Alignment.CenterHorizontally).size(180.dp),
+                                            painter = painterResource(id = R.drawable.no_article_man),
+                                            contentDescription = null
+                                        )
+                                        Text(
+                                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                                            text = "글이 없습니다.",
+                                            style = caption2
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
 //                    lazyPagingItems.loadState.append is LoadState.Loading -> {
 //                        items(10) {
 //                            JJapList()
 //                        }
 //                    }
-                }
+                    }
 
+                }
             }
+            PullToRefreshContainer(
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                containerColor = Color.White,
+                contentColor = Color.Black
+            )
         }
-        PullToRefreshContainer(
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-            containerColor = Color.White,
-            contentColor = Color.Black
-        )
+
     }
 
 }

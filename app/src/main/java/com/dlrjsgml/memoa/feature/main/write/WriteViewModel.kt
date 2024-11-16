@@ -172,7 +172,7 @@ class WriteViewModel : ViewModel() {
                 Log.d("글쓰기", "ㅇㅇㅇㅇㅇ: ${response.url}")
                 _uiState.update { it.copy(image = it.image + response.url) }
 //                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
-                _uiState.update { it.copy(content = it.content + "\n📷${_uiState.value.image.size} 번째에 들어갈 이미지 입니다!\n") }
+                _uiState.update { it.copy(content = it.content + "\n✔📷${_uiState.value.image.size} 번째에 들어갈 이미지 입니다!✔\n") }
 
                 Log.d("글글", "ui 하나 : ${_uiState.value.content}");
 
@@ -207,7 +207,7 @@ class WriteViewModel : ViewModel() {
             try {
                 _uiState.update { state ->
                     // 현재 content 값을 가져와 정규식을 통해 바꿔줌
-                    val updatedContent = state.content.replace(Regex("📷(\\d+) 번째에 들어갈 이미지 입니다!")) { matchResult ->
+                    val updatedContent = state.content.replace(Regex("✔📷(\\d+) 번째에 들어갈 이미지 입니다!✔")) { matchResult ->
                         // 정규식에서 숫자 부분을 추출하여 인덱스로 사용
                         val index = (matchResult.groupValues[1].toIntOrNull() ?: 1) - 1
                         // image 리스트의 index에 해당하는 값을 가져오거나 기본값 설정

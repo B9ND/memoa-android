@@ -65,6 +65,7 @@ import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
 import com.dlrjsgml.memoa.ui.component.items.ArticleImage
+import com.dlrjsgml.memoa.ui.component.items.DelArticleImage
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import kotlinx.coroutines.launch
 
@@ -73,7 +74,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun WriteScreen(
     viewModel: WriteViewModel = viewModel(),
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
     val context = LocalContext.current
@@ -94,7 +95,7 @@ fun WriteScreen(
                 selectedImageBitmap = context.contentResolver.uriToBitmap(uri)
                 selectedFileName = context.contentResolver.getFileName(uri).toString()
                 Log.d("글쓰기", "ChatDetailScreen: $selectedFileName $selectedImageBitmap")
-                viewModel.uploadImage(uri,context,selectedImageBitmap!!)
+                viewModel.uploadImage(uri, context, selectedImageBitmap!!)
             }
         }
     }
@@ -117,23 +118,27 @@ fun WriteScreen(
 
 
     LaunchedEffect(viewModel) {
-        viewModel.uiEffect.collect{ effect->
-            when(effect){
+        viewModel.uiEffect.collect { effect ->
+            when (effect) {
                 is WriteSideEffect.Success -> {
                     viewModel.wrigingErrorAlert("글쓰기 성공")
                     navController.popBackStack()
                     Log.d("글쓰기", "성공");
                 }
-                is WriteSideEffect.Failure ->{
+
+                is WriteSideEffect.Failure -> {
                     viewModel.wrigingErrorAlert("글쓰기 실패")
                     Log.d("글쓰기", "실패");
                 }
-                is UpLoadImageSideEffect.CompressionFailure ->{
+
+                is UpLoadImageSideEffect.CompressionFailure -> {
                     viewModel.wrigingErrorAlert("이미지 압축실패")
                 }
+
                 is UpLoadImageSideEffect.Failure -> {
                     viewModel.wrigingErrorAlert("이미지 업로드 실패")
                 }
+
                 is UpLoadImageSideEffect.Success -> {
                     viewModel.wrigingErrorAlert("이미지 업로드 성공")
                 }
@@ -160,9 +165,9 @@ fun WriteScreen(
             Text(
                 modifier = Modifier.noRippleClickable {
                     Log.d("글쓰기", "현재 상태 : ${uiState.isReleased}");
-                    if(uiState.title.isNotBlank() && uiState.content.isNotBlank()){
+                    if (uiState.title.isNotBlank() && uiState.content.isNotBlank()) {
                         viewModel.postWrite()
-                    }else{
+                    } else {
                         viewModel.plsAllWrite()
                     }
                 },
@@ -180,13 +185,15 @@ fun WriteScreen(
             hint = "제목을 입력하세요"
         )
         Spacer(modifier = Modifier.height(10.dp))
-        Box{
-            LazyRow(modifier = Modifier
-                .padding(horizontal = 21.dp)
-                .scrollable(
-                    state = scrollState,
-                    orientation = Orientation.Horizontal
-                )) {
+        Box {
+            LazyRow(
+                modifier = Modifier
+                    .padding(horizontal = 21.dp)
+                    .scrollable(
+                        state = scrollState,
+                        orientation = Orientation.Horizontal
+                    )
+            ) {
                 items(selectTags.size) {
                     MemoaCheckBox(
                         text = selectTags[it],
@@ -202,7 +209,9 @@ fun WriteScreen(
         Box {
             SimpleTextField(
                 hintColorWhite = true,
-                modifier = Modifier.padding(horizontal = 21.dp).focusRequester(focusRequester),
+                modifier = Modifier
+                    .padding(horizontal = 21.dp)
+                    .focusRequester(focusRequester),
                 singleLine = false,
                 minLines = 14,
                 maxLines = 14,
@@ -225,7 +234,10 @@ fun WriteScreen(
                 }
             )
             {
-                Image(painter = painterResource(id = R.drawable.ic_get_gallery), contentDescription = null)
+                Image(
+                    painter = painterResource(id = R.drawable.ic_get_gallery),
+                    contentDescription = null
+                )
             }
 //            selectedImageUri?.let {
 //                Log.d("ㅎㅇ", selectedImageUri.toString());
@@ -240,7 +252,11 @@ fun WriteScreen(
 
         Row(modifier = Modifier.padding(horizontal = 20.dp)) {
 
-            Text( modifier = Modifier.align(Alignment.CenterVertically), text = "공개", style = caption1Regular.copy(fontSize = 16.sp))
+            Text(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = "공개",
+                style = caption1Regular.copy(fontSize = 16.sp)
+            )
             Spacer(Modifier.width(20.dp))
             Switch(
                 checked = uiState.isReleased,
@@ -268,9 +284,11 @@ fun WriteScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
-            items(uiState.image.size){
-                ArticleImage(image = uiState.image[it],
-                    onImageClick = {navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.image[it]}")})
+            items(uiState.image.size) {
+                DelArticleImage(image = uiState.image[it],
+                    onImageClick = { navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.image[it]}") },
+                    onDelClick = {
+                    })
             }
         }
         Spacer(modifier = Modifier.height(200.dp))
