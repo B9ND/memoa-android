@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.google.gson.annotations.Expose
 import kotlinx.coroutines.runBlocking
 
 val REF_TOKEN = stringPreferencesKey("ref_token")

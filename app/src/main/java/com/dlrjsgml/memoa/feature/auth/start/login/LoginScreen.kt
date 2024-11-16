@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,12 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -44,15 +41,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
-
-import com.dlrjsgml.memoa.feature.auth.start.signup.email.addFocusCleaner
 import com.dlrjsgml.memoa.network.data.user.getAccToken
 import com.dlrjsgml.memoa.network.data.user.getRefToken
-import com.dlrjsgml.memoa.network.data.user.saveAccToken
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
+import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 
 
@@ -65,7 +59,6 @@ fun LoginScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
@@ -128,7 +121,6 @@ fun LoginScreen(
                     )
                 )
             )
-            .addFocusCleaner(focusManager)
     ) {
         Image(
             painter = painterResource(R.drawable.goorm),
@@ -169,11 +161,10 @@ fun LoginScreen(
                     modifier = Modifier.focusRequester(focusRequester),
                 )
                 Spacer(Modifier.height(10.dp))
-                MemoaTextField(
+                MemoaPasswordTextField(
                     value = uiState.password,
                     onValueChange = viewModel::updatePassword,
                     hint = authText,
-                    firstFocus = false,
                 )
             }
             Box(
@@ -193,9 +184,8 @@ fun LoginScreen(
                         viewModel.updateToken(uiState.access, uiState.refresh)
                         Log.d("acc", "LoginScreen: ${uiState.access}")
                         Log.d("acc", "LoginScreen: ${uiState.refresh}")
-                        Log.d("gettoken", "${getAccToken(context)}")
-                        Log.d("gettoken", "${getRefToken(context)}")
-//                        navController.navigate(NavGroup.MAIN)
+                        Log.d("get token", "${getAccToken(context)}")
+                        Log.d("get token", "${getRefToken(context)}")
                     }
                 )
 
@@ -205,21 +195,3 @@ fun LoginScreen(
     }
 }
 
-fun Modifier.addFocusCleaner(
-    focusManager: FocusManager,
-    doOnClear: () -> Unit = {},
-): Modifier {
-    return this.pointerInput(Unit) {
-        detectTapGestures(onTap = {
-            doOnClear()
-            focusManager.clearFocus()
-        })
-    }
-}
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//@Preview
-//fun EmailScreenPreview() {
-//    LoginScreen()
-//}
