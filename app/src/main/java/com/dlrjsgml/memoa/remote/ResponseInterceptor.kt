@@ -1,15 +1,11 @@
 package com.dlrjsgml.memoa.remote
 
 import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
 import com.dlrjsgml.memoa.MemoaApplication
-import com.dlrjsgml.memoa.network.data.login.LoginRequest
-import com.dlrjsgml.memoa.network.data.user.getAccToken
 import com.dlrjsgml.memoa.network.data.user.getRefToken
 import com.dlrjsgml.memoa.network.data.user.saveAccToken
 import com.dlrjsgml.memoa.network.data.user.saveRefToken
 import com.dlrjsgml.memoa.network.token.AccTokenRequest
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -53,7 +49,7 @@ class ResponseInterceptor : Interceptor {
                 // todo Control Error for Payment Required
             }
             403 -> {
-                Log.d("인터셉터", "403 에러");
+                Log.d("인터셉터", "403 에러")
             }
         }
         return response

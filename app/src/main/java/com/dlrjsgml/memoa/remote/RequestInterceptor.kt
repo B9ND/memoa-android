@@ -1,14 +1,10 @@
 package com.dlrjsgml.memoa.remote
 
-import android.content.Context
 import android.util.Log
 import com.dlrjsgml.memoa.MemoaApplication
-import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
 import com.dlrjsgml.memoa.network.data.user.getAccToken
 import okhttp3.Interceptor
 import okhttp3.Response
-import kotlin.coroutines.coroutineContext
-import kotlin.math.log
 
 class RequestInterceptor : Interceptor {
 

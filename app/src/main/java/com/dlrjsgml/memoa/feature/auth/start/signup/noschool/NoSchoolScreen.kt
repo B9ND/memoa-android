@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NoSchoolScreen(
@@ -90,10 +88,3 @@ fun NoSchoolScreen(
         }
     }
 }
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//@Preview
-//fun gdfd() {
-//    NoSchoolScreen()
-//}
