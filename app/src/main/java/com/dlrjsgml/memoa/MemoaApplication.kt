@@ -12,7 +12,7 @@ class MemoaApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
-        MemoaApplication.context = applicationContext
+        context = applicationContext
     }
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)

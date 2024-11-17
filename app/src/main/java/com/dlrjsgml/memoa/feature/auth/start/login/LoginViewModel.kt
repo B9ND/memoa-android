@@ -51,8 +51,6 @@ class LoginViewModel : ViewModel() {
     }
 
 
-    private val _loginState = MutableStateFlow("")
-    val loginState = _loginState.asStateFlow()
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {

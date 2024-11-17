@@ -5,8 +5,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation
-import com.dlrjsgml.memoa.feature.auth.start.login.LoginSideEffect
 import com.dlrjsgml.memoa.network.data.school.SchoolSearchResponse
 import com.dlrjsgml.memoa.network.data.signup.SignUpRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
@@ -26,7 +24,7 @@ data class TextState(
     val schoolNames: List<SchoolSearchResponse> = emptyList(),
     val departmentNames: List<String> = emptyList(),
     val departmentId: Int = -1,
-    val departmentName: AnnotatedString = buildAnnotatedString { "" }
+    val departmentName: AnnotatedString = buildAnnotatedString { }
 )
 
 sealed interface SignUpSideEffect {
@@ -41,8 +39,8 @@ class SchoolChooseScreenViewModel : ViewModel() {
     private val _uiEffect = MutableSharedFlow<SignUpSideEffect>()
     val uiEffect: SharedFlow<SignUpSideEffect> = _uiEffect.asSharedFlow()
 
-    fun updateDpName(selectedItem: String) {
-        _uiState.update { it.copy(departmentName = buildAnnotatedString { selectedItem }) }
+    fun updateDpName() {
+        _uiState.update { it.copy(departmentName = buildAnnotatedString {  }) }
     }
 
     fun updateSchool(content: String) {
@@ -66,7 +64,7 @@ class SchoolChooseScreenViewModel : ViewModel() {
         Log.d("ㅎㅇ", "lastSignup: $email ")
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val lastResponse = RetrofitClient.signupService.lastSignupSearch(
+                RetrofitClient.signupService.lastSignupSearch(
                     register = SignUpRequest(email, nickname, password, departmentId)
                 )
                 _uiEffect.emit(SignUpSideEffect.Success)

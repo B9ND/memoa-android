@@ -216,6 +216,6 @@ fun EmailScreenPreview() {
     PasswordScreen(
         modifier = Modifier,
         navController = rememberNavController(),
-        email = "fdadf"
+        email = "good"
     )
 }

@@ -3,12 +3,12 @@ package com.dlrjsgml.memoa.remote
 import com.dlrjsgml.memoa.BuildConfig
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
-import com.dlrjsgml.memoa.network.follow.FollowService
 import com.dlrjsgml.memoa.network.data.login.LoginService
 import com.dlrjsgml.memoa.network.data.school.SchoolService
 import com.dlrjsgml.memoa.network.data.signup.GetCodeService
 import com.dlrjsgml.memoa.network.data.signup.LastSignupService
 import com.dlrjsgml.memoa.network.data.signup.SendCodeService
+import com.dlrjsgml.memoa.network.follow.FollowService
 import com.dlrjsgml.memoa.network.follow.GetFollowersService
 import com.dlrjsgml.memoa.network.follow.GetFollowingService
 import com.dlrjsgml.memoa.network.main.GetMainService
@@ -20,35 +20,40 @@ import com.dlrjsgml.memoa.network.profile.GetUserProfileInfoService
 import com.dlrjsgml.memoa.network.token.TokenService
 import com.dlrjsgml.memoa.network.write.WriteService
 import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 object RetrofitClient {
-//    private lateinit var appContext: Context
-//    fun initializeContext(context: Context) {
-//        appContext = context.applicationContext
-//    }
 
 
     private const val BASE_URL = BuildConfig.API_KEY
-    var gson = GsonBuilder().setLenient().create()
-    val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY // 요청 메서드 및 URL만 로그에 남기기
-    }
+    private var gson: Gson = GsonBuilder().setLenient().create()
 
 
-    val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
-        .addInterceptor(ResponseInterceptor()).build()
+// <<<<<<< feature/setting
+//     val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
+//         .addInterceptor(ResponseInterceptor()).build()
 
-    val client = OkHttpClient.Builder().addInterceptor(logging).build()
+//     val client = OkHttpClient.Builder().addInterceptor(logging).build()
 
-    val instance: Retrofit by lazy {
-        Retrofit.Builder().baseUrl(BASE_URL).client(interceptorClient)
+//     val instance: Retrofit by lazy {
+//         Retrofit.Builder().baseUrl(BASE_URL).client(interceptorClient)
+// =======
+    private val interceptorClient = OkHttpClient().newBuilder()
+        .addInterceptor(RequestInterceptor())
+        .addInterceptor(ResponseInterceptor())
+        .build()
+
+    private val instance: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(interceptorClient)
+// >>>>>>> develop
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson)).build()
     }

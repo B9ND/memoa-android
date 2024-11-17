@@ -36,7 +36,7 @@ class EmailViewModel : ViewModel() {
     suspend fun sendCode(email: String) {
         return withContext(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.getCodeService.sendAuthCode(email = email)
+                RetrofitClient.getCodeService.sendAuthCode(email = email)
             } catch (e: HttpException) {
                 Log.d("sign", e.code().toString())
             }
@@ -46,7 +46,7 @@ class EmailViewModel : ViewModel() {
     fun checkCode(email: String, code: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.sendCodeService.checkAuthCode(email, code)
+                RetrofitClient.sendCodeService.checkAuthCode(email, code)
                 _uiState.update { it.copy(welcome = true) }
             } catch (e: HttpException) {
                 Log.d("sign", "HttpException: ${e.code()}") // HttpException 처리
