@@ -26,6 +26,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +47,7 @@ import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
+import com.dlrjsgml.memoa.ui.theme.miniCaption2
 import kotlinx.collections.immutable.toImmutableList
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -74,7 +79,24 @@ fun ProfileScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Purple60)
+            .drawBehind {
+                val height = size.height
+                val purpleHeight = height / 3
+
+                // 보라색 영역
+                drawRect(
+                    color = Purple60,
+                    topLeft = Offset(0f, 0f),
+                    size = Size(size.width, purpleHeight)
+                )
+
+                // 하얀색 영역
+                drawRect(
+                    color = Color.White,
+                    topLeft = Offset(0f, purpleHeight),
+                    size = Size(size.width, height - purpleHeight)
+                )
+            }
     ) {
         item {
             Box(
@@ -131,8 +153,8 @@ fun ProfileScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = uiState.email,
-                        style = miniCaption1
+                        text = uiState.description?: "",
+                        style = miniCaption2
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -167,9 +189,7 @@ fun ProfileScreen(
                 )
             }
         }
-        if(uiState.articles.size <= 5) {
-            items(3) { Box(modifier = Modifier.fillMaxWidth().height(300.dp).background(Color.White))  }
-        }
+
     }
 }
 

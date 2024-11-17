@@ -33,7 +33,7 @@ val miniCaption1 = TextStyle(
 val miniCaption2 = TextStyle(
     fontFamily = PretendardFontFamily,
     fontWeight = FontWeight.Normal,
-    fontSize = 14.sp,
+    fontSize = 12.sp,
     lineHeight = 1.3.em,
     platformStyle = PlatformTextStyle(includeFontPadding = false),
 )

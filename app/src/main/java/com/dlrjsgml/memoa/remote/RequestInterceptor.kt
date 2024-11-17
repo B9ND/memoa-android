@@ -11,7 +11,7 @@ class RequestInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val context = MemoaApplication.getContext()
-        val shouldSkipHeader = request.url.encodedPath.contains("/auth") ||
+        val shouldSkipHeader = request.url.encodedPath.contains("/auth") && !request.url.encodedPath.contains("auth/me")||
                 request.url.encodedPath.contains("/school") ||
                 request.url.encodedPath.contains("/auth/login")
 

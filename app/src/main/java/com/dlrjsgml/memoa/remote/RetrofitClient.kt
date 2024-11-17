@@ -13,6 +13,7 @@ import com.dlrjsgml.memoa.network.follow.GetFollowersService
 import com.dlrjsgml.memoa.network.follow.GetFollowingService
 import com.dlrjsgml.memoa.network.main.GetMainService
 import com.dlrjsgml.memoa.network.main.detail.DetailService
+import com.dlrjsgml.memoa.network.profile.PatchUserInfo
 import com.dlrjsgml.memoa.network.profile.GetProfileInfoService
 import com.dlrjsgml.memoa.network.profile.GetUserArticles
 import com.dlrjsgml.memoa.network.profile.GetUserProfileInfoService
@@ -34,6 +35,15 @@ object RetrofitClient {
     private var gson: Gson = GsonBuilder().setLenient().create()
 
 
+// <<<<<<< feature/setting
+//     val interceptorClient = OkHttpClient().newBuilder().addInterceptor(RequestInterceptor())
+//         .addInterceptor(ResponseInterceptor()).build()
+
+//     val client = OkHttpClient.Builder().addInterceptor(logging).build()
+
+//     val instance: Retrofit by lazy {
+//         Retrofit.Builder().baseUrl(BASE_URL).client(interceptorClient)
+// =======
     private val interceptorClient = OkHttpClient().newBuilder()
         .addInterceptor(RequestInterceptor())
         .addInterceptor(ResponseInterceptor())
@@ -43,9 +53,9 @@ object RetrofitClient {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(interceptorClient)
+// >>>>>>> develop
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+            .addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
 
@@ -54,11 +64,8 @@ object RetrofitClient {
     val getMainService: GetMainService by lazy { instance.create(GetMainService::class.java) }
     val getDetailService: DetailService by lazy { instance.create(DetailService::class.java) }
     val getProfileService: GetProfileInfoService by lazy { instance.create(GetProfileInfoService::class.java) }
-    val getUserProfileService: GetUserProfileInfoService by lazy {
-        instance.create(
-            GetUserProfileInfoService::class.java
-        )
-    }
+    val getUserProfileService: GetUserProfileInfoService by lazy { instance.create(GetUserProfileInfoService::class.java) }
+    val patchProfileService: PatchUserInfo by lazy { instance.create(PatchUserInfo::class.java) }
     val getFollowingService: GetFollowingService by lazy { instance.create(GetFollowingService::class.java) }
     val getFollowersService: GetFollowersService by lazy { instance.create(GetFollowersService::class.java) }
     val followService: FollowService by lazy { instance.create(FollowService::class.java) }

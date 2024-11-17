@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -190,7 +193,6 @@ fun ArticleList(
 @Composable
 fun ArticleImage(image: String, onImageClick : () -> Unit) {
     var isImageLoaded by remember { mutableStateOf(false) }
-
     Box {
         if (!isImageLoaded) {
             // Shimmer 효과 적용
@@ -220,18 +222,64 @@ fun ArticleImage(image: String, onImageClick : () -> Unit) {
 }
 
 
+@Composable
+fun DelArticleImage(image: String, onImageClick : () -> Unit,onDelClick : () -> Unit) {
+    var isImageLoaded by remember { mutableStateOf(false) }
+    Box {
+        if (!isImageLoaded) {
+            // Shimmer 효과 적용
+            Box(
+                modifier = Modifier
+                    .width(220.dp)
+                    .height(240.dp)
+                    .shimmerEffect()
+            )
+        }
+
+        Box(){
+            AsyncImage(
+                modifier = Modifier
+                    .width(220.dp)
+                    .height(240.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .noRippleClickable {
+//                    navController.navigate("${NavGroup.IMAGEDETAIL}?$image")
+                        onImageClick()
+                    },
+                model = image,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                onSuccess = { isImageLoaded = true } // 이미지가 로드되면 shimmer 중단
+            )
+            Icon(
+                modifier = Modifier.noRippleClickable { onDelClick() }.align(Alignment.TopEnd).padding(12.dp).size(34.dp),
+                imageVector = Icons.Default.Close,
+                contentDescription = "Close",
+                tint = Color.Black
+            )
+        }
+
+    }
+}
+
 @Preview
 @Composable
-fun ArticleListPreview() {
-    ArticleList(
-        name = "김은찬",
-        date = "2024년 8월 13일",
-        title = "국어, 과학 필기 공유합니다!",
-        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
-        tag = persistentListOf("국어", "과학"),
-        image = persistentListOf(
-            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
-        )
-    )
+private fun Deee() {
+    DelArticleImage("https://newsimg.hankookilbo.com/2015/12/17/201512171111528240_2.jpg", onImageClick = {}, onDelClick = {} )
 }
+//
+//@Preview
+//@Composable
+//fun ArticleListPreview() {
+//    ArticleList(
+//        name = "김은찬",
+//        date = "2024년 8월 13일",
+//        title = "국어, 과학 필기 공유합니다!",
+//        profile = "https://image.dongascience.com/Photo/2017/03/1489737117788.png",
+//        tag = persistentListOf("국어", "과학"),
+//        image = persistentListOf(
+//            "https://newsimg.hankookilbo.com/cms/articlerelease/2021/04/26/813324fb-5b9a-4065-a064-cb52e7c21156.jpg",
+//            "https://upload.wikimedia.org/wikipedia/commons/e/ea/Korean_Jindo_Dog.jpg"
+//        )
+//    )
+//}
