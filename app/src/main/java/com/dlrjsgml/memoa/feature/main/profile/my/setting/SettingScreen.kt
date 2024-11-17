@@ -29,6 +29,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -70,7 +73,24 @@ fun SettingScreen(
 //    BackHandlers(navController = navController)
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Gray30)
+        .drawBehind {
+            val height = size.height
+            val purpleHeight = height / 3
+
+            // 보라색 영역
+            drawRect(
+                color = Gray30,
+                topLeft = Offset(0f, 0f),
+                size = Size(size.width, purpleHeight)
+            )
+
+            // 하얀색 영역
+            drawRect(
+                color = Color.White,
+                topLeft = Offset(0f, purpleHeight),
+                size = Size(size.width, height - purpleHeight)
+            )
+        }
         .verticalScroll(scrollState)
         ) {
         Row(
@@ -84,6 +104,7 @@ fun SettingScreen(
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier.noRippleClickable {
+                    navController.popBackStack()
                 },
                 text = "완료",
                 color = Purple60,
@@ -147,7 +168,7 @@ fun SettingScreen(
             }
             Spacer(modifier = Modifier.height(12.dp))
             ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "자기소개 변경") {
-
+                navController.navigate(NavGroup.DESCRIPTION_SETTING)
             }
             Spacer(modifier = Modifier.height(12.dp))
             ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "개인정보 이용 약관") {

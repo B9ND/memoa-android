@@ -1,11 +1,9 @@
-package com.dlrjsgml.memoa.feature.main.profile.my.setting.name
+package com.dlrjsgml.memoa.feature.main.profile.my.setting.description 
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionSideEffect
-import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionState
-import com.dlrjsgml.memoa.network.profile.ChangeUserNameRequest
+import com.dlrjsgml.memoa.network.profile.ChangeUserDescriptionRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,17 +14,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class NameState(
-    val name: String = "",
+data class DescriptionState(
+    val description: String = "",
 )
 
-sealed interface NameSideEffect {
-    data object Success : NameSideEffect
-    data object Failure : NameSideEffect
+sealed interface DescriptionSideEffect {
+    data object Success : DescriptionSideEffect
+    data object Failure : DescriptionSideEffect
 }
 
-class NameSettingViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(NameState())
+class DescriptionSettingViewModel : ViewModel() {
+    private val _uiState = MutableStateFlow(DescriptionState())
     val uiState = _uiState.asStateFlow()
 
     private val _uiEffect = MutableSharedFlow<DescriptionSideEffect>()
@@ -36,8 +34,8 @@ class NameSettingViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
-                val request = ChangeUserNameRequest(uiState.value.name)
-                val response = RetrofitClient.patchProfileService.changeUserName(request)
+                val request = ChangeUserDescriptionRequest(uiState.value.description)
+                val response = RetrofitClient.patchProfileService.changeUserDescription(request)
                 Log.d("내정보 바꾸죠?", "dlrjsgml44 Ok");
                 _uiEffect.emit(DescriptionSideEffect.Success)
             } catch (e: Exception) {
@@ -49,8 +47,8 @@ class NameSettingViewModel : ViewModel() {
     }
 
 
-    fun updateTitle(name: String) {
-        _uiState.update { it.copy(name = name) }
+    fun updateTitle(description: String) {
+        _uiState.update { it.copy(description = description) }
     }
 
 }
