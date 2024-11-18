@@ -30,6 +30,7 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.theme.caption1
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun BookMarkScreen(
@@ -60,6 +61,8 @@ fun BookMarkScreen(
                         profile = bookMark.profileImage,
                         date = bookMark.createdAt,
                         title = bookMark.title,
+                        tag = bookMark.tags.toImmutableList(),
+                        image = bookMark.images.toImmutableList(),
                         onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") },
                     )
                 }
