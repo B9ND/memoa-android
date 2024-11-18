@@ -108,7 +108,7 @@ fun MainScreen(
                 Row(
                     modifier = Modifier
                         .background(Color.White)
-                        .padding(top = 10.dp)
+                        .padding(top = 4.dp)
                         .padding(vertical = 4.dp, horizontal = 14.dp)
                 ) {
                     MemoaDropDown(

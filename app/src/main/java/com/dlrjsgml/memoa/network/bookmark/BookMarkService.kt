@@ -8,6 +8,8 @@ data class BookMarkResponse(
     val nickname : String,
     val postId : Int,
     val title : String,
+    val images : List<String>,
+    val tags : List<String>,
     val profileImage : String,
     val createdAt : String,
 
