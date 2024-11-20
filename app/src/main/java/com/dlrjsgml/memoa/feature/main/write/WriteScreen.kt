@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
@@ -86,7 +87,11 @@ fun WriteScreen(
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var selectedFileName by remember { mutableStateOf("") }
+    // TODO rabbitmq
 
+    Button(onClick = { /*TODO*/ }) {
+        Text("ㅎㅇ")
+    }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->

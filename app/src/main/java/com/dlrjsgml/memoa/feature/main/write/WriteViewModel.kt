@@ -110,45 +110,61 @@ class WriteViewModel : ViewModel() {
     }
 
     // 이미지 압축
-    private fun convertResizeImage(context: Context, imageUri: Uri): Uri? {
+//    private fun convertResizeImage(context: Context, imageUri: Uri): Uri? {
+//        val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+//        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width / 8, bitmap.height / 8, true)
+//
+//        val byteArrayOutputStream = ByteArrayOutputStream()
+//        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+//
+//        // 임시 파일을 만듦
+//        val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
+//        val fileOutputStream = FileOutputStream(tempFile)
+//        fileOutputStream.write(byteArrayOutputStream.toByteArray())
+//        fileOutputStream.close()
+//
+//        // 파일을 MediaStore에 저장
+//        val values = ContentValues().apply {
+//            put(MediaStore.Images.Media.DISPLAY_NAME, tempFile.name)
+//            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+//            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+//        }
+//
+//        val contentUri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+//
+//        contentUri?.let {
+//            context.contentResolver.openOutputStream(it)?.use { outputStream ->
+//                val inputStream = FileInputStream(tempFile)
+//                inputStream.copyTo(outputStream)
+//                inputStream.close()
+//            }
+//        }
+//
+//        // 모든 스트림이 제대로 닫혔는지 확인한 후 임시 파일 삭제
+//        if (tempFile.exists()) {
+//            val deleted = tempFile.delete()
+//            if (!deleted) {
+//                tempFile.deleteOnExit() // 임시 파일이 삭제되지 않으면 나중에 삭제하도록 예약
+//            }
+//        }
+//
+//        return contentUri
+//    }
+
+    private fun convertResizeImage(context: Context, imageUri: Uri): Uri {
         val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
+        val resizedBitmap =
+            Bitmap.createScaledBitmap(bitmap, bitmap.width / 4, bitmap.height / 4, true)
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
 
-        // 임시 파일을 만듦
         val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
         val fileOutputStream = FileOutputStream(tempFile)
         fileOutputStream.write(byteArrayOutputStream.toByteArray())
         fileOutputStream.close()
 
-        // 파일을 MediaStore에 저장
-        val values = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, tempFile.name)
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-        }
-
-        val contentUri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-
-        contentUri?.let {
-            context.contentResolver.openOutputStream(it)?.use { outputStream ->
-                val inputStream = FileInputStream(tempFile)
-                inputStream.copyTo(outputStream)
-                inputStream.close()
-            }
-        }
-
-        // 모든 스트림이 제대로 닫혔는지 확인한 후 임시 파일 삭제
-        if (tempFile.exists()) {
-            val deleted = tempFile.delete()
-            if (!deleted) {
-                tempFile.deleteOnExit() // 임시 파일이 삭제되지 않으면 나중에 삭제하도록 예약
-            }
-        }
-
-        return contentUri
+        return Uri.fromFile(tempFile)
     }
 
     // 이미지 올리기
@@ -161,10 +177,9 @@ class WriteViewModel : ViewModel() {
 
                 val imageFile = UriUtil.toFile(context, uri)
                 val resizedFile = FileUtil.resizeImageFile(context, imageFile, (fileBitmap.width)/2, (fileBitmap.height)/2) //TODO
-                Log.d("글쓰기", "1글쓰기 중 : $resizedFile")
+                Log.d("글쓰기", "1글쓰기 중 : $imageFile")
                 val multipartImage: MultipartBody.Part =
                     FormDataUtil.getImageMultipart("file", resizedFile)
-
                 val response = RetrofitClient.upLoadImgService.uploadImage(
                     multipartImage
                 )
@@ -175,10 +190,6 @@ class WriteViewModel : ViewModel() {
                 _uiState.update { it.copy(content = it.content + "\n✔📷${_uiState.value.image.size} 번째에 들어갈 이미지 입니다!✔\n") }
 
                 Log.d("글글", "ui 하나 : ${_uiState.value.content}");
-
-
-
-
                 _uiEffect.emit(UpLoadImageSideEffect.Success)
 //                if(response.isSuccessful){
 //                    Log.d("글쓰기", "성공: ${response.body()}")

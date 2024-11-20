@@ -149,9 +149,6 @@ fun MainScreen(
             Column(
             ) {
                 HomeBackOnPressed()
-
-
-
                 LazyColumn(
                     state = lazyState
 //            userScrollEnabled = true
