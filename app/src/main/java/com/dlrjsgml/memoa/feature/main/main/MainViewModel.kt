@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -58,21 +59,27 @@ class MainViewModel : ViewModel() {
     val bookMarkUiEffect = _bookMarkUiEffect.asSharedFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             launch {
                 try {
-                    val data = Pager(config = PagingConfig(
-                        pageSize = 10,
-                        enablePlaceholders = false,
-                        initialLoadSize = 10
-                    ),
-                        pagingSourceFactory = { ArticlePagingSource("",_tagUiState.value.tags) }).flow.cachedIn(viewModelScope)
-                    if(_uiState.value.articles != data){
-                        _uiState.update { it.copy(articles = data) }
-                        Log.d("메인", "${_tagUiState.value.tags}");
-                    }
+                    val data = Pager(
+                        config = PagingConfig(
+                            pageSize = 10,
+                            enablePlaceholders = false,
+                            initialLoadSize = 10
+                        ),
+                        pagingSourceFactory = {
+                            ArticlePagingSource("", _tagUiState.value.tags)
+                        }
+                    ).flow
+                        .catch { e ->
+                            // PagingData의 에러 처리
+                            Log.e("MainViewModel", "Paging error: ${e.message}")
+                            _uiEffect.emit(ArticlesSideEffect.Failure)
+                        }
+                        .cachedIn(viewModelScope)
 
-
+                    _uiState.update { it.copy(articles = data) }
                     _uiEffect.emit(ArticlesSideEffect.Success)
                 } catch (e: Exception) {
                     Log.d("태그", "dlrjsgml44 Ok");
@@ -84,19 +91,26 @@ class MainViewModel : ViewModel() {
     fun getArticles() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val data = Pager(config = PagingConfig(
-                    pageSize = 10,
-                    enablePlaceholders = false,
-                    initialLoadSize = 10
-                ),
-                    pagingSourceFactory = { ArticlePagingSource("",_tagUiState.value.tags) }).flow.cachedIn(viewModelScope)
-                if(_uiState.value.articles != data){
-                    _uiState.update { it.copy(articles = data) }
-                    Log.d("메인", "${_tagUiState.value.tags}");
-                }
+                val data = Pager(
+                    config = PagingConfig(
+                        pageSize = 10,
+                        enablePlaceholders = false,
+                        initialLoadSize = 10
+                    ),
+                    pagingSourceFactory = {
+                        ArticlePagingSource("", _tagUiState.value.tags)
+                    }
+                ).flow
+                    .catch { e ->
+                        // PagingData의 에러 처리
+                        Log.e("MainViewModel", "Paging error: ${e.message}")
+                        _uiEffect.emit(ArticlesSideEffect.Failure)
+                    }
+                    .cachedIn(viewModelScope)
 
-
+                _uiState.update { it.copy(articles = data) }
                 _uiEffect.emit(ArticlesSideEffect.Success)
+
             } catch (e: Exception) {
                 Log.d("태그", "dlrjsgml44 Ok");
                 _uiEffect.emit(ArticlesSideEffect.Failure)

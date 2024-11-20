@@ -10,7 +10,7 @@ datastorePreferences = "1.1.1"
 datastorePreferencesVersion = "1.0.0"
 hiltAndroid = "2.52"
 hiltCompiler = "2.44.2"
-kotlin = "1.9.0"
+kotlin = "2.0.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -30,7 +30,7 @@ roomCompiler = "2.6.1"
 appcompat = "1.7.0"
 roomCompilerVersion = "2.6.4"
 zoomable = "1.6.2"
-pagingComposeAndroid = "3.3.2"
+pagingComposeAndroid = "3.3.4"
 
 
 [libraries]
@@ -76,4 +76,4 @@ androidx-paging-compose-android = { group = "androidx.paging", name = "paging-co
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

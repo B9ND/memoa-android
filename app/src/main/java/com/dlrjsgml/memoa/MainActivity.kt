@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
 }
 
 private suspend fun isLogin(context: Context): Boolean {
+    return true
     val refToken = getRefToken(context)
     Log.d("리프", "isLogin: $refToken")
     if (refToken != null) {
