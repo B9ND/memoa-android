@@ -58,6 +58,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
 import com.dlrjsgml.memoa.root.NavGroup
@@ -122,7 +123,7 @@ fun WriteScreen(
             when (effect) {
                 is WriteSideEffect.Success -> {
                     viewModel.wrigingErrorAlert("글쓰기 성공")
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                     Log.d("글쓰기", "성공");
                 }
 
@@ -152,14 +153,13 @@ fun WriteScreen(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        BackHandlers(navController = navController)
         Row(
             modifier = Modifier
                 .padding(top = 32.dp)
                 .padding(horizontal = 20.dp)
         ) {
             BackButton {
-                navController.popBackStack()
+                navController.safePopBackStack()
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(

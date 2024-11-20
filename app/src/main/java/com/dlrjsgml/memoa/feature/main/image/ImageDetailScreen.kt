@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.effect.shimmerEffect
@@ -62,7 +63,7 @@ fun ImageDetailScreen(
         Box(modifier = Modifier.padding(top = 32.dp, start = 20.dp)){
             Row(
                 modifier = Modifier.noRippleClickable(
-                    onClick = {navController.popBackStack()}
+                    onClick = {navController.safePopBackStack()}
                 )
             ) {
                 Image(

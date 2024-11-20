@@ -57,6 +57,30 @@ class MainViewModel : ViewModel() {
     private val _bookMarkUiEffect = MutableSharedFlow<BookMarkDoSideEffect>()
     val bookMarkUiEffect = _bookMarkUiEffect.asSharedFlow()
 
+    init {
+        viewModelScope.launch {
+            launch {
+                try {
+                    val data = Pager(config = PagingConfig(
+                        pageSize = 10,
+                        enablePlaceholders = false,
+                        initialLoadSize = 10
+                    ),
+                        pagingSourceFactory = { ArticlePagingSource("",_tagUiState.value.tags) }).flow.cachedIn(viewModelScope)
+                    if(_uiState.value.articles != data){
+                        _uiState.update { it.copy(articles = data) }
+                        Log.d("메인", "${_tagUiState.value.tags}");
+                    }
+
+
+                    _uiEffect.emit(ArticlesSideEffect.Success)
+                } catch (e: Exception) {
+                    Log.d("태그", "dlrjsgml44 Ok");
+                    _uiEffect.emit(ArticlesSideEffect.Failure)
+                }
+            }
+        }
+    }
     fun getArticles() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -66,8 +90,12 @@ class MainViewModel : ViewModel() {
                     initialLoadSize = 10
                 ),
                     pagingSourceFactory = { ArticlePagingSource("",_tagUiState.value.tags) }).flow.cachedIn(viewModelScope)
-                _uiState.update { it.copy(articles = data) }
-                Log.d("메인", "${_tagUiState.value.tags}");
+                if(_uiState.value.articles != data){
+                    _uiState.update { it.copy(articles = data) }
+                    Log.d("메인", "${_tagUiState.value.tags}");
+                }
+
+
                 _uiEffect.emit(ArticlesSideEffect.Success)
             } catch (e: Exception) {
                 Log.d("태그", "dlrjsgml44 Ok");

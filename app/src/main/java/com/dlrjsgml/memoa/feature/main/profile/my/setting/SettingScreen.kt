@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileViewModel
 import com.dlrjsgml.memoa.root.NavGroup
@@ -116,12 +117,12 @@ fun SettingScreen(
                 .padding(horizontal = 20.dp)
         ) {
             BackButton {
-                navController.popBackStack()
+                navController.safePopBackStack()
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier.noRippleClickable {
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                 },
                 text = "완료",
                 color = Purple60,

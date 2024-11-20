@@ -3,8 +3,11 @@ package com.dlrjsgml.memoa.root
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -30,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.name.NameScreen
@@ -113,7 +117,7 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
-                                    navController.popBackStack()
+                                    navController.safePopBackStack()
                                     navController.navigate(NavGroup.MAIN)
                                 }),
                             resId = R.drawable.ic_home,
@@ -124,7 +128,7 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
-                                    navController.popBackStack()
+                                    navController.safePopBackStack()
                                     navController.navigate(NavGroup.BEFORE_SEARCH)
                                 }),
                             resId = R.drawable.ic_search,
@@ -136,7 +140,7 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
-                                    navController.popBackStack()
+                                    navController.safePopBackStack()
                                     navController.navigate(NavGroup.BOOKMARK)
                                 }),
                             resId = R.drawable.ic_bookmark,
@@ -147,7 +151,7 @@ fun NavGraph(
                             modifier = Modifier
                                 .weight(1f)
                                 .noRippleClickable(onClick = {
-                                    navController.popBackStack()
+                                    navController.safePopBackStack()
                                     navController.navigate(NavGroup.PROFILE)
                                 }),
                             resId = R.drawable.ic_avatar,
@@ -220,6 +224,10 @@ fun NavGraph(
                     MainScreen(navController = navController)
                 }
                 composable(route = "${NavGroup.DETAIL}?{phone}",
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) },
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )) {
@@ -256,7 +264,12 @@ fun NavGraph(
                 composable(NavGroup.SEARCHING) {
                     SearchingScreen(navController = navController)
                 }
-                composable(NavGroup.WRITE) {
+                composable(NavGroup.WRITE,
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                    ) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         WriteScreen(navController = navController)
                     }
@@ -274,13 +287,17 @@ fun NavGraph(
                         imgUrl = phoneNum
                     )
                 }
-                composable(NavGroup.PROFILE) {
+                composable(NavGroup.PROFILE,
+                    exitTransition = { null },
+                    popExitTransition = {null},
+                    ) {
                     ProfileScreen(navController)
                 }
                 composable(route = "${NavGroup.USERPROFILE}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
-                    )) {
+                    ),
+                    ){
                     val phoneNum = it.arguments?.getString("phone") ?: ""
                     UserProfileScreen(
                         navController = navController,
@@ -291,7 +308,21 @@ fun NavGraph(
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType },
                         navArgument("checker") { NavType.StringType }
-                    )) {
+                    ),
+                    enterTransition = {
+                        return@composable slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Start, tween(100)
+                        )
+                    }, exitTransition = {
+                        return@composable slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.End, tween(100)
+                        )
+                    }, popEnterTransition = {
+                        return@composable slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Start, tween(100)
+                        )
+                    })
+                     {
                     val phoneNum = it.arguments?.getString("phone") ?: ""
                     val checkers = it.arguments?.getString("checker") ?: "false"
                     FollowerScreen(
@@ -299,13 +330,31 @@ fun NavGraph(
                         navController = navController
                     )
                 }
-                composable(NavGroup.SETTING) {
+                composable(
+                    route = NavGroup.SETTING,
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                ) {
                     SettingScreen(navController)
                 }
-                composable(NavGroup.NAME_SETTING) {
+                composable(
+                    NavGroup.NAME_SETTING,
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                ) {
                     NameSettingScreen(navController)
                 }
-                composable(NavGroup.DESCRIPTION_SETTING) {
+                composable(
+                    NavGroup.DESCRIPTION_SETTING,
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
+                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
+                ) {
                     DescriptionScreen(navController)
                 }
             }
@@ -314,8 +363,10 @@ fun NavGraph(
 
     }
 }
+
 private fun getStartDestination(isLogined: Boolean) =
-    if(isLogined) NavGroup.MAIN else NavGroup.START
+    if (isLogined) NavGroup.MAIN else NavGroup.START
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)

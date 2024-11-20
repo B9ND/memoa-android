@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
+import androidx.navigation.navOptions
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.root.NavGroup
@@ -108,7 +110,12 @@ fun ProfileScreen(
                         .align(Alignment.TopEnd)
                         .padding(top = 24.dp, end = 12.dp)
                         .noRippleClickable {
-                            navController.navigate(NavGroup.SETTING)
+                            navController.navigate(NavGroup.SETTING) {
+                                popUpToRoute?.let {
+                                    popUpTo(it) { this.inclusive = inclusive }
+                                }
+                                launchSingleTop = true
+                            }
                         },
                     painter = painterResource(id = R.drawable.ic_setting),
                     contentDescription = null

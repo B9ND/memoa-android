@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.search.SearchViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -58,7 +59,7 @@ fun SearchingScreen(
             .background(Color.White)
     ) {
 //        BackHandlers(navController)
-        BackHandler { navController.popBackStack() }
+        BackHandler { navController.safePopBackStack() }
         Spacer(modifier = Modifier.height(24.dp))
         SearchTextField(
             modifier = Modifier
@@ -70,14 +71,14 @@ fun SearchingScreen(
             onClick = {
                 if (uiState.search.isNotEmpty()) {
                     keyboardController?.hide()
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                     navController.navigate("${NavGroup.SEARCH}?${uiState.search}")
                 }
             },
             keyboardActions = KeyboardActions(onDone = {
                 if (uiState.search.isNotEmpty()) {
                     keyboardController?.hide()
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                     navController.navigate("${NavGroup.SEARCH}?${uiState.search}")
 
                 }
@@ -103,7 +104,7 @@ fun SearchingScreen(
                                         content = searchHistory.history,
                                         onClick = {
                                             keyboardController?.hide()
-                                            navController.popBackStack()
+                                            navController.safePopBackStack()
                                             navController.navigate("${NavGroup.SEARCH}?${searchHistory.history}")
 //                                            viewModel.updateTitle(searchHistory.history)
 //                                            viewModel.getSearchArticles()

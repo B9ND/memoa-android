@@ -71,9 +71,7 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel(),
     navController: NavHostController,
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getArticles()
-    }
+
     val lazyState = rememberLazyListState()
     val id = 1 // 특정 ID를 사용하여 글 가져오기
     val uiState by viewModel.uiState.collectAsState()
