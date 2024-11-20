@@ -4,11 +4,16 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,10 +21,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -64,6 +71,7 @@ import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
+import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
 import com.dlrjsgml.memoa.ui.component.items.BottomNavItem
@@ -101,7 +109,18 @@ fun NavGraph(
         modifier = Modifier.fillMaxSize()
     ) {
         Scaffold(bottomBar = {
-            if (isShowNavBar) {
+            AnimatedVisibility(
+                visible = isShowNavBar,
+                enter = slideInVertically(
+                    initialOffsetY = { it }, // 시작 위치: 컴포넌트의 높이만큼 아래에서 시작
+                    animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
+                ),
+                exit = slideOutVertically(
+                    targetOffsetY = { it }, // 끝 위치: 컴포넌트의 높이만큼 아래로 사라짐
+                    animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
+                )
+
+            ) {
                 Box(
                     modifier = Modifier.drawColoredShadow(Black20)
                 ) {
@@ -116,10 +135,19 @@ fun NavGraph(
                         BottomNavItem(
                             modifier = Modifier
                                 .weight(1f)
-                                .noRippleClickable(onClick = {
-                                    navController.safePopBackStack()
-                                    navController.navigate(NavGroup.MAIN)
-                                }),
+                                .clickable(
+                                    indication = rememberBounceIndication(
+                                        scale = 0.95f,
+                                        showBackground = true,
+                                        radius = RoundedCornerShape(8.dp)
+                                    ),
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    enabled = true,
+                                    onClick = {
+                                        navController.safePopBackStack()
+                                        navController.navigate(NavGroup.MAIN)
+                                    }
+                                ),
                             resId = R.drawable.ic_home,
                             isSelected = selectRoute == NavGroup.MAIN || NavGroup.DETAIL in selectRoute.toString(),
                             text = "메인"
@@ -127,10 +155,19 @@ fun NavGraph(
                         BottomNavItem(
                             modifier = Modifier
                                 .weight(1f)
-                                .noRippleClickable(onClick = {
-                                    navController.safePopBackStack()
-                                    navController.navigate(NavGroup.BEFORE_SEARCH)
-                                }),
+                                .clickable(
+                                    indication = rememberBounceIndication(
+                                        scale = 0.95f,
+                                        showBackground = true,
+                                        radius = RoundedCornerShape(8.dp)
+                                    ),
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    enabled = true,
+                                    onClick = {
+                                        navController.safePopBackStack()
+                                        navController.navigate(NavGroup.BEFORE_SEARCH)
+                                    }
+                                ),
                             resId = R.drawable.ic_search,
                             isSelected = selectRoute == "${NavGroup.SEARCH}?{search}" || NavGroup.BEFORE_SEARCH in selectRoute.toString(),
                             text = "검색"
@@ -139,10 +176,19 @@ fun NavGraph(
                         BottomNavItem(
                             modifier = Modifier
                                 .weight(1f)
-                                .noRippleClickable(onClick = {
-                                    navController.safePopBackStack()
-                                    navController.navigate(NavGroup.BOOKMARK)
-                                }),
+                                .clickable(
+                                    indication = rememberBounceIndication(
+                                        scale = 0.95f,
+                                        showBackground = true,
+                                        radius = RoundedCornerShape(8.dp)
+                                    ),
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    enabled = true,
+                                    onClick = {
+                                        navController.safePopBackStack()
+                                        navController.navigate(NavGroup.BOOKMARK)
+                                    }
+                                ),
                             resId = R.drawable.ic_bookmark,
                             isSelected = selectRoute == NavGroup.BOOKMARK,
                             text = "북마크"
@@ -150,10 +196,19 @@ fun NavGraph(
                         BottomNavItem(
                             modifier = Modifier
                                 .weight(1f)
-                                .noRippleClickable(onClick = {
-                                    navController.safePopBackStack()
-                                    navController.navigate(NavGroup.PROFILE)
-                                }),
+                                .clickable(
+                                    indication = rememberBounceIndication(
+                                        scale = 0.95f,
+                                        showBackground = true,
+                                        radius = RoundedCornerShape(8.dp)
+                                    ),
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    enabled = true,
+                                    onClick = {
+                                        navController.safePopBackStack()
+                                        navController.navigate(NavGroup.PROFILE)
+                                    }
+                                ),
                             resId = R.drawable.ic_avatar,
                             isSelected = selectRoute == NavGroup.PROFILE || NavGroup.USERPROFILE in selectRoute.toString(),
                             text = "프로필"
@@ -163,17 +218,20 @@ fun NavGraph(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .offset(y = (-14).dp)
-                            .noRippleClickable(onClick = {
+                            .noRippleClickable {
+                                navController.safePopBackStack()
                                 navController.navigate(NavGroup.WRITE)
-                            })
+                            }
                     ) {
                         BottomCircleTwo(
                             isSelected = selectRoute == NavGroup.WRITE,
                         )
                     }
                 }
+
+
             }
-        }) { it ->
+        }) {
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
@@ -264,12 +322,13 @@ fun NavGraph(
                 composable(NavGroup.SEARCHING) {
                     SearchingScreen(navController = navController)
                 }
-                composable(NavGroup.WRITE,
+                composable(
+                    NavGroup.WRITE,
                     enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
                     exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up) },
                     popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
                     popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down) },
-                    ) {
+                ) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         WriteScreen(navController = navController)
                     }
@@ -280,24 +339,27 @@ fun NavGraph(
                 composable(route = "${NavGroup.IMAGE_DETAIL}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
-                    )) {
+                    ),
+                    ) {
                     val phoneNum = it.arguments?.getString("phone") ?: ""
                     ImageDetailScreen(
                         navController = navController,
                         imgUrl = phoneNum
                     )
                 }
-                composable(NavGroup.PROFILE,
+                composable(
+                    NavGroup.PROFILE,
                     exitTransition = { null },
-                    popExitTransition = {null},
-                    ) {
+                    popExitTransition = { null },
+                ) {
                     ProfileScreen(navController)
                 }
-                composable(route = "${NavGroup.USERPROFILE}?{phone}",
+                composable(
+                    route = "${NavGroup.USERPROFILE}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     ),
-                    ){
+                ) {
                     val phoneNum = it.arguments?.getString("phone") ?: ""
                     UserProfileScreen(
                         navController = navController,
@@ -322,7 +384,7 @@ fun NavGraph(
                             AnimatedContentTransitionScope.SlideDirection.Start, tween(100)
                         )
                     })
-                     {
+                {
                     val phoneNum = it.arguments?.getString("phone") ?: ""
                     val checkers = it.arguments?.getString("checker") ?: "false"
                     FollowerScreen(
@@ -366,7 +428,6 @@ fun NavGraph(
 
 private fun getStartDestination(isLogined: Boolean) =
     if (isLogined) NavGroup.MAIN else NavGroup.START
-
 
 
 @RequiresApi(Build.VERSION_CODES.O)
