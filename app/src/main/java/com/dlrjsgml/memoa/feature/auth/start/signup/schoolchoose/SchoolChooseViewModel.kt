@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose
 
 import android.util.Log
+import androidx.compose.material3.SheetState
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.lifecycle.ViewModel
@@ -21,10 +22,12 @@ import retrofit2.HttpException
 data class TextState(
     val school: String = "",
     val response: List<SchoolSearchResponse> = emptyList(),
-    val schoolNames: List<SchoolSearchResponse> = emptyList(),
+    val schoolNames: List<String> = emptyList(),
     val departmentNames: List<String> = emptyList(),
     val departmentId: Int = -1,
-    val departmentName: AnnotatedString = buildAnnotatedString { }
+    val departmentName: AnnotatedString = buildAnnotatedString { },
+    val showBottomSheet: Boolean = false,
+    val showDialog: Boolean = false
 )
 
 sealed interface SignUpSideEffect {
@@ -36,11 +39,21 @@ class SchoolChooseScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(TextState())
     val uiState = _uiState.asStateFlow()
 
+
+
     private val _uiEffect = MutableSharedFlow<SignUpSideEffect>()
     val uiEffect: SharedFlow<SignUpSideEffect> = _uiEffect.asSharedFlow()
 
     fun updateDpName() {
         _uiState.update { it.copy(departmentName = buildAnnotatedString {  }) }
+    }
+
+    fun updateDialog(dialog: Boolean) {
+        _uiState.update { it.copy(showDialog = dialog) }
+    }
+
+    fun updateShowBottomSheet(sheet: Boolean) {
+        _uiState.update { it.copy(showBottomSheet = sheet) }
     }
 
     fun updateSchool(content: String) {
@@ -51,7 +64,8 @@ class SchoolChooseScreenViewModel : ViewModel() {
             try {
                 val responses = RetrofitClient.getSchoolService.schoolSearch(content)
                 _uiState.update { it.copy(response = responses) }
-                Log.d("TAG", "schoolSearch: ${_uiState.value.schoolNames[0].name} ")
+                _uiState.update { it.copy(schoolNames = responses.map { it.name }) }
+                Log.d("터지는놈1", "updateSchool: ${responses[1]}")
             } catch (e: HttpException) {
                 Log.d("signupServer", "Error code: ${e.code()}")
             } catch (e: Exception) {
@@ -61,7 +75,6 @@ class SchoolChooseScreenViewModel : ViewModel() {
     }
 
     fun lastSignup(email: String, nickname: String, password: String, departmentId: Int){
-        Log.d("ㅎㅇ", "lastSignup: $email ")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 RetrofitClient.signupService.lastSignupSearch(
@@ -82,21 +95,17 @@ class SchoolChooseScreenViewModel : ViewModel() {
         }
     }
 
-    fun updateResponse(responses: List<SchoolSearchResponse>) {
-        _uiState.update {
-            it.copy(response = responses)
-        }
-    }
+
 
     fun schoolSearch(school: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val responses = RetrofitClient.getSchoolService.schoolSearch(school)
                 _uiState.update { it.copy(response = responses) }
-                Log.d("TAG", "schoolSearch: ${_uiState.value.schoolNames[0].name} ")
+                Log.d("터지는놈", "schoolSearch: ${_uiState.value.response}")
+                Log.d("터지는놈", "schoolSearch: ${_uiState.value.response[0].departments} ")
             } catch (e: HttpException) {
                 Log.d("signupServer", "Error code: ${e.code()}")
-
             } catch (e: Exception) {
                 Log.d("signupServer", "Unexpected error: ${e.localizedMessage}")
             }

@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.remote
 
 import android.util.Log
 import com.dlrjsgml.memoa.MemoaApplication
+import com.dlrjsgml.memoa.network.data.user.clearToken
 import com.dlrjsgml.memoa.network.data.user.getRefToken
 import com.dlrjsgml.memoa.network.data.user.saveAccToken
 import com.dlrjsgml.memoa.network.data.user.saveRefToken
@@ -24,10 +25,13 @@ class ResponseInterceptor : Interceptor {
             }
             401 -> {
                 val newTokenResponse = runBlocking {
+                    clearToken(MemoaApplication.getContext())
                     getRefToken(context)?.let { refToken ->
                         val tokenData = AccTokenRequest(refToken)
                         try {
+                            Log.d("이게안됨", "intercept: $tokenData")
                             val tokenResponse = RetrofitClient.tokenService.token(tokenData)
+                            Log.d("이게안됨", "intercept1: $tokenResponse")
                             saveAccToken(context, tokenResponse.access)
                             saveRefToken(context, tokenResponse.refresh)
                         } catch (e: Exception) {
@@ -46,7 +50,30 @@ class ResponseInterceptor : Interceptor {
                 } ?: response
             }
             402 -> {
-                // todo Control Error for Payment Required
+                val newTokenResponse = runBlocking {
+                    clearToken(MemoaApplication.getContext())
+                    getRefToken(context)?.let { refToken ->
+                        val tokenData = AccTokenRequest(refToken)
+                        try {
+                            Log.d("이게안됨", "intercept: $tokenData")
+                            val tokenResponse = RetrofitClient.tokenService.token(tokenData)
+                            Log.d("이게안됨", "intercept1: $tokenResponse")
+                            saveAccToken(context, tokenResponse.access)
+                            saveRefToken(context, tokenResponse.refresh)
+                        } catch (e: Exception) {
+                            Log.e("토큰 갱신 오류", e.message ?: "토큰 갱신 실패")
+                            null
+                        }
+                    }
+                }
+
+                newTokenResponse?.let {
+                    chain.proceed(
+                        request.newBuilder()
+                            .header("Authorization", "Bearer $newTokenResponse")
+                            .build()
+                    )
+                } ?: response
             }
             403 -> {
                 Log.d("인터셉터", "403 에러")

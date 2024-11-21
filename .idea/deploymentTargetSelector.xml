@@ -7,10 +7,10 @@
       </SelectionState>
       <SelectionState runConfigName="memoa-android.memoa.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-15T08:19:37.435132Z">
+        <DropdownSelection timestamp="2024-11-18T11:28:50.758795Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/kmj5004/.android/avd/Pixel_8_Pro_API_35.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/kmj5004/.android/avd/Pixel_7_Pro_API_35.avd" />
             </handle>
           </Target>
         </DropdownSelection>

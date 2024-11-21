@@ -16,12 +16,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import kotlin.math.log
 
 data class TextState(
     val email: String = "leegeh1213@dgsw.hs.kr",
     val password: String = "1234",
     val access: String = "",
-    val refresh: String = ""
+    val refresh: String = "",
+    val error: String = "",
+    val showDialog: Boolean = false
 )
 
 
@@ -50,16 +53,49 @@ class LoginViewModel : ViewModel() {
         _uiState.update { it.copy(access = access, refresh = refresh) }
     }
 
+    fun updateError(error: String) {
+        _uiState.update { it.copy(error = error) }
+    }
+
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(error = "")
+    }
+
+    fun updateDialog(show: Boolean) {
+        _uiState.update { it.copy(showDialog = show) }
+    }
+
+
 
     fun login(email: String, password: String) {
-        viewModelScope.launch {
-            try {
-                val loginData = LoginRequest(email, password)
-                val response = RetrofitClient.getLoginService.login(loginData)
-                updateToken(response.access, response.refresh)
-                _uiEffect.emit(LoginSideEffect.Success)
-            } catch (e: HttpException) {
-                Log.d("login", e.code().toString())
+        if(email.length <= 255 && password.length <= 255) {
+            viewModelScope.launch {
+                try {
+                    val loginData = LoginRequest(email, password)
+                    val response = RetrofitClient.getLoginService.login(loginData)
+                    updateToken(response.access, response.refresh)
+                    _uiEffect.emit(LoginSideEffect.Success)
+                    updateDialog(false)
+                    Log.d("뷰모델쪽", "login: ${response}")
+                } catch (e: HttpException) {
+                    _uiEffect.emit(LoginSideEffect.Failed)
+                    updateDialog(true)
+                    if (e.code() == 401) {
+                        updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
+                        Log.d("뷰모델쪽", "login: ${e.code()}")
+                    } else {
+                        if (e.code() == 400) {
+                            updateError("유효하지 않은 이메일 입니다.")
+                            Log.d("뷰모델쪽", "login: ${e.code()}")
+                        } else {
+                            if (e.code() == 406) {
+                                updateError("현재 서버가 동작하지 않습니다.\n잠시후 다시 시도해 주세요.")
+                                Log.d("뷰모델쪽", "login: ${e.code()}")
+                            }
+                        }
+                    }
+                }
+                Log.d("뷰모델쪽", "login: ${_uiState.value.error}")
             }
         }
     }
@@ -67,8 +103,6 @@ class LoginViewModel : ViewModel() {
     fun saveTokens(context: Context){
         saveAccToken(context,uiState.value.access)
         saveRefToken(context,uiState.value.refresh)
-        Log.d("토큰 새로 발급 받은거", "saveTokens: ${uiState.value.access}")
-        Log.d("토큰 새로 발급 받은거", "saveTokens: ${uiState.value.refresh}")
     }
 }
 

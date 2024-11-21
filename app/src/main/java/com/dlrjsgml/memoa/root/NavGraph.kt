@@ -29,6 +29,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.email.EmailScreen
@@ -59,6 +60,7 @@ import com.dlrjsgml.memoa.feature.main.profile.my.setting.name.NameSettingScreen
 import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
+import com.dlrjsgml.memoa.network.data.user.getRefToken
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.component.items.BottomCircleTwo
@@ -69,7 +71,6 @@ import com.dlrjsgml.memoa.ui.theme.Black20
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
-    isLogined: Boolean,
     navController: NavHostController,
 ) {
 
@@ -170,6 +171,7 @@ fun NavGraph(
                 }
             }
         }) { it ->
+            Log.d("", "NavGraph: ")
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
@@ -315,7 +317,7 @@ fun NavGraph(
     }
 }
 private fun getStartDestination(isLogined: Boolean) =
-    if(isLogined) NavGroup.MAIN else NavGroup.START
+    if (getRefToken(MemoaApplication.getContext()) == null) NavGroup.START else NavGroup.MAIN
 
 
 @RequiresApi(Build.VERSION_CODES.O)

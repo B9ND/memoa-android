@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.remote
 
 import com.dlrjsgml.memoa.BuildConfig
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
 import com.dlrjsgml.memoa.network.data.login.LoginService
@@ -23,9 +24,11 @@ import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
+import org.koin.androidx.compose.get
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 object RetrofitClient {
@@ -45,7 +48,13 @@ object RetrofitClient {
 //         Retrofit.Builder().baseUrl(BASE_URL).client(interceptorClient)
 // =======
     private val interceptorClient = OkHttpClient().newBuilder()
-        .addInterceptor(RequestInterceptor())
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
+        .addInterceptor(RequestInterceptor(
+//            NetworkUtil(MemoaApplication.getContext())
+                    )
+        )
         .addInterceptor(ResponseInterceptor())
         .build()
 

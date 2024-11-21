@@ -1,14 +1,26 @@
 package com.dlrjsgml.memoa.remote
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
 import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.network.data.user.getAccToken
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 
-class RequestInterceptor : Interceptor {
+class RequestInterceptor(
+//    private val networkUtil: NetworkUtil
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
+//        if (!networkUtil.isNetworkConnected()) {
+//            Log.d("인터넷오류", "intercept:")
+//            throw IOException("Network connection is lost")
+//        }
         val request = chain.request()
         val context = MemoaApplication.getContext()
         val shouldSkipHeader = request.url.encodedPath.contains("/auth") && !request.url.encodedPath.contains("auth/me")||
@@ -33,4 +45,23 @@ class RequestInterceptor : Interceptor {
         return response
     }
 }
+
+//class NetworkUtil(private val context: Context) {
+//    @SuppressLint("MissingPermission")
+//    fun isNetworkConnected(): Boolean {
+//        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            val activeNetwork = connectivityManager.activeNetwork ?: return false
+//            val isActiveNetwork = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+//            return when {
+//                isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+//                isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+//                else -> false
+//            }
+//        } else {
+//            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+//            return networkInfo.isConnected
+//        }
+//    }
+//}
 
