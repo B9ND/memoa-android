@@ -1,9 +1,11 @@
 package com.dlrjsgml.memoa.feature.main.profile.my
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.user.UserArticlesSideEffect
+import com.dlrjsgml.memoa.network.data.user.saveRefToken
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
@@ -123,4 +125,6 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
+
+
 }

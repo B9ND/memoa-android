@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -56,19 +58,34 @@ import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
+import kotlinx.coroutines.flow.collect
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: ProfileViewModel = viewModel(),
+    settingViewModel: SettingViewModel = viewModel(),
 ) {
     val text = remember { mutableStateOf("이건희") }
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
-
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.getProfileInfo()
+    }
+    LaunchedEffect(settingViewModel) {
+        settingViewModel.uiEffect.collect { effect ->
+            when (effect) {
+                SettingSideEffect.LogoutFailed -> {}
+                SettingSideEffect.LogoutSuccess -> {
+                    navController.navigate(NavGroup.START) {
+                        popUpTo(0) { inclusive = true } // 모든 백 스택 제거
+                        launchSingleTop = true         // 동일한 목적지가 여러 번 쌓이는 것 방지
+                    }
+                }
+            }
+        }
     }
 //    BackHandlers(navController = navController)
     Column(modifier = Modifier
@@ -92,7 +109,7 @@ fun SettingScreen(
             )
         }
         .verticalScroll(scrollState)
-        ) {
+    ) {
         Row(
             modifier = Modifier
                 .padding(top = 32.dp)
@@ -120,7 +137,7 @@ fun SettingScreen(
                     Color.White,
                     shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                 )
-            
+
         ) {
             CircleProfile(
                 modifier = Modifier
@@ -129,7 +146,7 @@ fun SettingScreen(
                 profile = uiState.profileImage
             )
 
-            Box(modifier = Modifier.background(color = Color.White)){
+            Box(modifier = Modifier.background(color = Color.White)) {
 
             }
 
@@ -158,25 +175,26 @@ fun SettingScreen(
                 Spacer(modifier = Modifier.height(40.dp))
             }
         }
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
         ) {
 
-            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "이름 변경") {
+            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp), text = "이름 변경") {
                 navController.navigate(NavGroup.NAME_SETTING)
             }
             Spacer(modifier = Modifier.height(12.dp))
-            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "자기소개 변경") {
+            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp), text = "자기소개 변경") {
                 navController.navigate(NavGroup.DESCRIPTION_SETTING)
             }
             Spacer(modifier = Modifier.height(12.dp))
-            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "개인정보 이용 약관") {
+            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp), text = "개인정보 이용 약관") {
 
             }
             Spacer(modifier = Modifier.height(12.dp))
-            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp),text = "로그아웃") {
-
+            ShadowButton(modifier = Modifier.padding(horizontal = 20.dp), text = "로그아웃") {
+                settingViewModel.logout(context = context)
             }
             Spacer(modifier = Modifier.height(220.dp))
         }
@@ -186,6 +204,6 @@ fun SettingScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-private fun fdjafdj(){
+private fun fdjafdj() {
     SettingScreen(navController = rememberNavController())
 }

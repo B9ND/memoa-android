@@ -3,6 +3,8 @@ package com.dlrjsgml.memoa.root
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -173,7 +175,15 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = if (getRefToken(MemoaApplication.getContext()) == null) NavGroup.START else NavGroup.MAIN,
+                startDestination = getStartDestination(isLogined),
+                enterTransition = {
+                    // you can change whatever you want transition
+                    EnterTransition.None
+                },
+                exitTransition = {
+                    // you can change whatever you want transition
+                    ExitTransition.None
+                }
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -279,7 +289,6 @@ fun NavGraph(
                         userName = phoneNum
                     )
                 }
-
                 composable(route = "${NavGroup.FOLLOWER}?{phone}?{checker}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType },
@@ -307,6 +316,8 @@ fun NavGraph(
 
     }
 }
+private fun getStartDestination(isLogined: Boolean) =
+    if (getRefToken(MemoaApplication.getContext()) == null) NavGroup.START else NavGroup.MAIN
 
 
 @RequiresApi(Build.VERSION_CODES.O)
