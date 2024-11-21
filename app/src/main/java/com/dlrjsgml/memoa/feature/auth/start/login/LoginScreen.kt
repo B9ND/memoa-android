@@ -1,12 +1,16 @@
 package com.dlrjsgml.memoa.feature.auth.start.login
 
+import android.app.Dialog
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,12 +18,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,25 +40,26 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
-import com.dlrjsgml.memoa.network.data.user.getAccToken
-import com.dlrjsgml.memoa.network.data.user.getRefToken
+import com.dlrjsgml.memoa.feature.auth.start.signup.email.Code
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
+import com.dlrjsgml.memoa.ui.component.dialog.dialog
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaPasswordTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 
@@ -62,13 +76,19 @@ fun LoginScreen(
     val context = LocalContext.current
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
+            Log.d("alert쪽", "LoginScreen: ${effect}")
             when (effect) {
                 LoginSideEffect.Success -> {
                     viewModel.saveTokens(context)
                     navController.navigate(NavGroup.MAIN)
+                    Log.d("alert쪽", "LoginScreen: success")
                 }
 
-                LoginSideEffect.Failed -> {}
+                LoginSideEffect.Failed -> {
+                    Log.d("alert쪽", "LoginScreen: fail")
+                    viewModel.updateDialog(true)
+                    Log.d("뷰모델쪽", "LoginScreen: ${uiState.showDialog}")
+                }
             }
         }
     }
@@ -110,6 +130,30 @@ fun LoginScreen(
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()
     }
+
+    if (uiState.showDialog) {
+        Box(
+            modifier.clickable{
+                viewModel.updateDialog(false)
+            }
+        ) {
+            dialog(
+                onDismiss = {
+                    viewModel.clearError()
+                    viewModel.updateDialog(false)
+                },
+                text = "로그인에 실패했습니다",
+                buttonText = "확인",
+                modifier = modifier.clickable {
+                    viewModel.clearError()
+                    Log.d("나니?", "LoginScreen: ${uiState.showDialog}")
+                    viewModel.updateDialog(false)
+                    Log.d("나니?", "LoginScreen: ${uiState.showDialog}")
+                }
+            )
+        }
+    }
+
     Box(
         modifier
             .fillMaxSize()
@@ -158,7 +202,9 @@ fun LoginScreen(
                     onValueChange = viewModel::updateEmail,
                     hint = emailText,
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .focusRequester(focusRequester),
                 )
                 Spacer(Modifier.height(10.dp))
                 MemoaPasswordTextField(
@@ -166,6 +212,7 @@ fun LoginScreen(
                     onValueChange = viewModel::updatePassword,
                     hint = authText,
                 )
+                Spacer(Modifier.height(10.dp))
             }
             Box(
                 modifier.fillMaxSize(),
@@ -178,20 +225,16 @@ fun LoginScreen(
                         .height(55.dp),
                     text = "로그인",
                     enabled = true,
-
                     onClick = {
                         viewModel.login(uiState.email, uiState.password)
-                        viewModel.updateToken(uiState.access, uiState.refresh)
-                        Log.d("acc", "LoginScreen: ${uiState.access}")
-                        Log.d("acc", "LoginScreen: ${uiState.refresh}")
-                        Log.d("get token", "${getAccToken(context)}")
-                        Log.d("get token", "${getRefToken(context)}")
+                        Log.d("테스트", "LoginScreen: ${uiState.error}")
+                        Log.d("테스트", "LoginScreen: ${uiState.error}")
                     }
                 )
-
-
             }
         }
     }
 }
+
+
 

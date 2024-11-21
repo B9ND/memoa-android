@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.feature.main.main
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -51,8 +52,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
+import com.dlrjsgml.memoa.network.data.user.clearToken
+import com.dlrjsgml.memoa.network.data.user.getRefToken
+import com.dlrjsgml.memoa.network.data.user.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveRefToken
+import com.dlrjsgml.memoa.network.token.AccTokenRequest
+import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
@@ -62,6 +70,7 @@ import com.dlrjsgml.memoa.ui.theme.caption1
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import com.dlrjsgml.memoa.ui.theme.caption2
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -71,15 +80,27 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel(),
     navController: NavHostController,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    var isLogin: Boolean? by remember { mutableStateOf(null) }
     LaunchedEffect(Unit) {
-        viewModel.getArticles()
+        Log.d("Log", "called Launched Effect")
+        coroutineScope.launch {
+            val value = isLogin(MemoaApplication.getContext())
+            Log.d("메인화면 컨텍스", value.toString())
+            isLogin = value
+            if (isLogin == true) {
+                viewModel.getArticles()
+            } else {
+                clearToken(MemoaApplication.getContext())
+                navController.navigate(NavGroup.START)
+            }
+        }
     }
     val lazyState = rememberLazyListState()
     val id = 1 // 특정 ID를 사용하여 글 가져오기
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
     val pullRefreshState = rememberPullToRefreshState()
-    val coroutineScope = rememberCoroutineScope()
     if (pullRefreshState.isRefreshing) {
         viewModel.getArticles()
         pullRefreshState.endRefresh()
@@ -257,4 +278,36 @@ private fun adfjkafdjkadfjkadfkj() {
         viewModel = viewModel(),
         navController = rememberNavController()
     )
+}
+
+private suspend fun isLogin(context: Context): Boolean {
+    Log.d("LOGIN", "get Start")
+    val refToken = getRefToken(context)
+    Log.d("LOGIN", "get result: $refToken")
+    if (refToken != null) {
+        try {
+            val response = accToken(context)
+            return response == "success"
+        } catch (_: Exception) {
+            return false
+        }
+    }
+    return false
+}
+
+private suspend fun accToken(context: Context): String {
+    try {
+        val tokenData = getRefToken(context)?.let { AccTokenRequest(it) }
+        Log.d("스타트뷰모델", "accToken: }")
+        val response = tokenData?.let { RetrofitClient.tokenService.token(it) }
+        Log.d("스타트뷰모델", "accToken: 여기서 안됨")
+        if (response != null) {
+            saveAccToken(context, response.access)
+            saveRefToken(context, response.refresh)
+        }
+        return "success"
+    } catch (e: Exception) {
+        Log.d("스타트뷰모델", "error massage: $e")
+        return "fail"
+    }
 }
