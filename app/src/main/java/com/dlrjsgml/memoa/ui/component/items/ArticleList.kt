@@ -67,7 +67,12 @@ fun ArticleList(
     onArticleClick: () -> Unit = {},
     onImageClick: () -> Unit = {},
 ) {
-
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Gray10)
+    )
     Column(
         modifier = Modifier
             .clickable(
@@ -84,12 +89,7 @@ fun ArticleList(
                 }
             )
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Gray10)
-        )
+
         Row(
             modifier = Modifier
                 .background(Color.White)

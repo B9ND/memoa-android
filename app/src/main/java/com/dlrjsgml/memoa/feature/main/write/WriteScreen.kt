@@ -58,7 +58,6 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
@@ -149,7 +148,6 @@ fun WriteScreen(
                     viewModel.wrigingErrorAlert("이미지 업로드 성공")
                 }
             }
-
         }
     }
     Column(

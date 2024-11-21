@@ -100,6 +100,7 @@ fun NavGraph(
 
     val backstackEntry by navController.currentBackStackEntryAsState()
     val selectRoute = backstackEntry?.destination?.route
+    Log.d("현재스택", " : ")
     Log.d("현재경로", "안녕 : $selectRoute")
 
     val isShowNavBar = selectRoute in showNavBarList
@@ -219,7 +220,6 @@ fun NavGraph(
                             .align(Alignment.BottomCenter)
                             .offset(y = (-14).dp)
                             .noRippleClickable {
-                                navController.safePopBackStack()
                                 navController.navigate(NavGroup.WRITE)
                             }
                     ) {

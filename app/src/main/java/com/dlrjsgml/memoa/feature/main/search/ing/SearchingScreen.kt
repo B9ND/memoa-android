@@ -71,6 +71,7 @@ fun SearchingScreen(
             onClick = {
                 if (uiState.search.isNotEmpty()) {
                     keyboardController?.hide()
+                    viewModel.addData(uiState.search)
                     navController.safePopBackStack()
                     navController.navigate("${NavGroup.SEARCH}?${uiState.search}")
                 }
@@ -78,6 +79,7 @@ fun SearchingScreen(
             keyboardActions = KeyboardActions(onDone = {
                 if (uiState.search.isNotEmpty()) {
                     keyboardController?.hide()
+                    viewModel.addData(uiState.search)
                     navController.safePopBackStack()
                     navController.navigate("${NavGroup.SEARCH}?${uiState.search}")
 
