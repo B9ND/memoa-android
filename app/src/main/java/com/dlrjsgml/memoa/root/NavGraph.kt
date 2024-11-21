@@ -175,7 +175,7 @@ fun NavGraph(
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = getStartDestination(isLogined),
+                startDestination = getStartDestination(),
                 enterTransition = {
                     // you can change whatever you want transition
                     EnterTransition.None
@@ -316,7 +316,7 @@ fun NavGraph(
 
     }
 }
-private fun getStartDestination(isLogined: Boolean) =
+private fun getStartDestination() =
     if (getRefToken(MemoaApplication.getContext()) == null) NavGroup.START else NavGroup.MAIN
 
 
