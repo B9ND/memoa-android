@@ -48,6 +48,7 @@ import com.dlrjsgml.memoa.ui.component.items.FollowNumber
 import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardName
+import com.dlrjsgml.memoa.ui.theme.caption1
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
 import com.dlrjsgml.memoa.ui.theme.miniCaption2
 import kotlinx.collections.immutable.toImmutableList
@@ -66,7 +67,7 @@ fun ProfileScreen(
         viewModel.getProfileInfo()
     }
     LaunchedEffect(viewModel) {
-        viewModel.uiEffect.collect{ effect->
+        viewModel.uiEffect.collect{ effect ->
             when(effect){
                 MyProfileEffect.Failed -> Log.d("프로필", "에러");
                 MyProfileEffect.Success -> {

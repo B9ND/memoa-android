@@ -123,7 +123,6 @@ fun ArticleList(
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,  // 이미지를 원에 맞춰 자르기,
-
                 )
             }
 
@@ -150,7 +149,7 @@ fun ArticleList(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
-                        text = date,
+                        text = date.substring(0..9),
                         style = boardContent.copy(fontSize = 15.sp, fontWeight = FontWeight.Medium),
                         color = Color.Gray
                     )

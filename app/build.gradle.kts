@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id ("kotlin-kapt")
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 val properties = Properties()
@@ -66,6 +66,9 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     // To use Kotlin Symbol Processing (KSP)
+    implementation (libs.hilt.android.v248)
+    ksp (libs.hilt.android.compiler)
+
 
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.zoomable)

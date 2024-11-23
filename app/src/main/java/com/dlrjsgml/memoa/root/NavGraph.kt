@@ -9,6 +9,9 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -33,12 +36,14 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navOptions
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
@@ -106,8 +111,16 @@ fun NavGraph(
     val isShowNavBar = selectRoute in showNavBarList
     Log.d("현재경로", "ggg : $isShowNavBar")
 
+//    val navOptions = navOptions {
+//        // 현재 화면 유지
+//        launchSingleTop = true
+//        restoreState = true
+//    }
+    val navOptions: NavOptions? = navOptions {
+        launchSingleTop = true
+    }
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Scaffold(bottomBar = {
             AnimatedVisibility(
@@ -220,7 +233,11 @@ fun NavGraph(
                             .align(Alignment.BottomCenter)
                             .offset(y = (-14).dp)
                             .noRippleClickable {
-                                navController.navigate(NavGroup.WRITE)
+                                navController.navigate(
+                                    NavGroup.WRITE)
+                                    navOptions {
+                                        launchSingleTop = true
+                                    }
                             }
                     ) {
                         BottomCircleTwo(
@@ -336,11 +353,12 @@ fun NavGraph(
                 composable(NavGroup.BOOKMARK) {
                     BookMarkScreen(navController = navController)
                 }
-                composable(route = "${NavGroup.IMAGE_DETAIL}?{phone}",
+                composable(
+                    route = "${NavGroup.IMAGE_DETAIL}?{phone}",
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     ),
-                    ) {
+                ) {
                     val phoneNum = it.arguments?.getString("phone") ?: ""
                     ImageDetailScreen(
                         navController = navController,

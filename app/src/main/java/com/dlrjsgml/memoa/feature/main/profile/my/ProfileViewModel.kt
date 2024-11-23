@@ -61,6 +61,7 @@ sealed interface MySettingSideEffect {
     data object Failed : MySettingSideEffect
 }
 
+
 class ProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MyProfileState())
     val uiState: StateFlow<MyProfileState> = _uiState.asStateFlow()

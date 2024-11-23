@@ -25,8 +25,10 @@ import com.dlrjsgml.memoa.network.token.AccTokenRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {

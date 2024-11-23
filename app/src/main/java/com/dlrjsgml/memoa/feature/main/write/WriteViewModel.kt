@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.network.write.WriteDTO
 import com.dlrjsgml.memoa.network.write.image.FileUtil
 import com.dlrjsgml.memoa.network.write.image.FormDataUtil
+import com.dlrjsgml.memoa.network.write.image.ImageConversionUtils
 import com.dlrjsgml.memoa.network.write.image.UriUtil
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
@@ -152,9 +153,14 @@ class WriteViewModel : ViewModel() {
 //    }
 
     private fun convertResizeImage(context: Context, imageUri: Uri): Uri {
-        val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-        val resizedBitmap =
-            Bitmap.createScaledBitmap(bitmap, bitmap.width / 4, bitmap.height / 4, true)
+        // Use the new ImageConversionUtils
+        val bitmap = ImageConversionUtils.uriToBitmap(context, imageUri)
+
+        // Resize the bitmap (adjust maxWidth and maxHeight as needed)
+        val resizedBitmap = ImageConversionUtils.resizeBitmap(bitmap,
+            maxWidth = bitmap.width / 4,
+            maxHeight = bitmap.height / 4
+        )
 
         val byteArrayOutputStream = ByteArrayOutputStream()
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
@@ -168,49 +174,52 @@ class WriteViewModel : ViewModel() {
     }
 
     // 이미지 올리기
-    fun uploadImage(uri: Uri, context: Context,fileBitmap: Bitmap) {
+    fun uploadImage(uri: Uri, context: Context, fileBitmap: Bitmap? = null) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                val smallImage =  convertResizeImage(context,uri)
-                Log.d("글쓰기", "uri : $uri");
-                Log.d("글쓰기", "작은거 : $smallImage");
+                // If fileBitmap is not provided, convert Uri to Bitmap
+                val bitmap = fileBitmap ?: ImageConversionUtils.uriToBitmap(context, uri)
+
+                val smallImage = convertResizeImage(context, uri)
+                Log.d("글쓰기", "uri : $uri")
+                Log.d("글쓰기", "작은거 : $smallImage")
 
                 val imageFile = UriUtil.toFile(context, uri)
-                val resizedFile = FileUtil.resizeImageFile(context, imageFile, (fileBitmap.width)/2, (fileBitmap.height)/2) //TODO
+                val resizedFile = FileUtil.resizeImageFile(
+                    context,
+                    imageFile,
+                    (bitmap.width) / 2,
+                    (bitmap.height) / 2
+                )
+
                 Log.d("글쓰기", "1글쓰기 중 : $imageFile")
                 val multipartImage: MultipartBody.Part =
                     FormDataUtil.getImageMultipart("file", resizedFile)
-                val response = RetrofitClient.upLoadImgService.uploadImage(
-                    multipartImage
-                )
+
+                val response = RetrofitClient.upLoadImgService.uploadImage(multipartImage)
+
                 Log.d("글쓰기", "Uploading file: ${multipartImage}")
                 Log.d("글쓰기", "ㅇㅇㅇㅇㅇ: ${response.url}")
-                _uiState.update { it.copy(image = it.image + response.url) }
-//                _uiState.update { it.copy(content = it.content + "✔★${response.url}✔") }
-                _uiState.update { it.copy(content = it.content + "\n✔📷${_uiState.value.image.size} 번째에 들어갈 이미지 입니다!✔\n") }
 
-                Log.d("글글", "ui 하나 : ${_uiState.value.content}");
+                _uiState.update {
+                    it.copy(
+                        image = it.image + response.url,
+                        content = it.content + "\n✔📷${_uiState.value.image.size+1} 번째에 들어갈 이미지 입니다!✔\n"
+                    )
+                }
+
+                Log.d("글글", "ui 하나 : ${_uiState.value.content}")
                 _uiEffect.emit(UpLoadImageSideEffect.Success)
-//                if(response.isSuccessful){
-//                    Log.d("글쓰기", "성공: ${response.body()}")
-//                    _uiState.update { it.copy(image = it.image + response.body().toString()) }
-//                    Log.d("글쓰기", "성공: ${uiState.value.image}")
-//
-//                }else{
-//                    Log.d("글쓰기", "실패: ${response.body()}")
-//                }
             } catch (e: Exception) {
-                if(e.message == null){
+                if (e.message == null) {
                     _uiEffect.emit(UpLoadImageSideEffect.CompressionFailure)
-                } else{
+                } else {
                     _uiEffect.emit(UpLoadImageSideEffect.Failure)
-
                 }
                 Log.d("글쓰기", "글쓰기 오류: ${e.message}")
             }
         }
     }
-
     // 글 올리기
     fun postWrite() {
 

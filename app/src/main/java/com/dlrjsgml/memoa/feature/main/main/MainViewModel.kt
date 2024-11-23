@@ -126,6 +126,9 @@ class MainViewModel : ViewModel() {
                                         }
                                     }
                                 }
+                                is Exception ->{
+                                    _uiEffect.emit(ArticlesSideEffect.Failure)
+                                }
 
                                 else -> {
                                     Log.e("MainViewModel", "Error: ${e.message}")
@@ -134,6 +137,7 @@ class MainViewModel : ViewModel() {
                             }
                         }
                         .cachedIn(viewModelScope)
+                    Log.e("메인뷰", "$data")
 
                     _uiState.update { it.copy(articles = data) }
                     _uiEffect.emit(ArticlesSideEffect.Success)
