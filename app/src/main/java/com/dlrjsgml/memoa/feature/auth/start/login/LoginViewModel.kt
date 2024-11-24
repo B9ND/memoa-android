@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import kotlin.math.log
 
 data class TextState(
     val email: String = "leegeh1213@dgsw.hs.kr",
@@ -76,7 +75,6 @@ class LoginViewModel : ViewModel() {
                     updateToken(response.access, response.refresh)
                     _uiEffect.emit(LoginSideEffect.Success)
                     updateDialog(false)
-                    Log.d("뷰모델쪽", "login: ${response}")
                 } catch (e: HttpException) {
                     _uiEffect.emit(LoginSideEffect.Failed)
                     updateDialog(true)
