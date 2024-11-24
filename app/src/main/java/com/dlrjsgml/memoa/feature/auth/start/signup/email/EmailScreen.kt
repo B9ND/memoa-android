@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -66,7 +65,6 @@ fun EmailScreen(
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-    val clicked = remember { mutableStateOf(false) }
     val authString = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -157,31 +155,28 @@ fun EmailScreen(
     }
     LaunchedEffect(uiState.errorCode) {
         if (uiState.errorCode == 500) {
-            clicked.value = false
+            viewModel.updateClicked(false)
         }
     }
-    LaunchedEffect(clicked.value) {
-        if (clicked.value) {
+    LaunchedEffect(uiState.clicked) {
+        if (uiState.clicked) {
             while (uiState.time >= 1) {
                 delay(1.seconds)
                 viewModel.delTime(uiState.time)
-                Log.d("false되야함", "EmailScreen: ${uiState.errorCode}")
             }
-            clicked.value = false
+            viewModel.updateClicked(false)
             viewModel.updateTime(300)
             Log.d("나인", "EmailScreen: ${uiState.time}")
         }
     }
     LaunchedEffect(uiState.errorCode) {
         if (uiState.errorCode == 400) {
-            clicked.value = false
+            viewModel.updateClicked(false)
         }
-        Log.d("이메일 인증 버튼", "EmailScreen: ${clicked.value}")
-        Log.d("이메일 인증 버튼", "EmailScreen: ${uiState.errorCode}")
     }
     fun updateEmail(newInput: String) {
         viewModel.updateEmail(newInput)
-        clicked.value = false
+        viewModel.updateClicked(false)
         viewModel.updateTime(300)
     }
     if (uiState.showDialog) {
@@ -240,17 +235,16 @@ fun EmailScreen(
                     onValueChange = { newValue -> updateEmail(newValue) },
                     hint = emailText,
                     textButton = true,
-                    textButtonVal = if (clicked.value) uiState.time.toString() else "인증",
+                    textButtonVal = if (uiState.clicked) uiState.time.toString() else "인증",
                     firstFocus = true,
                     modifier = Modifier.focusRequester(focusRequester),
                     textButtonOnClick = {
                         coroutineScope.launch {
                             viewModel.updateErrorCode(0)
                             viewModel.updateError("")
-                            clicked.value = true
+                            viewModel.updateClicked(true)
                             viewModel.sendCode(uiState.email)
                         }
-                        Log.d("나인", "EmailScreen: ${clicked.value}")
                     }
                 )
                 Spacer(Modifier.height(10.dp))

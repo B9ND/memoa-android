@@ -1,7 +1,6 @@
 package com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose
 
 import android.util.Log
-import androidx.compose.material3.SheetState
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.lifecycle.ViewModel
@@ -24,10 +23,16 @@ data class TextState(
     val response: List<SchoolSearchResponse> = emptyList(),
     val schoolNames: List<String> = emptyList(),
     val departmentNames: List<String> = emptyList(),
-    val departmentId: Int = -1,
+    val departmentId: Int? = -1,
     val departmentName: AnnotatedString = buildAnnotatedString { },
     val showBottomSheet: Boolean = false,
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
+    val selectedGrade: String = "1학년",
+    val selectedGradeInt: Int = 1,
+    val departmentList: List<String> = emptyList(),
+    val selectedItem: Int = -1,
+    val selectedDepartment: Int = -1,
+    val isExpanded: Boolean = false
 )
 
 sealed interface SignUpSideEffect {
@@ -48,12 +53,87 @@ class SchoolChooseScreenViewModel : ViewModel() {
         _uiState.update { it.copy(departmentName = buildAnnotatedString {  }) }
     }
 
+    fun updateExpand(expand: Boolean) {
+        _uiState.update { it.copy(isExpanded = expand) }
+    }
+
+    fun updateItem(item: Int) {
+        _uiState.update {
+            it.copy(
+                selectedItem = item,
+                selectedDepartment = -1,
+                departmentList = emptyList()
+            )
+        }
+    }
+
+    fun updateDepItem(item: Int) {
+        val currentState = _uiState.value
+        val selectedSchool = currentState.response.getOrNull(currentState.selectedItem)
+
+        val departmentsForGrade = selectedSchool?.departments?.filter {
+            it.grade == currentState.selectedGradeInt
+        }
+
+        val selectedDepartment = departmentsForGrade?.getOrNull(item)
+
+        if (selectedDepartment != null) {
+            _uiState.update {
+                it.copy(
+                    selectedDepartment = item,
+                    departmentId = selectedDepartment.id,
+                    departmentName = buildAnnotatedString { append(selectedDepartment.name) },
+                    isExpanded = false
+                )
+            }
+        } else {
+            Log.d("Department", "Invalid department selection")
+        }
+    }
+
+
+
+
+    fun updateList() {
+        val currentState = _uiState.value
+        val selectedSchool = currentState.response.getOrNull(currentState.selectedItem)
+
+        val departmentNames = selectedSchool?.departments
+            ?.filter { it.grade == currentState.selectedGradeInt }
+            ?.map { it.name } ?: emptyList()
+
+
+        _uiState.update {
+            it.copy(
+                departmentList = departmentNames,
+                selectedDepartment = if (it.selectedDepartment >= departmentNames.size) -1 else it.selectedDepartment
+            )
+        }
+    }
+
     fun updateDialog(dialog: Boolean) {
         _uiState.update { it.copy(showDialog = dialog) }
     }
 
     fun updateShowBottomSheet(sheet: Boolean) {
         _uiState.update { it.copy(showBottomSheet = sheet) }
+    }
+
+    fun updateUpdateGrade(grade: String) {
+        _uiState.update {
+            it.copy(
+                selectedGrade = grade,
+                selectedGradeInt = grade[0].toString().toInt(),
+                selectedDepartment = -1,
+                departmentList = emptyList()
+            )
+        }
+    }
+
+    fun updateDepartmentId(departmentId: Int?) {
+        _uiState.update {
+            it.copy(departmentId = departmentId)
+        }
     }
 
     fun updateSchool(content: String) {
@@ -65,7 +145,6 @@ class SchoolChooseScreenViewModel : ViewModel() {
                 val responses = RetrofitClient.getSchoolService.schoolSearch(content)
                 _uiState.update { it.copy(response = responses) }
                 _uiState.update { it.copy(schoolNames = responses.map { it.name }) }
-                Log.d("터지는놈1", "updateSchool: ${responses[1]}")
             } catch (e: HttpException) {
                 Log.d("signupServer", "Error code: ${e.code()}")
             } catch (e: Exception) {
@@ -74,36 +153,31 @@ class SchoolChooseScreenViewModel : ViewModel() {
         }
     }
 
-    fun lastSignup(email: String, nickname: String, password: String, departmentId: Int){
+    fun lastSignup(email: String, nickname: String, password: String, departmentId: Int?) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                if (departmentId == -1) {
+                    _uiEffect.emit(SignUpSideEffect.Failed)
+                    return@launch
+                }
+
                 RetrofitClient.signupService.lastSignupSearch(
                     register = SignUpRequest(email, nickname, password, departmentId)
                 )
                 _uiEffect.emit(SignUpSideEffect.Success)
-            }  catch (e: HttpException) {
-                Log.d("signupServer", "Error code: ${e.code()}")
-            } catch (e: Exception) {
-                Log.d("signupServer", "Unexpected error: ${e.localizedMessage}")
+            } catch (_: HttpException) {
+                _uiEffect.emit(SignUpSideEffect.Failed)
+            } catch (_: Exception) {
+                _uiEffect.emit(SignUpSideEffect.Failed)
             }
         }
     }
-
-    fun updateId(departmentId: Int) {
-        _uiState.update {
-            it.copy(departmentId = departmentId)
-        }
-    }
-
-
 
     fun schoolSearch(school: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val responses = RetrofitClient.getSchoolService.schoolSearch(school)
                 _uiState.update { it.copy(response = responses) }
-                Log.d("터지는놈", "schoolSearch: ${_uiState.value.response}")
-                Log.d("터지는놈", "schoolSearch: ${_uiState.value.response[0].departments} ")
             } catch (e: HttpException) {
                 Log.d("signupServer", "Error code: ${e.code()}")
             } catch (e: Exception) {

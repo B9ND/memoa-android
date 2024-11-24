@@ -21,7 +21,8 @@ data class TextState(
     val time: Int = 300,
     val error: String = "",
     val errorCode: Int = 0,
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
+    val clicked: Boolean = false
 )
 
 sealed interface Code {
@@ -64,6 +65,11 @@ class EmailViewModel : ViewModel() {
     fun updateShowDialog(dialog: Boolean) {
         _uiState.update { it.copy(showDialog = dialog) }
     }
+
+    fun updateClicked(clicked: Boolean) {
+        _uiState.update { it.copy(clicked = clicked) }
+    }
+
 
 
     suspend fun sendCode(email: String) {

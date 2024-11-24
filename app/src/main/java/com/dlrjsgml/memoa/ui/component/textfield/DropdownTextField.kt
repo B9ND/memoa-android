@@ -52,7 +52,6 @@ fun MemoaDropDownTextField(
     shape: Shape = RoundedCornerShape(12.dp),
     textButtonOnClick: () -> Unit = {},
     value: String = "",
-    selected: Boolean = false
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val (nothing,good) = remember { mutableStateOf("") }
@@ -102,7 +101,6 @@ fun MemoaDropDownTextField(
                                 modifier = Modifier.align(Alignment.CenterStart),
                                 text = hint,
                                 style = caption2.copy(fontSize = 20.sp),
-                                color = if (selected) Color.Gray else Color.Black,
                                 maxLines = 1
                             )
                         }

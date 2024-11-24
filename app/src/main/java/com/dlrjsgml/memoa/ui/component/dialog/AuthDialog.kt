@@ -77,7 +77,7 @@ fun dialog(
 fun dialogPreview() {
     dialog(
         onDismiss = {},
-        text = "로그인에 실패했습니다",
+        text = "로그인에 실패했습니다ddddd\nddddddddd",
         buttonText = "확인"
     )
 }
