@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.feature.main.main.MainViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
@@ -34,8 +35,9 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun BookMarkScreen(
-    viewModel: BookMarkViewModel = viewModel(),
     navController: NavHostController,
+    viewModel: BookMarkViewModel = viewModel(),
+    mainViewModel: MainViewModel = viewModel()
 ) {
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
     val uiState by viewModel.uiState.collectAsState()
@@ -63,7 +65,9 @@ fun BookMarkScreen(
                         title = bookMark.title,
                         tag = bookMark.tags.toImmutableList(),
                         image = bookMark.images.toImmutableList(),
+                        bookmarked = true,
                         onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") },
+                        onBookmarkClick = {mainViewModel.bookmark(bookMark.postId)}
                     )
                 }
             }

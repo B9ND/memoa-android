@@ -104,6 +104,13 @@ fun WriteScreen(
             }
         }
     }
+    LaunchedEffect(uiState.content, uiState.image) {
+        if (uiState.content.isNotEmpty()) {
+            focusRequester.requestFocus()
+            // 약간의 지연을 주어 포커스가 확실히 적용되도록 함
+            kotlinx.coroutines.delay(100)
+        }
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -291,7 +298,9 @@ fun WriteScreen(
                 DelArticleImage(image = uiState.image[it],
                     onImageClick = { navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.image[it]}") },
                     onDelClick = {
+                        viewModel.deleteImage(it)
                     })
+                Spacer(Modifier.width(10.dp))
             }
         }
         Spacer(modifier = Modifier.height(200.dp))

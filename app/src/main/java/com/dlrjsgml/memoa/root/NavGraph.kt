@@ -98,7 +98,9 @@ fun NavGraph(
         NavGroup.FOLLOWER,
         "${NavGroup.USERPROFILE}?{phone}",
         "${NavGroup.DETAIL}?{phone}",
-        "userprofile?{phone}", "${NavGroup.USERPROFILE}?{phone}"
+        "userprofile?{phone}", "${NavGroup.USERPROFILE}?{phone}",
+        "${NavGroup.FOLLOWER}?{phone}?{checker}"
+
     )
 
     val backstackEntry by navController.currentBackStackEntryAsState()
@@ -120,17 +122,15 @@ fun NavGraph(
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Scaffold(bottomBar = {
+        Scaffold(
+            bottomBar = {
             AnimatedVisibility(
                 visible = isShowNavBar,
                 enter = slideInVertically(
                     initialOffsetY = { it }, // 시작 위치: 컴포넌트의 높이만큼 아래에서 시작
                     animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
                 ),
-                exit = slideOutVertically(
-                    targetOffsetY = { it }, // 끝 위치: 컴포넌트의 높이만큼 아래로 사라짐
-                    animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
-                )
+                exit = ExitTransition.None
 
             ) {
                 Box(
@@ -157,7 +157,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.MAIN)
+                                        navController.navigate(NavGroup.MAIN){
+                                            popUpTo(NavGroup.MAIN) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_home,
@@ -177,7 +181,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.BEFORE_SEARCH)
+                                        navController.navigate(NavGroup.BEFORE_SEARCH){
+                                            popUpTo(NavGroup.BEFORE_SEARCH) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_search,
@@ -198,7 +206,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.BOOKMARK)
+                                        navController.navigate(NavGroup.BOOKMARK){
+                                            popUpTo(NavGroup.BOOKMARK) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_bookmark,
@@ -218,7 +230,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.PROFILE)
+                                        navController.navigate(NavGroup.PROFILE){
+                                            popUpTo(NavGroup.PROFILE) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_avatar,
@@ -232,26 +248,25 @@ fun NavGraph(
                             .offset(y = (-14).dp)
                             .noRippleClickable {
                                 navController.navigate(
-                                    NavGroup.WRITE)
-                                    navOptions {
-                                        launchSingleTop = true
-                                    }
+                                    NavGroup.WRITE){
+                                    popUpTo(NavGroup.WRITE) { inclusive = false } // 이미 존재하면 백스택 유지
+                                    launchSingleTop = true                      // 동일 경로 중복 방지
+                                    restoreState = true
+                                }
                             }
                     ) {
                         BottomCircleTwo(
                             isSelected = selectRoute == NavGroup.WRITE,
                         )
                     }
-                }
-
-
+                    }
             }
         }) { it ->
             Log.d("", "NavGraph: ")
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = getStartDestination(),
+                startDestination = NavGroup.MAIN,
                 enterTransition = {
                     // you can change whatever you want transition
                     EnterTransition.None
@@ -259,7 +274,9 @@ fun NavGraph(
                 exitTransition = {
                     // you can change whatever you want transition
                     ExitTransition.None
-                }
+                },
+                popEnterTransition = { EnterTransition.None},
+                popExitTransition = {ExitTransition.None}
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)

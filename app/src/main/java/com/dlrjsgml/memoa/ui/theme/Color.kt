@@ -29,4 +29,5 @@ val Purple60 = Color(0xFF715AFF)
 
 val Black20 = Color(0xFF535353)
 
+val Black = Color(0xFF000000)
 val button_purple = Color(0xFFC2B9FF)

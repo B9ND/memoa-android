@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
+import okhttp3.internal.filterList
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -204,7 +205,7 @@ class WriteViewModel : ViewModel() {
                 _uiState.update {
                     it.copy(
                         image = it.image + response.url,
-                        content = it.content + "\n✔📷${_uiState.value.image.size+1} 번째에 들어갈 이미지 입니다!✔\n"
+                        content = it.content + if (_uiState.value.content.isEmpty()) "✔\uD83D\uDCF7${_uiState.value.image.size + 1} 번째에 들어갈 이미지 입니다!✔\n" else "\n✔\uD83D\uDCF7${_uiState.value.image.size + 1} 번째에 들어갈 이미지 입니다!✔\n"
                     )
                 }
 
@@ -246,9 +247,12 @@ class WriteViewModel : ViewModel() {
                     images = uiState.value.image
                 )
                 Log.d("글쓰기", "글 내용 ㄱㅡ$writeData");
+                Log.d("글쓰기", "글 자른거 ㄱㅡ${writeData.content.split("✔")[0]}");
+
                 val write = RetrofitClient.writeService.postWrite(
                     writeData
                 )
+
                 _uiEffect.emit(WriteSideEffect.Success)
             } catch (e: Exception) {
                 Log.d("글쓰기", e.message.toString());
@@ -257,6 +261,82 @@ class WriteViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteImage(target: Int) {
+        // 현재 상태 가져오기
+        val currentState = _uiState.value
+
+        // content를 ✔를 기준으로 분리하고 필터링하여 이미지가 포함된 항목들만 추출
+        val imageContainingItems = currentState.content
+            .split("✔")
+            .filter { it.contains("📷") }
+
+        // 유효성 검사
+        if (target < 0 || target >= imageContainingItems.size) {
+            Log.w("ImageDeletion", "Invalid target index: $target")
+            return
+        }
+
+        try {
+            // 전체 content를 처리하는 새로운 방식
+            val updatedContent = currentState.content
+                .split("✔")
+                .filterIndexed { index, item ->
+                    // 이미지를 포함하는 항목 중 target 인덱스에 해당하는 항목 제외
+                    !(item.contains("📷") && imageContainingItems.indexOf(item) == target)
+                }
+                .joinToString(" ") { item ->
+                    // 이미지가 포함된 항목에 대해서만 ✔로 감싸기
+                    if (item.contains("📷")) "✔$item✔" else item
+                }
+                .trim()
+
+            // 이미지 리스트 업데이트
+            val updatedImages = currentState.image.toMutableList().apply {
+                removeAt(target)
+            }
+
+            // UI 상태 업데이트
+            _uiState.update { state ->
+                state.copy(
+                    content = updatedContent,
+                    image = updatedImages
+                )
+            }
+
+            Log.d("ImageDeletion", "Successfully deleted image at index: $target")
+        } catch (e: Exception) {
+            Log.e("ImageDeletion", "Error during image deletion", e)
+            // 에러 처리 로직 추가 가능
+        }
+    }
+
+//    fun deleteImage(target : Int){
+//        Log.d("이미지삭제", "타겟 4 Ok $target");
+//        val beforeContent : List<String> = _uiState.value.content.split("✔")
+//        Log.d("이미지삭제", "지금은? Ok $beforeContent");
+//
+//        var pos = 0
+//        var index = -1
+//        for (i in beforeContent){
+//            index++
+//            if("📷" in i)
+//            if (pos == target){
+//                pos = beforeContent.indexOf(i)
+//                break
+//            }
+//        }
+//        val newContent = beforeContent.toMutableList()
+//        newContent.removeAt(index = index)
+//        val updatedContent = newContent.map {
+//            if ("📷" in it) "✔$it✔" else it
+//        }
+//        val newImageList = _uiState.value.image.toMutableList()
+//        newImageList.removeAt(index = target)
+//        val contentString = updatedContent.joinToString(" ")
+//        _uiState.update { it.copy(content = contentString, image =newImageList ) }
+//    }
+
 
     fun changeRelease(isReleased : Boolean){
         _uiState.update { it.copy(isReleased = isReleased) }
