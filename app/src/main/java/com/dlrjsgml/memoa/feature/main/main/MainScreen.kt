@@ -55,6 +55,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
+import com.dlrjsgml.memoa.feature.main.write.UpLoadImageSideEffect
+import com.dlrjsgml.memoa.feature.main.write.WriteSideEffect
 import com.dlrjsgml.memoa.network.data.user.clearToken
 import com.dlrjsgml.memoa.network.data.user.getRefToken
 import com.dlrjsgml.memoa.network.data.user.saveAccToken
@@ -110,6 +113,28 @@ fun MainScreen(
     val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
 
+    LaunchedEffect(viewModel) {
+        viewModel.uiEffect.collect { effect ->
+            when (effect) {
+                ArticlesSideEffect.Failure -> {
+                    Log.d("상태", "지금은  실패! : ${lazyPagingItems.itemCount}");
+
+                    navController.safePopBackStack()
+                    navController.navigate(NavGroup.START)
+                }
+                ArticlesSideEffect.Success -> {
+                    Log.d("상태", "지금은  성공러 : ${lazyPagingItems.itemCount}");
+
+                }
+                ArticlesSideEffect.TokenError -> {
+                    Log.d("상태", "지금은  토큰에러 : ${lazyPagingItems.itemCount}");
+
+                    navController.safePopBackStack()
+                    navController.navigate(NavGroup.START)
+                }
+            }
+        }
+    }
     Scaffold(topBar = {
         AnimatedVisibility(
             visible = lazyState.isScrollingUp().value,
@@ -167,14 +192,13 @@ fun MainScreen(
                 .background(Color.White)
         )
         Box(
-            modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection).padding(innerPadding)
+            modifier = Modifier
+                .nestedScroll(pullRefreshState.nestedScrollConnection)
+                .padding(innerPadding)
         ) {
             Column(
             ) {
                 HomeBackOnPressed()
-
-
-
                 LazyColumn(
                     state = lazyState
 //            userScrollEnabled = true
@@ -219,7 +243,9 @@ fun MainScreen(
                                     {
                                         Spacer(modifier = Modifier.height(200.dp))
                                         Image(
-                                            modifier = Modifier.align(Alignment.CenterHorizontally).size(180.dp),
+                                            modifier = Modifier
+                                                .align(Alignment.CenterHorizontally)
+                                                .size(180.dp),
                                             painter = painterResource(id = R.drawable.no_article_man),
                                             contentDescription = null
                                         )

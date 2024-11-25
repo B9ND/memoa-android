@@ -4,8 +4,9 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id ("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 val properties = Properties()
@@ -51,7 +52,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -65,9 +66,14 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     // To use Kotlin Symbol Processing (KSP)
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.zoomable)
-    implementation(libs.androidx.room.runtime)
+
+    implementation (libs.hilt.android.v248)
+    ksp (libs.hilt.android.compiler)
+
+
+    implementation (libs.androidx.paging.runtime.ktx)
+    implementation (libs.zoomable)
+    implementation (libs.androidx.room.runtime)
     ksp( libs.androidx.room.compiler)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.paging.compose.android)

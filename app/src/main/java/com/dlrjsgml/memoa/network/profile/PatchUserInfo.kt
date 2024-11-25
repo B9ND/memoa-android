@@ -6,9 +6,11 @@ import retrofit2.http.PATCH
 data class ChangeUserNameRequest(
     val nickname: String?
 )
-
 data class ChangeUserDescriptionRequest(
     val description: String?
+)
+data class ChangeProfileImageRequest(
+    val profileImage: String?
 )
 interface PatchUserInfo {
     @PATCH("/auth/me")
@@ -19,4 +21,9 @@ interface PatchUserInfo {
     suspend fun changeUserDescription(
         @Body request: ChangeUserDescriptionRequest
     ): ProfileResponse
+    @PATCH("/auth/me")
+    suspend fun changeProfileImage(
+        @Body request: ChangeProfileImageRequest
+    ): ProfileResponse
+
 }

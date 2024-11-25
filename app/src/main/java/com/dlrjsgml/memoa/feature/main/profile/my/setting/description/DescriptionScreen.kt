@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.textfield.SettingTextField
@@ -35,7 +36,7 @@ fun DescriptionScreen(
         viewModel.uiEffect.collect { effect ->
             when (effect) {
                 DescriptionSideEffect.Failure -> {}
-                DescriptionSideEffect.Success -> navController.popBackStack()
+                DescriptionSideEffect.Success -> navController.safePopBackStack()
             }
         }
     }
@@ -51,7 +52,7 @@ fun DescriptionScreen(
                 .padding(horizontal = 20.dp)
         ) {
             BackButton("자기소개 변경") {
-                navController.popBackStack()
+                navController.safePopBackStack()
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(

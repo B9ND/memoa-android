@@ -1,6 +1,6 @@
 [versions]
 activityKtx = "1.9.2"
-agp = "8.7.1"
+agp = "8.7.2"
 
 androidxRoomCompiler = "2.5.1"
 coilCompose = "2.6.0"
@@ -9,8 +9,10 @@ converterScalars = "2.9.0"
 datastorePreferences = "1.1.1"
 datastorePreferencesVersion = "1.0.0"
 hiltAndroid = "2.52"
-hiltCompiler = "2.44.2"
-kotlin = "1.9.0"
+hiltAndroidCompiler = "2.52"
+hiltAndroidVersion = "2.52"
+hiltCompiler = "2.52"
+kotlin = "2.0.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -30,7 +32,7 @@ roomCompiler = "2.6.1"
 appcompat = "1.7.0"
 roomCompilerVersion = "2.6.4"
 zoomable = "1.6.2"
-pagingComposeAndroid = "3.3.2"
+pagingComposeAndroid = "3.3.4"
 
 
 [libraries]
@@ -50,7 +52,10 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android-v248 = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -76,4 +81,4 @@ androidx-paging-compose-android = { group = "androidx.paging", name = "paging-co
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

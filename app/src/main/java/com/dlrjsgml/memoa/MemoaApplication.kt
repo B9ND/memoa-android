@@ -7,7 +7,10 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.util.DebugLogger
+import dagger.hilt.android.HiltAndroidApp
 
+
+@HiltAndroidApp
 class MemoaApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
