@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.ui.component.items
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -39,10 +41,13 @@ import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.button.BookMarkButton
 import com.dlrjsgml.memoa.ui.component.button.CommentButton
+import com.dlrjsgml.memoa.ui.component.button.FollowerListButton
 import com.dlrjsgml.memoa.ui.component.effect.shimmerEffect
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray20
 import com.dlrjsgml.memoa.ui.theme.Gray40
+import com.dlrjsgml.memoa.ui.theme.Gray60
+import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardName
 import kotlinx.collections.immutable.ImmutableList
@@ -51,8 +56,6 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun JJapList(
 ) {
-
-
     Column(
         modifier = Modifier
 
@@ -69,15 +72,14 @@ fun JJapList(
                 .fillMaxWidth()
                 .padding(start = 21.dp, top = 15.dp, bottom = 14.dp)
         ) {
-            Box {
-                Box(
-                    modifier = Modifier
-                        .size(42.dp)
-                        .background(color = Gray20, CircleShape)
-                        .clip(CircleShape)
-                        .shimmerEffect()
-                )
-            }
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .background(color = Gray20, CircleShape)
+                    .clip(CircleShape)
+                    .shimmerEffect()
+            )
+
 
             Column(
                 modifier = Modifier
@@ -182,6 +184,59 @@ fun JJapList(
     }
 }
 
+
+@Composable
+fun FollowJJapList(
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth()
+                .padding(start = 21.dp, top = 15.dp, bottom = 14.dp, end = 15.dp)
+
+        ) {
+            Box {
+                Box(
+                    modifier = Modifier
+                        .size(52.dp)
+                        .background(color = Gray20, CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(52.dp)
+                        .background(color = Gray20, CircleShape)
+                        .clip(CircleShape)
+                        .shimmerEffect()
+                )
+
+            }
+            Box(
+                modifier = Modifier
+                    .width(170.dp)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Box(modifier = Modifier.padding(start = 16.dp).width(60.dp).height(21.dp).shimmerEffect())
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .width(105.dp)
+                    .height(25.dp)
+                    .shimmerEffect()
+            )
+
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Gray10)
+        )
+    }
+}
+
 @Composable
 fun JJapArticleImage() {
 
@@ -200,5 +255,5 @@ fun JJapArticleImage() {
 @Preview
 @Composable
 fun afdjkadfjk() {
-    JJapList()
+    FollowJJapList()
 }
