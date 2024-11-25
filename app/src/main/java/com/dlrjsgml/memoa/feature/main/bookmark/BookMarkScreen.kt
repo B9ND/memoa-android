@@ -66,6 +66,7 @@ fun BookMarkScreen(
                         tag = bookMark.tags.toImmutableList(),
                         image = bookMark.images.toImmutableList(),
                         bookmarked = true,
+                        onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${bookMark.nickname}")},
                         onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") },
                         onBookmarkClick = {mainViewModel.bookmark(bookMark.postId)}
                     )

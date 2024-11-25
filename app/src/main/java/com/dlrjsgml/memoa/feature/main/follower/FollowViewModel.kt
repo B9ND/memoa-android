@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.user.FollowEffect
+import com.dlrjsgml.memoa.network.follow.FollowResponse
 import com.dlrjsgml.memoa.network.profile.ProfileResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
@@ -17,8 +18,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class FollowState(
-    val followings : List<ProfileResponse> = emptyList(),
-    val followers : List<ProfileResponse> = emptyList(),
+    val followings : List<FollowResponse> = emptyList(),
+    val followers : List<FollowResponse> = emptyList(),
     val isFollowing : Boolean = false,
 )
 
