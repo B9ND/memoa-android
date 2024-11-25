@@ -44,6 +44,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
@@ -62,7 +63,6 @@ import com.dlrjsgml.memoa.feature.main.profile.my.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
-// <<<<<<< feature/setting
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
@@ -70,11 +70,10 @@ import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScr
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionState
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.name.NameSettingScreen
-// =======
-// >>>>>>> develop
 import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
+import com.dlrjsgml.memoa.network.data.user.getRefToken
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
@@ -86,7 +85,6 @@ import com.dlrjsgml.memoa.ui.theme.Black20
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
-    isLogined: Boolean,
     navController: NavHostController,
 ) {
 
@@ -248,11 +246,12 @@ fun NavGraph(
 
 
             }
-        }) {
+        }) { it ->
+            Log.d("", "NavGraph: ")
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = getStartDestination(isLogined),
+                startDestination = getStartDestination(),
                 enterTransition = {
                     // you can change whatever you want transition
                     EnterTransition.None

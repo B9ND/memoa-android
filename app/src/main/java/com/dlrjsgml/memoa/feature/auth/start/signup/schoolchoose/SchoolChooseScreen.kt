@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,11 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -56,6 +53,7 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.button.SchoolButton
+import com.dlrjsgml.memoa.ui.component.dialog.dialog
 import com.dlrjsgml.memoa.ui.component.items.DepartmentList
 import com.dlrjsgml.memoa.ui.component.items.SchoolList
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaDropDownTextField
@@ -77,18 +75,8 @@ fun SchoolChooseScreen(
     val focusManager = LocalFocusManager.current
     val uiState by viewModel.uiState.collectAsState()
     val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedGrade by remember { mutableStateOf("1학년") }
     val coroutineScope = rememberCoroutineScope()
-    var selectedItem by remember { mutableIntStateOf(-1) }
-    var selectedDepartment by remember { mutableIntStateOf(-1) }
     val touchScope = rememberCoroutineScope()
-    var isExpanded by remember { mutableStateOf(false) }
-    val selectedGradeInt = selectedGrade[0].toString().toInt()
-    var departmentList by remember { mutableStateOf(emptyList<String>()) }
-    val schoolName = uiState.response.map { it.name }
-    var departmentSelected by remember { mutableStateOf(false) }
-    var isClicked by remember{ mutableStateOf(false) }
 
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
@@ -97,13 +85,14 @@ fun SchoolChooseScreen(
                     navController.navigate(NavGroup.START)
                 }
 
-                SignUpSideEffect.Failed -> {}
+                SignUpSideEffect.Failed -> {
+                    viewModel.updateDialog(true)
+                }
             }
         }
     }
-    viewModel.updateResponse(uiState.response)
-    LaunchedEffect(showBottomSheet) {
-        if (showBottomSheet) {
+    LaunchedEffect(uiState.showBottomSheet) {
+        if (uiState.showBottomSheet) {
             coroutineScope.launch {
                 sheetState.show()
             }
@@ -163,14 +152,16 @@ fun SchoolChooseScreen(
         withStyle(
             SpanStyle(
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF6D6D6D)
             )
         ) {
             append("소속학교")
         }
         withStyle(
             SpanStyle(
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = Color(0xFF6D6D6D)
             )
         ) {
             append("를 선택하세요")
@@ -180,18 +171,29 @@ fun SchoolChooseScreen(
         withStyle(
             SpanStyle(
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF6D6D6D)
             )
         ) {
             append("학과")
         }
         withStyle(
             SpanStyle(
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = Color(0xFF6D6D6D)
             )
         ) {
             append("를 선택하세요")
         }
+    }
+    if (uiState.showDialog) {
+        dialog(
+            onDismiss = { viewModel.updateDialog(false) },
+            text = "학교 또는 학과를 선택해 주세요",
+            buttonText = "확인"
+        )
+    }
+    LaunchedEffect(uiState.selectedItem) {
     }
 
     Box(
@@ -251,29 +253,29 @@ fun SchoolChooseScreen(
                     Row {
                         SchoolButton(
                             text = "1학년",
-                            isSelected = selectedGrade == "1학년"
+                            isSelected = uiState.selectedGrade == "1학년"
                         ) { isSelected ->
                             if (isSelected) {
-                                selectedGrade = "1학년"
+                                viewModel.updateUpdateGrade("1학년")
                             }
 
                         }
                         Spacer(Modifier.width(10.dp))
                         SchoolButton(
                             text = "2학년",
-                            isSelected = selectedGrade == "2학년"
+                            isSelected = uiState.selectedGrade == "2학년"
                         ) { isSelected ->
                             if (isSelected) {
-                                selectedGrade = "2학년"
+                                viewModel.updateUpdateGrade("2학년")
                             }
                         }
                         Spacer(Modifier.width(10.dp))
                         SchoolButton(
                             text = "3학년",
-                            isSelected = selectedGrade == "3학년"
+                            isSelected = uiState.selectedGrade == "3학년"
                         ) { isSelected ->
                             if (isSelected) {
-                                selectedGrade = "3학년"
+                                viewModel.updateUpdateGrade("3학년")
                             }
                         }
                     }
@@ -285,62 +287,62 @@ fun SchoolChooseScreen(
                         hint = schoolText,
                         modifier = Modifier.clickable(
                             onClick = {
-                                showBottomSheet = true
-                                isExpanded = false
+                                viewModel.updateShowBottomSheet(true)
+                                viewModel.updateExpand(false)
                                 viewModel.schoolSearch(uiState.school)
                             }
                         )
                     )
                     Spacer(Modifier.height(10.dp))
                     MemoaDropDownTextField(
-                        hint = if (selectedDepartment != -1) {
-                            if (selectedDepartment > departmentList.size-1) {
+                        hint = when (
+                            uiState.selectedDepartment) {
+                            -1 -> {
                                 subjectText
-                            } else {
+                            }
+                            in 0 until uiState.departmentList.size -> {
                                 buildAnnotatedString {
-                                    append(departmentList[selectedDepartment])
+                                    append(uiState.departmentList[uiState.selectedDepartment])
                                 }
                             }
-                        } else {
-                            subjectText
+                            else -> {
+                                subjectText
+                            }
                         },
                         modifier = Modifier.clickable {
-                            isExpanded = true
-                            isClicked = !isClicked
-                        },
-                        selected = selectedDepartment == -1 || selectedDepartment > departmentList.size-1
+                            viewModel.updateExpand(true)
+                        }
                     )
                     Spacer(Modifier.height(3.dp))
-                    if (isExpanded && selectedItem != -1) {
+                    if (uiState.isExpanded && uiState.selectedItem != -1) {
                         LazyColumn {
-                            departmentList = getDepartmentNames(
-                                getDepartNames(
-                                    response = uiState.response,
-                                    name = uiState.response[selectedItem].name
-                                ), selectedGradeInt
+                            viewModel.updateList(
                             )
-                            items(count = departmentList.size) { index ->
+                            items(count = uiState.departmentList.size) { index ->
                                 DepartmentList(
                                     modifier = Modifier
                                         .clickable {
-                                            selectedDepartment = index
-                                            viewModel.updateResponse(uiState.response)
-                                            departmentSelected = true
-                                            isExpanded = false
-                                            getDepartNames(
-                                                response = uiState.response,
-                                                name = uiState.response[selectedItem].name
-                                            )?.get(selectedDepartment)?.id?.let {
-                                                viewModel.updateId(
-                                                    it
-                                                )
+                                            viewModel.updateDepItem(index)
+                                            viewModel.updateExpand(false)
+                                            if (uiState.selectedDepartment != -1 && uiState.selectedDepartment != index) {
+                                                val selectedId = getDepartNames(
+                                                    response = uiState.response,
+                                                    name = uiState.response[0].name,
+                                                    grade = uiState.selectedGradeInt
+                                                )?.get(uiState.selectedDepartment)?.id
+                                                selectedId?.let { viewModel.updateDepartmentId(it) }
+                                                selectedId?.let { viewModel.updateDepartmentId(it) }
+                                                viewModel.updateDpName()
+                                            } else {
+                                                Log.d("Debug", "No department selected")
                                             }
-                                            viewModel.updateDpName()
+                                            viewModel.updateDepItem(index)
+
                                         },
-                                    text = departmentList[index],
+                                    text = uiState.departmentList[index],
                                     top = index == 0,
-                                    bottom = index == departmentList.size - 1,
-                                    selected = false
+                                    bottom = index == uiState.departmentList.size - 1,
+                                    selected = index == uiState.selectedDepartment
                                 )
                             }
                         }
@@ -363,18 +365,24 @@ fun SchoolChooseScreen(
                     text = "회원가입",
                     enabled = true,
                 ) {
-                    viewModel.lastSignup(
-                        email = email,
-                        nickname = nickname,
-                        password = password,
-                        departmentId = uiState.departmentId
-                    )
+                    if (uiState.selectedDepartment != -1 && uiState.selectedItem != -1) {
+                        viewModel.lastSignup(
+                            email = email,
+                            nickname = nickname,
+                            password = password,
+                            departmentId = uiState.departmentId
+                        )
+                    } else {
+                        viewModel.updateDialog(true)
+                    }
                 }
             }
-            if (showBottomSheet) {
+            if (uiState.showBottomSheet) {
                 ModalBottomSheet(
-                    onDismissRequest = { showBottomSheet = false },
-                    sheetState = sheetState
+                    onDismissRequest = { viewModel.updateShowBottomSheet(false) },
+                    sheetState = sheetState,
+                    contentColor = Color.White,
+                    containerColor = Color.White
                 ) {
                     SearchTextField(
                         value = uiState.school,
@@ -396,15 +404,15 @@ fun SchoolChooseScreen(
                             .fillMaxWidth()
                     )
                     LazyColumn {
-                        items(count = schoolName.size) { index ->
+                        items(count = uiState.schoolNames.size) { index ->
                             SchoolList(
                                 modifier = Modifier
                                     .clickable {
-                                        selectedItem = index
-                                        showBottomSheet = false
-                                        viewModel.updateSchool(schoolName[selectedItem])
+                                        viewModel.updateItem(index)
+                                        viewModel.updateSchool(uiState.schoolNames[index])
+                                        viewModel.updateShowBottomSheet(false)
                                     },
-                                schoolName = schoolName[index]
+                                schoolName = uiState.schoolNames[index],
                             )
                         }
                     }
@@ -427,11 +435,11 @@ fun Modifier.addFocusCleaner(
     }
 }
 
-
-fun getDepartmentNames(response: List<Department>?, grade: Int): List<String> {
-    return response?.filter { it.grade == grade }?.map { it.name } ?: emptyList()
+fun getDepartNames(
+    response: List<SchoolSearchResponse>,
+    name: String,
+    grade: Int
+): List<Department>? {
+    return response.find { it.name == name }?.departments?.filter { it.grade == grade }
 }
 
-fun getDepartNames(response: List<SchoolSearchResponse>, name: String): List<Department>? {
-    return response.find { it.name == name }?.departments
-}

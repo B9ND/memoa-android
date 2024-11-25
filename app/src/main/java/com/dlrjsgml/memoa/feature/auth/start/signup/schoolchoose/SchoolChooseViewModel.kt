@@ -21,10 +21,18 @@ import retrofit2.HttpException
 data class TextState(
     val school: String = "",
     val response: List<SchoolSearchResponse> = emptyList(),
-    val schoolNames: List<SchoolSearchResponse> = emptyList(),
+    val schoolNames: List<String> = emptyList(),
     val departmentNames: List<String> = emptyList(),
-    val departmentId: Int = -1,
-    val departmentName: AnnotatedString = buildAnnotatedString { }
+    val departmentId: Int? = -1,
+    val departmentName: AnnotatedString = buildAnnotatedString { },
+    val showBottomSheet: Boolean = false,
+    val showDialog: Boolean = false,
+    val selectedGrade: String = "1학년",
+    val selectedGradeInt: Int = 1,
+    val departmentList: List<String> = emptyList(),
+    val selectedItem: Int = -1,
+    val selectedDepartment: Int = -1,
+    val isExpanded: Boolean = false
 )
 
 sealed interface SignUpSideEffect {
@@ -36,11 +44,96 @@ class SchoolChooseScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(TextState())
     val uiState = _uiState.asStateFlow()
 
+
+
     private val _uiEffect = MutableSharedFlow<SignUpSideEffect>()
     val uiEffect: SharedFlow<SignUpSideEffect> = _uiEffect.asSharedFlow()
 
     fun updateDpName() {
         _uiState.update { it.copy(departmentName = buildAnnotatedString {  }) }
+    }
+
+    fun updateExpand(expand: Boolean) {
+        _uiState.update { it.copy(isExpanded = expand) }
+    }
+
+    fun updateItem(item: Int) {
+        _uiState.update {
+            it.copy(
+                selectedItem = item,
+                selectedDepartment = -1,
+                departmentList = emptyList()
+            )
+        }
+    }
+
+    fun updateDepItem(item: Int) {
+        val currentState = _uiState.value
+        val selectedSchool = currentState.response.getOrNull(currentState.selectedItem)
+
+        val departmentsForGrade = selectedSchool?.departments?.filter {
+            it.grade == currentState.selectedGradeInt
+        }
+
+        val selectedDepartment = departmentsForGrade?.getOrNull(item)
+
+        if (selectedDepartment != null) {
+            _uiState.update {
+                it.copy(
+                    selectedDepartment = item,
+                    departmentId = selectedDepartment.id,
+                    departmentName = buildAnnotatedString { append(selectedDepartment.name) },
+                    isExpanded = false
+                )
+            }
+        } else {
+            Log.d("Department", "Invalid department selection")
+        }
+    }
+
+
+
+
+    fun updateList() {
+        val currentState = _uiState.value
+        val selectedSchool = currentState.response.getOrNull(currentState.selectedItem)
+
+        val departmentNames = selectedSchool?.departments
+            ?.filter { it.grade == currentState.selectedGradeInt }
+            ?.map { it.name } ?: emptyList()
+
+
+        _uiState.update {
+            it.copy(
+                departmentList = departmentNames,
+                selectedDepartment = if (it.selectedDepartment >= departmentNames.size) -1 else it.selectedDepartment
+            )
+        }
+    }
+
+    fun updateDialog(dialog: Boolean) {
+        _uiState.update { it.copy(showDialog = dialog) }
+    }
+
+    fun updateShowBottomSheet(sheet: Boolean) {
+        _uiState.update { it.copy(showBottomSheet = sheet) }
+    }
+
+    fun updateUpdateGrade(grade: String) {
+        _uiState.update {
+            it.copy(
+                selectedGrade = grade,
+                selectedGradeInt = grade[0].toString().toInt(),
+                selectedDepartment = -1,
+                departmentList = emptyList()
+            )
+        }
+    }
+
+    fun updateDepartmentId(departmentId: Int?) {
+        _uiState.update {
+            it.copy(departmentId = departmentId)
+        }
     }
 
     fun updateSchool(content: String) {
@@ -51,7 +144,7 @@ class SchoolChooseScreenViewModel : ViewModel() {
             try {
                 val responses = RetrofitClient.getSchoolService.schoolSearch(content)
                 _uiState.update { it.copy(response = responses) }
-                Log.d("TAG", "schoolSearch: ${_uiState.value.schoolNames[0].name} ")
+                _uiState.update { it.copy(schoolNames = responses.map { it.name }) }
             } catch (e: HttpException) {
                 Log.d("signupServer", "Error code: ${e.code()}")
             } catch (e: Exception) {
@@ -60,31 +153,23 @@ class SchoolChooseScreenViewModel : ViewModel() {
         }
     }
 
-    fun lastSignup(email: String, nickname: String, password: String, departmentId: Int){
-        Log.d("ㅎㅇ", "lastSignup: $email ")
+    fun lastSignup(email: String, nickname: String, password: String, departmentId: Int?) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                if (departmentId == -1) {
+                    _uiEffect.emit(SignUpSideEffect.Failed)
+                    return@launch
+                }
+
                 RetrofitClient.signupService.lastSignupSearch(
                     register = SignUpRequest(email, nickname, password, departmentId)
                 )
                 _uiEffect.emit(SignUpSideEffect.Success)
-            }  catch (e: HttpException) {
-                Log.d("signupServer", "Error code: ${e.code()}")
-            } catch (e: Exception) {
-                Log.d("signupServer", "Unexpected error: ${e.localizedMessage}")
+            } catch (_: HttpException) {
+                _uiEffect.emit(SignUpSideEffect.Failed)
+            } catch (_: Exception) {
+                _uiEffect.emit(SignUpSideEffect.Failed)
             }
-        }
-    }
-
-    fun updateId(departmentId: Int) {
-        _uiState.update {
-            it.copy(departmentId = departmentId)
-        }
-    }
-
-    fun updateResponse(responses: List<SchoolSearchResponse>) {
-        _uiState.update {
-            it.copy(response = responses)
         }
     }
 
@@ -93,10 +178,8 @@ class SchoolChooseScreenViewModel : ViewModel() {
             try {
                 val responses = RetrofitClient.getSchoolService.schoolSearch(school)
                 _uiState.update { it.copy(response = responses) }
-                Log.d("TAG", "schoolSearch: ${_uiState.value.schoolNames[0].name} ")
             } catch (e: HttpException) {
                 Log.d("signupServer", "Error code: ${e.code()}")
-
             } catch (e: Exception) {
                 Log.d("signupServer", "Unexpected error: ${e.localizedMessage}")
             }

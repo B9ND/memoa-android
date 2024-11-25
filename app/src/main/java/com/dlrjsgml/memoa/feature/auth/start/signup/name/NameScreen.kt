@@ -173,6 +173,14 @@ fun NameScreen(
                     modifier = Modifier.focusRequester(focusRequester),
                     firstFocus = true,
                 )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = if (uiState.name.length > 255) "닉네임 길이 초과입니다." else "",
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
 
             }
             Column(
@@ -192,7 +200,9 @@ fun NameScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    navController.navigate("${NavGroup.SIGNUP_SCHOOL}?${email}?${password}?${uiState.name}")
+                    if (uiState.name.length <= 255) {
+                        navController.navigate("${NavGroup.SIGNUP_SCHOOL}?${email}?${password}?${uiState.name}")
+                    }
                 }
             }
         }
@@ -209,10 +219,4 @@ fun Modifier.addFocusCleaner(
     }
 }
 
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//@Preview
-//fun EmailScreenPreview() {
-//    PasswordScreen()
-//}
 

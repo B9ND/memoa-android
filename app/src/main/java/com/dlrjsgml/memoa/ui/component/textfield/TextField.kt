@@ -70,6 +70,7 @@ fun MemoaTextField(
                 .onFocusChanged {
                     isFocused = it.isFocused
                 }
+                .padding(end = if(textButton) 50.dp else 0.dp)
             ,
             value = value,
             onValueChange = onValueChange,

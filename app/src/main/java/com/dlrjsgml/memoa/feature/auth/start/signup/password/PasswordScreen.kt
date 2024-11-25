@@ -173,6 +173,14 @@ fun PasswordScreen(
                     hint = passwordText,
                     modifier = Modifier.focusRequester(focusRequester)
                 )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = if (uiState.password.length > 255) "비밀번호 길이 초과입니다." else "",
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
 
             }
             Column(
@@ -192,7 +200,9 @@ fun PasswordScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    navController.navigate("${NavGroup.SIGNUP_NICKNAME}?${email}?${uiState.password}")
+                    if (uiState.password.length <= 255) {
+                        navController.navigate("${NavGroup.SIGNUP_NICKNAME}?${email}?${uiState.password}")
+                    }
                 }
             }
         }

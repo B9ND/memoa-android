@@ -66,6 +66,7 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     // To use Kotlin Symbol Processing (KSP)
+
     implementation (libs.hilt.android.v248)
     ksp (libs.hilt.android.compiler)
 
@@ -78,13 +79,13 @@ dependencies {
     implementation(libs.androidx.paging.compose.android)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation (libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.coil.compose)
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-    implementation (libs.converter.scalars)
-    implementation (libs.androidx.navigation.compose)
+    implementation(libs.converter.scalars)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -103,7 +104,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore.preferences.v100)
-    implementation(libs.androidx.datastore.preferences.core)
-
+    implementation("io.insert-koin:koin-core:3.5.0")
+    implementation("io.insert-koin:koin-android:3.5.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.0")
 }

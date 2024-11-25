@@ -48,15 +48,18 @@ import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
+import com.dlrjsgml.memoa.ui.component.dialog.dialog
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EmailScreen(
     modifier: Modifier = Modifier,
     viewModel: EmailViewModel = viewModel(),
-    navController: NavController,
+    navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
@@ -138,8 +141,50 @@ fun EmailScreen(
             append("를 입력하세요")
         }
     }
-    LaunchedEffect(focusRequester) {
-        focusRequester.requestFocus()
+    LaunchedEffect(viewModel) {
+        viewModel.uiEffect.collect { effect ->
+            when (effect) {
+                Code.Success -> {
+                    navController.navigate("${NavGroup.SIGNUP_PASSWORD}?${uiState.email}")
+                }
+                Code.Fail -> {
+                    viewModel.updateShowDialog(true)
+                }
+            }
+        }
+    }
+    LaunchedEffect(uiState.errorCode) {
+        if (uiState.errorCode == 500) {
+            viewModel.updateClicked(false)
+        }
+    }
+    LaunchedEffect(uiState.clicked) {
+        if (uiState.clicked) {
+            while (uiState.time >= 1) {
+                delay(1.seconds)
+                viewModel.delTime(uiState.time)
+            }
+            viewModel.updateClicked(false)
+            viewModel.updateTime(300)
+            Log.d("나인", "EmailScreen: ${uiState.time}")
+        }
+    }
+    LaunchedEffect(uiState.errorCode) {
+        if (uiState.errorCode == 400) {
+            viewModel.updateClicked(false)
+        }
+    }
+    fun updateEmail(newInput: String) {
+        viewModel.updateEmail(newInput)
+        viewModel.updateClicked(false)
+        viewModel.updateTime(300)
+    }
+    if (uiState.showDialog) {
+        dialog(
+            onDismiss = { viewModel.updateShowDialog(false) },
+            text = uiState.error,
+            buttonText = "확인"
+        )
     }
     Box(
         modifier
@@ -187,14 +232,17 @@ fun EmailScreen(
                 Spacer(Modifier.height(30.dp))
                 MemoaTextField(
                     value = uiState.email,
-                    onValueChange = viewModel::updateEmail,
+                    onValueChange = { newValue -> updateEmail(newValue) },
                     hint = emailText,
                     textButton = true,
-                    textButtonVal = "인증",
+                    textButtonVal = if (uiState.clicked) uiState.time.toString() else "인증",
                     firstFocus = true,
                     modifier = Modifier.focusRequester(focusRequester),
                     textButtonOnClick = {
                         coroutineScope.launch {
+                            viewModel.updateErrorCode(0)
+                            viewModel.updateError("")
+                            viewModel.updateClicked(true)
                             viewModel.sendCode(uiState.email)
                         }
                     }
@@ -227,18 +275,24 @@ fun EmailScreen(
                 ) {
                     viewModel.updateEmail(uiState.email)
                     focusManager.clearFocus()
+                    Log.d("let's", "EmailScreen: ${uiState.errorCode}")
                     if (uiState.auth.length == 6) {
                         coroutineScope.launch {
                             try {
                                 viewModel.checkCode(uiState.email, uiState.auth)
-                                if (uiState.welcome || uiState.auth == "123456") {
-                                    navController.navigate("${NavGroup.SIGNUP_PASSWORD}?${uiState.email}")
-                                }
                             } catch (e: Exception) {
-                                Log.e("Auth Check", "Error during checkCode: ${e.message}")
+                                Log.d("Auth Check", "Error during checkCode: ${e.message}")
                                 e.printStackTrace()
                             }
                         }
+                    } else {
+                        if (uiState.errorCode == 100 || uiState.errorCode == 401){
+                            viewModel.updateError("인증번호를 확인해 주세요")
+                        } else {
+                            viewModel.updateError("이메일 인증을 진행해 주세요")
+                        }
+                        Log.d("good", "EmailScreen: ${uiState.errorCode}")
+                        viewModel.updateShowDialog(true)
                     }
 
                 }
