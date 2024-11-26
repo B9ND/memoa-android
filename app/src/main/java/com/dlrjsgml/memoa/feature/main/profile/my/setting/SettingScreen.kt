@@ -1,10 +1,19 @@
 package com.dlrjsgml.memoa.feature.main.profile.my.setting
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +29,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +37,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -38,15 +50,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileViewModel
+import com.dlrjsgml.memoa.feature.main.write.WriteViewModel
+import com.dlrjsgml.memoa.network.write.image.getFileName
+import com.dlrjsgml.memoa.network.write.image.uriToBitmap
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
+import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.button.ShadowButton
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
@@ -59,18 +77,55 @@ import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SettingScreen(
     navController: NavHostController,
     viewModel: ProfileViewModel = viewModel(),
+    writeViewModel: WriteViewModel = viewModel(),
     settingViewModel: SettingViewModel = viewModel(),
 ) {
     val text = remember { mutableStateOf("이건희") }
     val scrollState = rememberScrollState()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var selectedFileName by remember { mutableStateOf("") }
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+    ) { uri: Uri? ->
+        if (uri != null) {
+            coroutineScope.launch {
+                Log.d("글쓰기", "ChatDetailScreen: $uri")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    selectedImageBitmap = context.contentResolver.uriToBitmap(uri)
+                }
+                selectedFileName = context.contentResolver.getFileName(uri).toString()
+                Log.d("글쓰기", "ChatDetailScreen: $selectedFileName $selectedImageBitmap")
+                viewModel.changeProfileImage(uri, context, selectedImageBitmap!!)
+            }
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        } else {
+            Toast.makeText(context, "권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 권한 확인
+    val permissionCheckResult = ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+
     LaunchedEffect(Unit) {
         viewModel.getProfileInfo()
     }
@@ -116,12 +171,12 @@ fun SettingScreen(
                 .padding(horizontal = 20.dp)
         ) {
             BackButton {
-                navController.popBackStack()
+                navController.safePopBackStack()
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 modifier = Modifier.noRippleClickable {
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                 },
                 text = "완료",
                 color = Purple60,
@@ -139,12 +194,42 @@ fun SettingScreen(
                 )
 
         ) {
-            CircleProfile(
+            Box(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .offset(y = -60.dp),
-                profile = uiState.profileImage
-            )
+                    .offset(y = -60.dp)
+                    .clickable(
+                        indication = rememberBounceIndication(
+                            scale = 0.95f,
+                            showBackground = true,
+                            radius = RoundedCornerShape(8.dp)
+                        ),
+                        interactionSource = remember { MutableInteractionSource() },
+                        enabled = true,
+                        onClick = {
+                            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                                galleryLauncher.launch("image/*")
+                            } else {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                                }
+                            }
+                        }
+                    )
+            ) {
+                CircleProfile(
+                    modifier = Modifier
+
+                        ,
+                    profile = uiState.profileImage
+                )
+                Image(
+                    modifier = Modifier.align(Alignment.BottomStart).padding(12.dp),
+                    painter = painterResource(R.drawable.ic_change_image),
+                    contentDescription = null
+                )
+            }
+
 
             Box(modifier = Modifier.background(color = Color.White)) {
 

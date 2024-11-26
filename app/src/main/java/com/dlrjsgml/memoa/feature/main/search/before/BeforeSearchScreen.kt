@@ -40,6 +40,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
@@ -105,7 +106,7 @@ fun BeforeSearchScreen(
                                         content = searchHistory.history,
                                         onClick = {
                                             keyboardController?.hide()
-                                            navController.popBackStack()
+                                            navController.safePopBackStack()
                                             navController.navigate("${NavGroup.SEARCH}?${searchHistory.history}")
 //                                            viewModel.getSearchArticles()
                                         }

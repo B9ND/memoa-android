@@ -12,8 +12,10 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
+import com.dlrjsgml.memoa.feature.main.write.manager.ImageCompressException
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -26,6 +28,21 @@ import java.io.FileOutputStream
 fun ContentResolver.uriToBitmap(uri: Uri): Bitmap = ImageDecoder.decodeBitmap(
     ImageDecoder.createSource(this, uri),
 )
+
+fun Uri.toBitmap(context: Context): Bitmap {
+    return try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val source = android.graphics.ImageDecoder.createSource(context.contentResolver, this)
+            android.graphics.ImageDecoder.decodeBitmap(source)
+        } else {
+            @Suppress("DEPRECATION")
+            MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+        }
+    } catch (e: Exception) {
+        throw ImageCompressException("Bitmap conversion failed", e)
+    }
+}
+
 
 @SuppressLint("Range")
 fun ContentResolver.getFileName(uri: Uri): String? {
@@ -108,6 +125,57 @@ object FileUtil {
             outputStream.write(buffer, 0, byteCount)
         }
         outputStream.flush()
+    }
+}
+
+object ImageConversionUtils {
+    /**
+     * Convert Uri to Bitmap with fallback for different Android versions
+     * @param context Context of the application
+     * @param uri Uri of the image to be converted
+     * @return Bitmap representation of the image
+     */
+    fun uriToBitmap(context: Context, uri: Uri): Bitmap {
+        return try {
+            // For Android 9 (Pie) and above
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(
+                    ImageDecoder.createSource(context.contentResolver, uri)
+                )
+            } else {
+                // Fallback for older versions
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Unable to convert Uri to Bitmap: ${e.message}")
+        }
+    }
+
+    /**
+     * Resize bitmap while maintaining aspect ratio
+     * @param bitmap Original bitmap to resize
+     * @param maxWidth Maximum width of the resized bitmap
+     * @param maxHeight Maximum height of the resized bitmap
+     * @return Resized bitmap
+     */
+    fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val ratioBitmap = width.toFloat() / height.toFloat()
+        val ratioMax = maxWidth.toFloat() / maxHeight.toFloat()
+
+        val finalWidth: Int
+        val finalHeight: Int
+        if (ratioBitmap > ratioMax) {
+            finalWidth = maxWidth
+            finalHeight = (maxWidth / ratioBitmap).toInt()
+        } else {
+            finalHeight = maxHeight
+            finalWidth = (maxHeight * ratioBitmap).toInt()
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, finalWidth, finalHeight, true)
     }
 }
 

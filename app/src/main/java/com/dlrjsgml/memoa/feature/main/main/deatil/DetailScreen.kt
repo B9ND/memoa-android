@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.main.MainViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
@@ -70,7 +71,7 @@ fun DetailScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 BackButton {
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))

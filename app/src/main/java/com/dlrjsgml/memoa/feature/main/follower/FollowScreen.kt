@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.items.FollowerList
@@ -55,7 +56,7 @@ fun FollowerScreen(
     ) {
         Box(modifier = Modifier.padding(top = 32.dp, start = 20.dp)) {
             BackButton {
-                navController.popBackStack()
+                navController.safePopBackStack()
             }
         }
         Spacer(modifier = Modifier.height(12.dp))

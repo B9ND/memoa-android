@@ -21,7 +21,12 @@ import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
 import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
