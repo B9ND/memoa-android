@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.network.data.login.LoginRequest
-import com.dlrjsgml.memoa.network.data.user.saveAccToken
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

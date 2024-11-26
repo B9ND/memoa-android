@@ -3,8 +3,7 @@ package com.dlrjsgml.memoa.feature.main.profile.my.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

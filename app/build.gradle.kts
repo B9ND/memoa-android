@@ -4,7 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id ("kotlin-kapt")
+    id("kotlin-kapt")
     id("com.google.devtools.ksp")
 }
 
@@ -27,7 +27,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField ("String", "API_KEY", properties["API_KEY"].toString())
+        buildConfigField("String", "API_KEY", properties["API_KEY"].toString())
     }
 
     buildTypes {
@@ -68,7 +68,7 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.zoomable)
     implementation(libs.androidx.room.runtime)
-    ksp( libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.paging.compose.android)
     implementation(libs.androidx.activity.ktx) // Required for Activity Result API
@@ -101,4 +101,11 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.5.0")
     implementation("io.insert-koin:koin-android:3.5.0")
     implementation("io.insert-koin:koin-androidx-compose:3.5.0")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("androidx.room:room-runtime:2.4.2")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    //Room
 }

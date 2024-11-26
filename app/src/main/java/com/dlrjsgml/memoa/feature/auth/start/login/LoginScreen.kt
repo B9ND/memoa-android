@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,17 +32,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.feature.auth.start.signup.name.addFocusCleaner
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
@@ -59,6 +64,7 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
             when (effect) {
@@ -117,7 +123,7 @@ fun LoginScreen(
 
     if (uiState.showDialog) {
         Box(
-            modifier.clickable{
+            modifier.clickable {
                 viewModel.updateDialog(false)
             }
         ) {
@@ -135,7 +141,6 @@ fun LoginScreen(
             )
         }
     }
-
     Box(
         modifier
             .fillMaxSize()
@@ -147,6 +152,7 @@ fun LoginScreen(
                     )
                 )
             )
+            .addFocusCleaner(focusManager)
     ) {
         Image(
             painter = painterResource(R.drawable.goorm),
@@ -216,6 +222,13 @@ fun LoginScreen(
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+@Preview
+fun dddd() {
+    LoginScreen(navController = NavController(context = LocalContext.current))
 }
 
 

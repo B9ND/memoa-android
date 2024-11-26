@@ -56,9 +56,12 @@ import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
 import com.dlrjsgml.memoa.network.data.user.clearToken
-import com.dlrjsgml.memoa.network.data.user.getRefToken
-import com.dlrjsgml.memoa.network.data.user.saveAccToken
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
+import com.dlrjsgml.memoa.network.data.user.clearUserProfile
+import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveUserProfile
 import com.dlrjsgml.memoa.network.token.AccTokenRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGroup
@@ -66,12 +69,8 @@ import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.theme.Gray10
-import com.dlrjsgml.memoa.ui.theme.caption1
-import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import com.dlrjsgml.memoa.ui.theme.caption2
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,7 +96,7 @@ fun MainScreen(
         }
     }
     val lazyState = rememberLazyListState()
-    val id = 1 // 특정 ID를 사용하여 글 가져오기
+    val id = 1
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
     val pullRefreshState = rememberPullToRefreshState()
@@ -167,7 +166,9 @@ fun MainScreen(
                 .background(Color.White)
         )
         Box(
-            modifier = Modifier.nestedScroll(pullRefreshState.nestedScrollConnection).padding(innerPadding)
+            modifier = Modifier
+                .nestedScroll(pullRefreshState.nestedScrollConnection)
+                .padding(innerPadding)
         ) {
             Column(
             ) {
@@ -219,7 +220,9 @@ fun MainScreen(
                                     {
                                         Spacer(modifier = Modifier.height(200.dp))
                                         Image(
-                                            modifier = Modifier.align(Alignment.CenterHorizontally).size(180.dp),
+                                            modifier = Modifier
+                                                .align(Alignment.CenterHorizontally)
+                                                .size(180.dp),
                                             painter = painterResource(id = R.drawable.no_article_man),
                                             contentDescription = null
                                         )
@@ -281,19 +284,31 @@ private fun adfjkafdjkadfjkadfkj() {
 }
 
 private suspend fun isLogin(context: Context): Boolean {
-    Log.d("LOGIN", "get Start")
+    Log.d("유저정보1", "isLogin: ${getUserProfile(MemoaApplication.getContext())}")
     val refToken = getRefToken(context)
-    Log.d("LOGIN", "get result: $refToken")
     if (refToken != null) {
         try {
             val response = accToken(context)
-            return response == "success"
+            if (response == "success") {
+                val userResponse = RetrofitClient.getUserService.getUserService()
+                Log.d("야호", "isLogin: ${userResponse.nickname}")
+                return true
+            } else {
+                Log.d("유저정보2", "isLogin: ${getUserProfile(MemoaApplication.getContext())}")
+                clearUserProfile(context)
+                return false
+            }
         } catch (_: Exception) {
+            Log.d("유저정보3", "isLogin: ${getUserProfile(MemoaApplication.getContext())}")
+            clearUserProfile(context)
             return false
         }
     }
+    Log.d("유저정보4", "isLogin: ${getUserProfile(MemoaApplication.getContext())}")
+    clearUserProfile(context)
     return false
 }
+
 
 private suspend fun accToken(context: Context): String {
     try {
@@ -304,10 +319,15 @@ private suspend fun accToken(context: Context): String {
         if (response != null) {
             saveAccToken(context, response.access)
             saveRefToken(context, response.refresh)
+            val userResponse = RetrofitClient.getUserService.getUserService()
+            saveUserProfile(context, userResponse)
+            Log.d("유저정보5", "isLogin: ${getUserProfile(MemoaApplication.getContext())}")
         }
         return "success"
     } catch (e: Exception) {
         Log.d("스타트뷰모델", "error massage: $e")
+        clearUserProfile(context)
+        Log.d("유저정보6", "isLogin: ${getUserProfile(MemoaApplication.getContext())}")
         return "fail"
     }
 }
