@@ -3,9 +3,9 @@ package com.dlrjsgml.memoa.remote
 import android.util.Log
 import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.network.data.user.clearToken
-import com.dlrjsgml.memoa.network.data.user.getRefToken
-import com.dlrjsgml.memoa.network.data.user.saveAccToken
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
 import com.dlrjsgml.memoa.network.token.AccTokenRequest
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

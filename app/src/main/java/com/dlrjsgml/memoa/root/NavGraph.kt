@@ -64,16 +64,12 @@ import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionScreen
-import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionState
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.name.NameSettingScreen
 import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
-import com.dlrjsgml.memoa.feature.main.write.WriteScreen
-import com.dlrjsgml.memoa.network.data.user.getRefToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
