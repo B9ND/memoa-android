@@ -33,7 +33,11 @@ android {
 
     buildTypes {
         release {
+
+            // 코드 축소 (ProGuard) 활성화
             isMinifyEnabled = true
+
+            // 최적화된 ProGuard 규칙 추가
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -56,7 +60,16 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // 중복되거나 불필요한 리소스 제외
+            excludes += setOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/*.kotlin_module"
+            )
         }
     }
 }

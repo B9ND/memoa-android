@@ -1,7 +1,9 @@
 package com.dlrjsgml.memoa
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.service.autofill.UserData
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,13 +19,13 @@ import coil.Coil
 import coil.ImageLoader
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import com.dlrjsgml.memoa.data.local.UserDatabase
 import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
 import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.io.File
 
 
 @AndroidEntryPoint
@@ -32,7 +34,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         val imageLoader = ImageLoader.Builder(this)
             .memoryCache {
                 MemoryCache.Builder(this)
@@ -97,3 +98,32 @@ class MainActivity : ComponentActivity() {
 //        return "fail"
 //    }
 //}
+fun clearAppData(context: Context) {
+    val cache = context.cacheDir //캐시 폴더 호출
+    val appDir = File(cache.parent) //App Data 삭제를 위해 캐시 폴더의 부모폴더까지 호출
+    if (appDir.exists()) {
+        val children = appDir.list()
+        for (s in children) {
+            //App Data 폴더의 리스트를 deleteDir 를 통해 하위 디렉토리 삭제
+            deleteDir(File(appDir, s))
+        }
+    }
+}
+
+fun deleteDir(dir: File?): Boolean {
+    if (dir != null && dir.isDirectory) {
+        val children = dir.list()
+
+        //파일 리스트를 반복문으로 호출
+        for (i in children.indices) {
+            val success = deleteDir(File(dir, children[i]))
+            if (!success) {
+                return false
+            }
+        }
+    }
+
+
+    //디렉토리가 비어있거나 파일이므로 삭제 처리
+    return dir!!.delete()
+}

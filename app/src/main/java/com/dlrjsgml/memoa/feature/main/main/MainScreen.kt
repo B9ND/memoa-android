@@ -108,6 +108,8 @@ fun MainScreen(
         pullRefreshState.endRefresh()
     }
 
+    val userProfile = getUserProfile(MemoaApplication.getContext())?:null
+
     Log.d("ㅎㅇ", "dlrjsgml44 Ok ${lazyPagingItems.loadState}");
     val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");

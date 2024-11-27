@@ -8,6 +8,7 @@ import com.dlrjsgml.memoa.data.local.bookmark.BookMarkDao
 import com.dlrjsgml.memoa.data.local.bookmark.BookMarkEntity
 import com.dlrjsgml.memoa.data.local.search.SearchHistoryDao
 import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
+import kotlinx.coroutines.runBlocking
 
 
 @Database(
@@ -30,10 +31,16 @@ abstract class UserDatabase: RoomDatabase() {
                         MemoaApplication.getContext(),
                         UserDatabase::class.java,
                         "user-database"
-                    ).build()
+                    ).fallbackToDestructiveMigration()
+                        .build()
                 }
             }
             return instance
         }
+        fun dropDatabase() {
+            instance?.openHelper?.writableDatabase?.execSQL("DROP TABLE IF EXISTS search_history_table")
+            instance = null
+        }
     }
+
 }

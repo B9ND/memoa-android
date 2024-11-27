@@ -63,7 +63,6 @@ fun SearchScreen(
     navController: NavHostController,
     search: String,
 ) {
-
     val uiState by viewModel.uiState.collectAsState()
     val articlesItems = uiState.articles.collectAsLazyPagingItems()
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")

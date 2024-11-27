@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
 import com.dlrjsgml.memoa.feature.main.write.UpLoadImageSideEffect
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
 import com.dlrjsgml.memoa.network.write.image.FileUtil
 import com.dlrjsgml.memoa.network.write.image.FormDataUtil
 import com.dlrjsgml.memoa.network.write.image.UriUtil
