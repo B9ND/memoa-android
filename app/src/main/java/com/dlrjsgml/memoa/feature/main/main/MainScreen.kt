@@ -84,6 +84,10 @@ fun MainScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isLogin: Boolean? by remember { mutableStateOf(null) }
+
+    val user = getUserProfile(MemoaApplication.getContext())
+    val userSchool = listOf( user.department.school)
+    val userTags = user.department.subjects
     LaunchedEffect(Unit) {
         Log.d("Log", "called Launched Effect")
         coroutineScope.launch {
@@ -96,6 +100,7 @@ fun MainScreen(
                 clearToken(MemoaApplication.getContext())
                 navController.navigate(NavGroup.START)
             }
+            viewModel.fillTags(user.department.school)
         }
     }
     val lazyState = rememberLazyListState()
@@ -108,7 +113,6 @@ fun MainScreen(
         pullRefreshState.endRefresh()
     }
 
-    val userProfile = getUserProfile(MemoaApplication.getContext())?:null
 
     Log.d("ㅎㅇ", "dlrjsgml44 Ok ${lazyPagingItems.loadState}");
     val density = LocalDensity.current
@@ -159,13 +163,13 @@ fun MainScreen(
                         .padding(vertical = 4.dp, horizontal = 14.dp)
                 ) {
                     MemoaDropDown(
-                        selectList = listOf("대구소프트웨어마이스터고등학교", "교학웨트프소구대"),
+                        selectList = userSchool,
                         modifier = Modifier.weight(5.5f)
                     ) {
                         viewModel.fillTags(it)
                     }
                     MemoaDropDown(
-                        selectList = listOf("국어", "영어", "수학", "사회", "과학", "기타"),
+                        selectList = userTags,
                         modifier = Modifier.weight(1.85f)
                     ) {
                         viewModel.fillTags(it)

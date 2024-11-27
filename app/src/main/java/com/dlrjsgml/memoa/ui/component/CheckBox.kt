@@ -26,10 +26,12 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 fun MemoaCheckBox(
     modifier: Modifier = Modifier,
     text: String,
+    enabled: Boolean = false,
     shape: Shape = RoundedCornerShape(12.dp),
     onClick: () -> Unit,
+    
 ) {
-    val checked = remember { mutableStateOf(false) }
+    val checked = remember { mutableStateOf(enabled) }
     Box(
         modifier = modifier
             .background(color = Color.White, shape = shape)
@@ -47,8 +49,10 @@ fun MemoaCheckBox(
                 interactionSource = remember { MutableInteractionSource() },
                 enabled = true,
                 onClick = {
-                    onClick()
-                    checked.value = !checked.value
+                    if(!enabled){
+                        onClick()
+                        checked.value = !checked.value
+                    }
                 })
             .padding(horizontal = 12.dp, vertical = 8.dp)
 
