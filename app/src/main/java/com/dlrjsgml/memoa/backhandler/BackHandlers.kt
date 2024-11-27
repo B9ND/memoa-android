@@ -8,7 +8,7 @@ import com.dlrjsgml.memoa.root.NavGroup
 @Composable
 fun BackHandlers(navController: NavHostController) {
     BackHandler(enabled = true, onBack = {
-        navController.popBackStack()
+        navController.safePopBackStack()
         navController.navigate(NavGroup.MAIN)
     })
 }

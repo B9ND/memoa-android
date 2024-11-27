@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.main.main.deatil
+package com.dlrjsgml.memoa.feature.main.main.detail
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.main.MainViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
@@ -70,13 +71,13 @@ fun DetailScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 BackButton {
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
             CommentList(
                 name = uiState.author,
-                date = uiState.createdAt,
+                date = uiState.createdAt.substring(0, 10),
                 title = uiState.title,
                 profile = uiState.authorProfileImage,
                 onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}") },
@@ -127,7 +128,7 @@ fun DetailScreen(
                     BookMarkButton(
                         modifier = Modifier.align(Alignment.CenterVertically),
                         bookmarked = uiState.isBookmarked,
-                        onClick = {bookMarkViewModel.bookmark(uiState.id)})
+                        onClick = { bookMarkViewModel.bookmark(uiState.id) })
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),

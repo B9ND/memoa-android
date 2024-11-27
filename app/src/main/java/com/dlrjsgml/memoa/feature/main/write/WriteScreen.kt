@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
@@ -57,7 +58,7 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.dlrjsgml.memoa.backhandler.BackHandlers
+import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
 import com.dlrjsgml.memoa.root.NavGroup
@@ -85,7 +86,11 @@ fun WriteScreen(
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var selectedFileName by remember { mutableStateOf("") }
+    // TODO rabbitmq
 
+    Button(onClick = { /*TODO*/ }) {
+        Text("ㅎㅇ")
+    }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->
@@ -97,6 +102,13 @@ fun WriteScreen(
                 Log.d("글쓰기", "ChatDetailScreen: $selectedFileName $selectedImageBitmap")
                 viewModel.uploadImage(uri, context, selectedImageBitmap!!)
             }
+        }
+    }
+    LaunchedEffect(uiState.content, uiState.image) {
+        if (uiState.content.isNotEmpty()) {
+            focusRequester.requestFocus()
+            // 약간의 지연을 주어 포커스가 확실히 적용되도록 함
+            kotlinx.coroutines.delay(100)
         }
     }
 
@@ -122,7 +134,7 @@ fun WriteScreen(
             when (effect) {
                 is WriteSideEffect.Success -> {
                     viewModel.wrigingErrorAlert("글쓰기 성공")
-                    navController.popBackStack()
+                    navController.safePopBackStack()
                     Log.d("글쓰기", "성공");
                 }
 
@@ -143,7 +155,6 @@ fun WriteScreen(
                     viewModel.wrigingErrorAlert("이미지 업로드 성공")
                 }
             }
-
         }
     }
     Column(
@@ -152,14 +163,13 @@ fun WriteScreen(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        BackHandlers(navController = navController)
         Row(
             modifier = Modifier
                 .padding(top = 32.dp)
                 .padding(horizontal = 20.dp)
         ) {
             BackButton {
-                navController.popBackStack()
+                navController.safePopBackStack()
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -288,7 +298,9 @@ fun WriteScreen(
                 DelArticleImage(image = uiState.image[it],
                     onImageClick = { navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.image[it]}") },
                     onDelClick = {
+                        viewModel.deleteImage(it)
                     })
+                Spacer(Modifier.width(10.dp))
             }
         }
         Spacer(modifier = Modifier.height(200.dp))
@@ -303,6 +315,7 @@ fun WriteScreen(
 //        focusRequester.requestFocus()
 //    }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Preview

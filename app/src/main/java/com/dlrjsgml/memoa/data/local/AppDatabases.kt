@@ -17,6 +17,8 @@ import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 abstract class UserDatabase: RoomDatabase() {
     abstract fun searchHistoryDao(): SearchHistoryDao
 
+
+
     companion object {
         private var instance: UserDatabase? = null
 

@@ -100,7 +100,7 @@ fun BottomCircleTwo(
                 shape = RoundedCornerShape(topStart = 1000.dp, topEnd = 1000.dp),
                 color = Color.White
             )
-            .width(77.dp)
+            .width(74.dp)
             .height(57.dp)
     ) {
         Column(modifier = Modifier.align(Alignment.Center)) {

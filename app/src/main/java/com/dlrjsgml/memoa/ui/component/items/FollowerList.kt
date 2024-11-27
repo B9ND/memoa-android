@@ -18,16 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
-import com.dlrjsgml.memoa.ui.component.button.FollowerButton
+import com.dlrjsgml.memoa.ui.component.button.FollowerListButton
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.Gray20
-import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardName
 
 @Composable
@@ -74,7 +72,7 @@ fun FollowerList(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            FollowerButton(modifier = Modifier.align(Alignment.CenterVertically),
+            FollowerListButton(modifier = Modifier.align(Alignment.CenterVertically),
                 enabled = buttonEnabled) {
                 onFollowClick()
             }

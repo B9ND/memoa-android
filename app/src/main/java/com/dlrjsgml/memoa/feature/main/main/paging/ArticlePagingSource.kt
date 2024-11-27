@@ -18,9 +18,9 @@ import java.io.IOException
  *
  * Note that the key type is Int, since we're using page number to load a page.
  */
-class  ArticlePagingSource(
-    private val searchQuery : String,
-    private val searchTag : List<String>
+class ArticlePagingSource(
+    private val searchQuery: String,
+    private val searchTag: List<String>,
 ) : PagingSource<Int, ArticleResponse>() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleResponse> {
@@ -37,32 +37,29 @@ class  ArticlePagingSource(
             // withContext(Dispatcher.IO) { ... } block since Retrofit's Coroutine
             // CallAdapter dispatches on a worker thread.
 
-            val response =
-                RetrofitClient.getMainService.getArticles(search = searchQuery, tags = if(searchTag.isEmpty()) arrayListOf("대구소프트웨어마이스터고등학교") else searchTag ,
-                    page = pageNumber,
-                    size = 10
-                )
-            Log.d("메인", "${arrayListOf("대구소프트웨어마이스터고등학교")+searchTag}");
+            val response = RetrofitClient.getMainService.getArticles(
+                search = searchQuery,
+                tags = if (searchTag.isEmpty()) arrayListOf("대구소프트웨어마이스터고등학교") else searchTag,
+                page = pageNumber,
+                size = 10
+            )
 
-
-            // Since 0 is the lowest page number, return null to signify no more pages should
-            // be loaded before it.
-            val prevKey = if (pageNumber > 0) pageNumber - 1 else null
-
-            // This API defines that it's out of data when a page returns empty. When out of
-            // data, we return `null` to signify no more pages should be loaded
-            val nextKey = if (response.isNotEmpty()) pageNumber + 1 else null
             LoadResult.Page(
                 data = response,
-                prevKey = prevKey,
-                nextKey = nextKey
+                prevKey = if (pageNumber > 0) pageNumber - 1 else null,
+                nextKey = if (response.isNotEmpty()) pageNumber + 1 else null
             )
         } catch (e: HttpException) {
-            LoadResult.Page(
-                data = emptyList(),
-                prevKey = null,
-                nextKey = null
-            )
+            // HTTP 에러 처리
+            LoadResult.Error(e)
+        } catch (e: IOException) {
+            // 네트워크 에러 처리
+            Log.e("ArticlePaging", "Network Error: ${e.message}")
+            LoadResult.Error(e)
+        } catch (e: Exception) {
+            // 기타 예외 처리
+            Log.e("ArticlePaging", "Error: ${e.message}")
+            LoadResult.Error(e)
         }
     }
 

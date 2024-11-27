@@ -60,14 +60,19 @@ fun ArticleList(
     profile: String = "",
     tag: ImmutableList<String> = persistentListOf(),
     comment: Long = 0,
-    bookmarked : Boolean = false,
+    bookmarked: Boolean = false,
     onProfileClick: () -> Unit = {},
     onBookmarkClick: () -> Unit = {},
     onCommentClick: () -> Unit = {},
     onArticleClick: () -> Unit = {},
-    onImageClick: () -> Unit ={}
+    onImageClick: () -> Unit = {},
 ) {
-
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Gray10)
+    )
     Column(
         modifier = Modifier
             .clickable(
@@ -84,19 +89,25 @@ fun ArticleList(
                 }
             )
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Gray10)
-        )
+
         Row(
             modifier = Modifier
                 .background(Color.White)
                 .fillMaxWidth()
                 .padding(start = 21.dp, top = 15.dp, bottom = 14.dp)
         ) {
-            Box {
+            Box(
+                modifier = Modifier.clickable(
+                    indication = rememberBounceIndication(
+                        scale = 0.95f,
+                        showBackground = true,
+                        radius = RoundedCornerShape(8.dp)
+                    ),
+                    interactionSource = remember { MutableInteractionSource() },
+                    enabled = true,
+                    onClick = onProfileClick
+                )
+            ) {
                 Box(
                     modifier = Modifier
                         .size(42.dp)
@@ -108,11 +119,10 @@ fun ArticleList(
                     modifier = Modifier
                         .size(42.dp)
                         .clip(CircleShape)
-                        .noRippleClickable { onProfileClick() },  // 원형으로 이미지를 클립
+                       ,// 원형으로 이미지를 클립
                     model = profile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,  // 이미지를 원에 맞춰 자르기,
-
                 )
             }
 
@@ -123,7 +133,11 @@ fun ArticleList(
             ) {
                 Row() {
                     Column {
-                        Text(modifier = Modifier, text = name, style = boardName.copy(fontSize = 16.sp))
+                        Text(
+                            modifier = Modifier,
+                            text = name,
+                            style = boardName.copy(fontSize = 16.sp)
+                        )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
@@ -135,7 +149,7 @@ fun ArticleList(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),
-                        text = date,
+                        text = date.substring(0..9),
                         style = boardContent.copy(fontSize = 15.sp, fontWeight = FontWeight.Medium),
                         color = Color.Gray
                     )
@@ -147,9 +161,9 @@ fun ArticleList(
                     LazyRow {
                         items(image.size) {
                             ArticleImage(image = image[it],
-                                onImageClick = {onImageClick()}
+                                onImageClick = { onImageClick() }
                                 //navController = navController
-                                )
+                            )
                             Spacer(modifier = Modifier.width(6.dp))
                         }
                     }
@@ -173,7 +187,8 @@ fun ArticleList(
                         BookMarkButton(
                             modifier = Modifier.align(Alignment.CenterVertically),
                             bookmarked = bookmarked,
-                            onClick = {onBookmarkClick()
+                            onClick = {
+                                onBookmarkClick()
                             }
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -191,7 +206,7 @@ fun ArticleList(
 }
 
 @Composable
-fun ArticleImage(image: String, onImageClick : () -> Unit) {
+fun ArticleImage(image: String, onImageClick: () -> Unit) {
     var isImageLoaded by remember { mutableStateOf(false) }
     Box {
         if (!isImageLoaded) {
@@ -223,7 +238,7 @@ fun ArticleImage(image: String, onImageClick : () -> Unit) {
 
 
 @Composable
-fun DelArticleImage(image: String, onImageClick : () -> Unit,onDelClick : () -> Unit) {
+fun DelArticleImage(image: String, onImageClick: () -> Unit, onDelClick: () -> Unit) {
     var isImageLoaded by remember { mutableStateOf(false) }
     Box {
         if (!isImageLoaded) {
@@ -236,7 +251,7 @@ fun DelArticleImage(image: String, onImageClick : () -> Unit,onDelClick : () -> 
             )
         }
 
-        Box(){
+        Box() {
             AsyncImage(
                 modifier = Modifier
                     .width(220.dp)
@@ -252,7 +267,11 @@ fun DelArticleImage(image: String, onImageClick : () -> Unit,onDelClick : () -> 
                 onSuccess = { isImageLoaded = true } // 이미지가 로드되면 shimmer 중단
             )
             Icon(
-                modifier = Modifier.noRippleClickable { onDelClick() }.align(Alignment.TopEnd).padding(12.dp).size(34.dp),
+                modifier = Modifier
+                    .noRippleClickable { onDelClick() }
+                    .align(Alignment.TopEnd)
+                    .padding(12.dp)
+                    .size(34.dp),
                 imageVector = Icons.Default.Close,
                 contentDescription = "Close",
                 tint = Color.Black
@@ -265,7 +284,10 @@ fun DelArticleImage(image: String, onImageClick : () -> Unit,onDelClick : () -> 
 @Preview
 @Composable
 private fun Deee() {
-    DelArticleImage("https://newsimg.hankookilbo.com/2015/12/17/201512171111528240_2.jpg", onImageClick = {}, onDelClick = {} )
+    DelArticleImage(
+        "https://newsimg.hankookilbo.com/2015/12/17/201512171111528240_2.jpg",
+        onImageClick = {},
+        onDelClick = {})
 }
 //
 //@Preview

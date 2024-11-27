@@ -128,6 +128,7 @@ class SearchViewModel(
                 _uiEffect.emit(SearchSideEffect.BeforeSearch)
                 Log.d("ㅎㅇ", "$data");
             } catch (e: Exception) {
+                Log.d("룸", "룸에러");
 
             }
 

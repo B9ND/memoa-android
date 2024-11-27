@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlrjsgml.memoa.feature.main.profile.user.FollowEffect
+import com.dlrjsgml.memoa.network.follow.FollowResponse
 import com.dlrjsgml.memoa.network.profile.ProfileResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
@@ -17,12 +18,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class FollowState(
-    val followings : List<ProfileResponse> = emptyList(),
-    val followers : List<ProfileResponse> = emptyList(),
-    val isFollowing : Boolean = false,
+    val followings: List<FollowResponse> = emptyList(),
+    val followers: List<FollowResponse> = emptyList(),
+    val isFollowing: Boolean = false,
+    val isLoaded: Boolean = false
 )
 
-sealed interface FollowSideEffect{
+sealed interface FollowSideEffect {
     data object Success : FollowSideEffect
     data object Failed : FollowSideEffect
 }
@@ -36,23 +38,25 @@ class FollowViewModel : ViewModel() {
     private val _uiEffect = MutableSharedFlow<FollowSideEffect>()
     val uiEffect: SharedFlow<FollowSideEffect> = _uiEffect.asSharedFlow()
 
-    fun getFollow(user:String) : String{
+    fun getFollow(user: String): String {
         Log.d("팔로우", "함수를 부름");
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val followingResponse = RetrofitClient.getFollowingService.getFollowingList(
-                    user)
+                    user
+                )
                 val followersResponse = RetrofitClient.getFollowersService.getFollowersList(
-                    user)
+                    user
+                )
                 _uiState.update {
                     it.copy(
                         followings = followingResponse,
-                        followers = followersResponse
+                        followers = followersResponse,
+                        isLoaded = true
                     )
                 }
-
                 _uiEffect.emit(FollowSideEffect.Success)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 Log.d("팔로우", "뷰모델에서 에러 : $e");
                 _uiEffect.emit(FollowSideEffect.Failed)
             }
@@ -62,10 +66,11 @@ class FollowViewModel : ViewModel() {
 
     fun follow(userName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            try{
+            try {
                 val response = RetrofitClient.followService.follow(userName)
                 Log.d("팔로우", "팔로우 : $response");
-            } catch (e:Exception){
+            } catch (e: Exception) {
+                throw e
             }
         }
     }

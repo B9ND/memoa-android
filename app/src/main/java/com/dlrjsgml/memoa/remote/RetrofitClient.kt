@@ -1,7 +1,6 @@
 package com.dlrjsgml.memoa.remote
 
 import com.dlrjsgml.memoa.BuildConfig
-import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
 import com.dlrjsgml.memoa.network.data.login.LoginService
@@ -9,6 +8,7 @@ import com.dlrjsgml.memoa.network.data.school.SchoolService
 import com.dlrjsgml.memoa.network.data.signup.GetCodeService
 import com.dlrjsgml.memoa.network.data.signup.LastSignupService
 import com.dlrjsgml.memoa.network.data.signup.SendCodeService
+import com.dlrjsgml.memoa.network.data.user.getUser.GetUserService
 import com.dlrjsgml.memoa.network.follow.FollowService
 import com.dlrjsgml.memoa.network.follow.GetFollowersService
 import com.dlrjsgml.memoa.network.follow.GetFollowingService
@@ -24,7 +24,6 @@ import com.dlrjsgml.memoa.network.write.image.UpLoadImgService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
-import org.koin.androidx.compose.get
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -87,4 +86,5 @@ object RetrofitClient {
     val getCodeService: GetCodeService by lazy { instance.create(GetCodeService::class.java) }
     val signupService: LastSignupService by lazy { instance.create(LastSignupService::class.java) }
     val tokenService: TokenService by lazy { instance.create(TokenService::class.java) }
+    val getUserService: GetUserService by lazy { instance.create(GetUserService::class.java) }
 }
