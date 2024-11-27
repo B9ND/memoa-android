@@ -23,7 +23,8 @@ data class TextState(
     val access: String = "",
     val refresh: String = "",
     val error: String = "",
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
+    val isLoading: Boolean = false
 )
 
 
@@ -70,6 +71,7 @@ class LoginViewModel : ViewModel() {
         if(email.length <= 255 && password.length <= 255) {
             viewModelScope.launch {
                 try {
+                    _uiState.update { it.copy(isLoading = true) }
                     val loginData = LoginRequest(email, password)
                     val response = RetrofitClient.getLoginService.login(loginData)
                     updateToken(response.access, response.refresh)
