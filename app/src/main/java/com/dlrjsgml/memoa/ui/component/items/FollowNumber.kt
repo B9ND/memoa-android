@@ -2,7 +2,10 @@ package com.dlrjsgml.memoa.ui.component.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
+import com.dlrjsgml.memoa.ui.component.effect.shimmerEffect
 import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
 
@@ -21,6 +25,7 @@ fun FollowNumber(
     modifier: Modifier = Modifier,
     number: Int,
     text: String,
+    isLoading: Boolean = true,
     onClick: () -> Unit = {},
 ) {
     Column(modifier = modifier.clickable(
@@ -33,11 +38,16 @@ fun FollowNumber(
         onClick = {onClick() }
 
     )) {
-        Text(
-            modifier = modifier.align(Alignment.CenterHorizontally),
-            text = number.toString(),
-            style = boardName
-        )
+        if(!isLoading){
+            Box(modifier = Modifier.align(Alignment.CenterHorizontally).width(16.dp).height(21.dp).shimmerEffect())
+        } else {
+            Text(
+                modifier = modifier.align(Alignment.CenterHorizontally),
+                text = number.toString(),
+                style = boardName
+            )
+        }
+
         Text(
             modifier = modifier.align(Alignment.CenterHorizontally),
             text = text,

@@ -39,7 +39,7 @@ class ArticlePagingSource(
 
             val response = RetrofitClient.getMainService.getArticles(
                 search = searchQuery,
-                tags = if(searchTag.isEmpty()) arrayListOf("대구소프트웨어마이스터고등학교") else searchTag,
+                tags = if (searchTag.isEmpty()) arrayListOf("대구소프트웨어마이스터고등학교") else searchTag,
                 page = pageNumber,
                 size = 10
             )

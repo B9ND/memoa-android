@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
-import com.dlrjsgml.memoa.feature.main.main.deatil.DetailViewModel
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.items.CommentList
 

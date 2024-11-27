@@ -15,11 +15,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class BookMarkState(
-    val tags : List<String> = emptyList(),
-    val bookMarks : List<BookMarkResponse> = emptyList()
+    val tags: List<String> = emptyList(),
+    val bookMarks: List<BookMarkResponse> = emptyList(),
+    val isLoaded: Boolean = false,
 )
 
-sealed interface BookMarkSideEffect{
+sealed interface BookMarkSideEffect {
     data object Success : BookMarkSideEffect
     data object Failure : BookMarkSideEffect
 }
@@ -31,16 +32,19 @@ class BookMarkViewModel : ViewModel() {
     private val _uiEffect = MutableSharedFlow<BookMarkSideEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
-    fun getBookMarks(){
+    fun getBookMarks() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = RetrofitClient.getBookMarkService.getBookMark()
                 _uiState.update {
-                    it.copy(bookMarks = response)
+                    it.copy(
+                        bookMarks = response,
+                        isLoaded = true
+                    )
                 }
                 _uiEffect.emit(BookMarkSideEffect.Success)
 
-            } catch (e:Exception){
+            } catch (e: Exception) {
                 _uiEffect.emit(BookMarkSideEffect.Failure)
             }
         }

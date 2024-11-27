@@ -57,7 +57,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: ProfileViewModel = viewModel(),
 ) {
     val text = remember { mutableStateOf("이건희") }
     val uiState by viewModel.uiState.collectAsState()
@@ -67,8 +67,8 @@ fun ProfileScreen(
         viewModel.getProfileInfo()
     }
     LaunchedEffect(viewModel) {
-        viewModel.uiEffect.collect{ effect ->
-            when(effect){
+        viewModel.uiEffect.collect { effect ->
+            when (effect) {
                 MyProfileEffect.Failed -> Log.d("프로필", "에러");
                 MyProfileEffect.Success -> {
                     viewModel.getUsersArticles(uiState.nickname)
@@ -161,14 +161,20 @@ fun ProfileScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = uiState.description?: "",
+                        text = uiState.description ?: "",
                         style = miniCaption2
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        FollowNumber(number = followUiState.follower, text = "팔로워", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true")})
+                        FollowNumber(number = followUiState.follower,
+                            isLoading = followUiState.isLoaded,
+                            text = "팔로워",
+                            onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true") })
                         Spacer(modifier = Modifier.width(35.dp))
-                        FollowNumber(number = followUiState.following, text = "팔로잉", onClick = {navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false")})
+                        FollowNumber(number = followUiState.following,
+                            isLoading = followUiState.isLoaded,
+                            text = "팔로잉",
+                            onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false") })
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
@@ -187,13 +193,13 @@ fun ProfileScreen(
                     profile = article.authorProfileImage,
                     tag = article.tags.toImmutableList(),
                     comment = 1,
-                    onProfileClick = {navController.navigate("${NavGroup.USERPROFILE}?${article.author}")},
+                    onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
                     onBookmarkClick = {
 //                        viewModel.bookmark(article.id)
                     },
                     onCommentClick = {},
-                    onArticleClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")} ,
-                    onImageClick = {navController.navigate("${NavGroup.DETAIL}?${article.id}")}
+                    onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                    onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
                 )
             }
         }

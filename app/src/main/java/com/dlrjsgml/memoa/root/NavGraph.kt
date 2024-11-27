@@ -8,12 +8,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -44,7 +39,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
-import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
@@ -58,22 +52,17 @@ import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
 import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
-import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
+import com.dlrjsgml.memoa.feature.main.main.detail.DetailScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
 import com.dlrjsgml.memoa.feature.main.search.SearchScreen
 import com.dlrjsgml.memoa.feature.main.write.WriteScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.password.PasswordScreen
-import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreen
 import com.dlrjsgml.memoa.feature.auth.start.signup.schoolchoose.SchoolChooseScreenViewModel
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionScreen
-import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionState
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.name.NameSettingScreen
 import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
-import com.dlrjsgml.memoa.feature.main.write.WriteScreen
-import com.dlrjsgml.memoa.network.data.user.getRefToken
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
@@ -315,10 +304,8 @@ fun NavGraph(
                     MainScreen(navController = navController)
                 }
                 composable(route = "${NavGroup.DETAIL}?{phone}",
-                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
-                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
-                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End) },
-                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) },
+                    exitTransition = { null },
+                    popExitTransition = { null },
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )) {
@@ -383,13 +370,20 @@ fun NavGraph(
                 }
                 composable(
                     NavGroup.PROFILE,
-                    exitTransition = { null },
-                    popExitTransition = { null },
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None},
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None },
+
                 ) {
                     ProfileScreen(navController)
                 }
                 composable(
                     route = "${NavGroup.USERPROFILE}?{phone}",
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) },
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     ),
@@ -414,9 +408,7 @@ fun NavGraph(
                             AnimatedContentTransitionScope.SlideDirection.End, tween(100)
                         )
                     }, popEnterTransition = {
-                        return@composable slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Start, tween(100)
-                        )
+                        return@composable EnterTransition.None
                     })
                 {
                     val phoneNum = it.arguments?.getString("phone") ?: ""

@@ -30,6 +30,7 @@ import com.dlrjsgml.memoa.feature.main.main.MainViewModel
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
+import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.theme.caption1
 import kotlinx.collections.immutable.toImmutableList
 
@@ -37,7 +38,7 @@ import kotlinx.collections.immutable.toImmutableList
 fun BookMarkScreen(
     navController: NavHostController,
     viewModel: BookMarkViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel()
+    mainViewModel: MainViewModel = viewModel(),
 ) {
     val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
     val uiState by viewModel.uiState.collectAsState()
@@ -45,7 +46,7 @@ fun BookMarkScreen(
     LaunchedEffect(Unit) {
         viewModel.getBookMarks()
     }
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,29 +54,43 @@ fun BookMarkScreen(
         ) {
             BackHandlers(navController = navController)
             LazyColumn {
-                item {
-                    Spacer(modifier = Modifier.height(58.dp))
+                if(uiState.isLoaded){
+                    item {
+                        Spacer(modifier = Modifier.height(58.dp))
+                    }
+                    items(uiState.bookMarks.size) {
+                        val bookMark = uiState.bookMarks[it]
+                        ArticleList(
+                            name = bookMark.nickname,
+                            profile = bookMark.profileImage,
+                            date = bookMark.createdAt,
+                            title = bookMark.title,
+                            tag = bookMark.tags.toImmutableList(),
+                            image = bookMark.images.toImmutableList(),
+                            bookmarked = true,
+                            onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${bookMark.nickname}") },
+                            onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") },
+                            onBookmarkClick = { mainViewModel.bookmark(bookMark.postId) }
+                        )
+                    }
+                } else {
+                    item {
+                        Spacer(modifier = Modifier.height(58.dp))
+                    }
+                    items(10){
+                        JJapList()
+                    }
                 }
-                items(uiState.bookMarks.size) {
-                    val bookMark = uiState.bookMarks[it]
-                    ArticleList(
-                        name = bookMark.nickname,
-                        profile = bookMark.profileImage,
-                        date = bookMark.createdAt,
-                        title = bookMark.title,
-                        tag = bookMark.tags.toImmutableList(),
-                        image = bookMark.images.toImmutableList(),
-                        bookmarked = true,
-                        onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${bookMark.nickname}")},
-                        onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") },
-                        onBookmarkClick = {mainViewModel.bookmark(bookMark.postId)}
-                    )
-                }
+
             }
         }
 
-        if (uiState.bookMarks.isEmpty()){
-            Text(modifier = Modifier.align(Alignment.Center), text = "선택된 북마크가 없습니다.", style = caption1.copy(fontSize = 24.sp))
+        if (uiState.bookMarks.isEmpty() && uiState.isLoaded) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = "선택된 북마크가 없습니다.",
+                style = caption1.copy(fontSize = 24.sp)
+            )
         }
     }
 }

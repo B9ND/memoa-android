@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +49,7 @@ import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.CircleProfile
 import com.dlrjsgml.memoa.ui.component.items.FollowNumber
 import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
+import com.dlrjsgml.memoa.ui.theme.Black
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
@@ -83,124 +85,132 @@ fun UserProfileScreen(
     }
 
     Box {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .drawBehind {
-                    val height = size.height
-                    val purpleHeight = height / 3
+        if (followUiState.isLoaded) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawBehind {
+                        val height = size.height
+                        val purpleHeight = height / 3
 
-                    // 보라색 영역
-                    drawRect(
-                        color = Purple60,
-                        topLeft = Offset(0f, 0f),
-                        size = Size(size.width, purpleHeight)
-                    )
-
-                    // 하얀색 영역
-                    drawRect(
-                        color = Color.White,
-                        topLeft = Offset(0f, purpleHeight),
-                        size = Size(size.width, height - purpleHeight)
-                    )
-                }
-        ) {
-
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Spacer(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 46.dp, end = 12.dp)
-                    )
-                }
-            }
-
-            item {
-                Box(
-                    modifier = Modifier
-                        .padding(top = 98.dp)
-                        .fillMaxWidth()
-                        .background(
-                            Color.White,
-                            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                        // 보라색 영역
+                        drawRect(
+                            color = Purple60,
+                            topLeft = Offset(0f, 0f),
+                            size = Size(size.width, purpleHeight)
                         )
-                ) {
-                    CircleProfile(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .offset(y = -60.dp)
-                            .noRippleClickable {
-                                navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.profileImage}")
-                            },
-                        profile = uiState.profileImage
-                    )
 
-                    Column(
+                        // 하얀색 영역
+                        drawRect(
+                            color = Color.White,
+                            topLeft = Offset(0f, purpleHeight),
+                            size = Size(size.width, height - purpleHeight)
+                        )
+                    }
+            ) {
+                item {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 60.dp)
                     ) {
-                        Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                            Text(text = uiState.nickname, style = boardName)
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = uiState.email,
-                            style = miniCaption1
+                        Spacer(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(top = 46.dp, end = 12.dp)
                         )
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                            FollowNumber(
-                                number = followUiState.follower,
-                                text = "팔로우",
-                                onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true") })
-                            Spacer(modifier = Modifier.width(35.dp))
-                            FollowNumber(
-                                number = followUiState.following,
-                                text = "팔로잉",
-                                onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false") })
-                        }
-                        Spacer(modifier = Modifier.height(15.dp))
-                        FollowerButton(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            enabled = uiState.followed,
-                            onClick = {
-                                viewModel.follow(uiState.nickname)
-                            })
-                        Spacer(modifier = Modifier.height(25.dp))
+                    }
+                }
 
+                item {
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 98.dp)
+                            .fillMaxWidth()
+                            .background(
+                                Color.White,
+                                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                            )
+                    ) {
+                        CircleProfile(
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .offset(y = -60.dp)
+                                .noRippleClickable {
+                                    navController.navigate("${NavGroup.IMAGE_DETAIL}?${uiState.profileImage}")
+                                },
+                            profile = uiState.profileImage
+                        )
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 60.dp)
+                        ) {
+                            Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                                Text(text = uiState.nickname, style = boardName)
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                text = uiState.email,
+                                style = miniCaption1
+                            )
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                                FollowNumber(
+                                    number = followUiState.follower,
+                                    text = "팔로우",
+                                    onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?true") })
+                                Spacer(modifier = Modifier.width(35.dp))
+                                FollowNumber(
+                                    number = followUiState.following,
+                                    text = "팔로잉",
+                                    onClick = { navController.navigate("${NavGroup.FOLLOWER}?${uiState.nickname}?false") })
+                            }
+                            Spacer(modifier = Modifier.height(15.dp))
+                            FollowerButton(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                enabled = uiState.followed,
+                                onClick = {
+                                    viewModel.follow(uiState.nickname)
+                                })
+                            Spacer(modifier = Modifier.height(25.dp))
+                        }
+                    }
+                }
+
+                items(uiState.articles.size) {
+                    val article = uiState.articles[it]
+                    Box(modifier = Modifier.background(Color.White)) {
+                        ArticleList(
+                            id = article.id,
+                            name = article.author,
+                            date = article.createdAt,
+                            title = article.title,
+                            image = article.images.toImmutableList(),
+                            profile = article.authorProfileImage,
+                            tag = article.tags.toImmutableList(),
+                            comment = 1,
+                            onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
+                            onBookmarkClick = {
+//                        viewModel.bookmark(article.id)
+                            },
+                            onCommentClick = {},
+                            onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
+                            onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
+                        )
                     }
                 }
             }
-
-            items(uiState.articles.size) {
-                val article = uiState.articles[it]
-                Box(modifier = Modifier.background(Color.White)) {
-                    ArticleList(
-                        id = article.id,
-                        name = article.author,
-                        date = article.createdAt,
-                        title = article.title,
-                        image = article.images.toImmutableList(),
-                        profile = article.authorProfileImage,
-                        tag = article.tags.toImmutableList(),
-                        comment = 1,
-                        onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
-                        onBookmarkClick = {
-//                        viewModel.bookmark(article.id)
-                        },
-                        onCommentClick = {},
-                        onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") },
-                        onImageClick = { navController.navigate("${NavGroup.DETAIL}?${article.id}") }
-                    )
-                }
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize().background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Black)
             }
         }
+
     }
 
 }

@@ -239,7 +239,6 @@ fun FollowJJapList(
 
 @Composable
 fun JJapArticleImage() {
-
     Box {
         Box(
             modifier = Modifier
@@ -247,8 +246,6 @@ fun JJapArticleImage() {
                 .height(240.dp)
                 .shimmerEffect()
         )
-
-
     }
 }
 
