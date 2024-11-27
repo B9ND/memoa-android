@@ -1,6 +1,5 @@
 package com.dlrjsgml.memoa
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,18 +17,14 @@ import coil.Coil
 import coil.ImageLoader
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileState
-import com.dlrjsgml.memoa.network.data.user.getAccToken
-import com.dlrjsgml.memoa.network.data.user.getRefToken
-import com.dlrjsgml.memoa.network.data.user.saveAccToken
-import com.dlrjsgml.memoa.network.data.user.saveRefToken
-import com.dlrjsgml.memoa.network.token.AccTokenRequest
-import com.dlrjsgml.memoa.remote.RetrofitClient
+import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
