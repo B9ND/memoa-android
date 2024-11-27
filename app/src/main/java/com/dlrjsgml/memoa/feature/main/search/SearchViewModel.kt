@@ -64,6 +64,7 @@ class SearchViewModel(
 
     fun getSearchArticles(search: String) {
         Log.d("확인", "검색전");
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val data = Pager(config = PagingConfig(
@@ -113,12 +114,6 @@ class SearchViewModel(
         Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
     }
 
-    fun deleteAllData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            room!!.searchHistoryDao().deleteAll()
-            getData()
-        }
-    }
 
     fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
