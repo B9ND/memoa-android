@@ -41,9 +41,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.BackHandlers
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
+import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.component.MemoaCheckBox
@@ -65,7 +67,9 @@ fun SearchScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val articlesItems = uiState.articles.collectAsLazyPagingItems()
-    val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
+    val user = getUserProfile(MemoaApplication.getContext())
+    val userSchool = user.department.school
+    val selectTags = user.department.subjects
 
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
@@ -99,7 +103,8 @@ fun SearchScreen(
                 Row {
                     MemoaCheckBox(
                         modifier = Modifier.weight(1f),
-                        text = "대구소프트웨어마이스터고등학교",
+                        text = userSchool,
+                        enabled = true,
                         onClick = {}
                     )
                     MemoaDropDown(
@@ -109,20 +114,18 @@ fun SearchScreen(
                         viewModel.fillTags(it)
                     }
                 }
-
-                Row {
-                    LazyRow(
-                        modifier = Modifier
-                    ) {
-                        items(selectTags.size) {
-                            MemoaCheckBox(
-                                text = selectTags[it],
-                                onClick = { viewModel.fillTags(selectTags[it]) }
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                        }
+                LazyRow(
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    items(selectTags.size) {
+                        MemoaCheckBox(
+                            text = selectTags[it],
+                            onClick = { viewModel.fillTags(selectTags[it]) }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
                 }
+
             }
             Spacer(modifier = Modifier.height(4.dp))
         }

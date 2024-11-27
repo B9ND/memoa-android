@@ -58,7 +58,9 @@ import com.dlrjsgml.memoa.ui.theme.caption1Regular
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
+import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
 import com.dlrjsgml.memoa.network.write.image.getFileName
 import com.dlrjsgml.memoa.network.write.image.uriToBitmap
 import com.dlrjsgml.memoa.root.NavGroup
@@ -77,7 +79,6 @@ fun WriteScreen(
     viewModel: WriteViewModel = viewModel(),
     navController: NavHostController,
 ) {
-    val selectTags = arrayListOf("국어", "영어", "수학", "사회", "과학", "기타")
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -86,7 +87,9 @@ fun WriteScreen(
     val customAlertDialogState = viewModel.customAlertDialogState.value
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var selectedFileName by remember { mutableStateOf("") }
-    // TODO rabbitmq
+    val user = getUserProfile(MemoaApplication.getContext())
+    val userSchool = user.department.school
+    val selectTags = user.department.subjects
 
     Button(onClick = { /*TODO*/ }) {
         Text("ㅎㅇ")

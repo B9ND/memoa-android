@@ -39,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
@@ -64,6 +65,7 @@ import com.dlrjsgml.memoa.feature.main.profile.my.setting.name.NameSettingScreen
 import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
@@ -114,144 +116,159 @@ fun NavGraph(
     ) {
         Scaffold(
             bottomBar = {
-            AnimatedVisibility(
-                visible = isShowNavBar,
-                enter = slideInVertically(
-                    initialOffsetY = { it }, // 시작 위치: 컴포넌트의 높이만큼 아래에서 시작
-                    animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
-                ),
-                exit = ExitTransition.None
+                AnimatedVisibility(
+                    visible = isShowNavBar,
+                    enter = slideInVertically(
+                        initialOffsetY = { it }, // 시작 위치: 컴포넌트의 높이만큼 아래에서 시작
+                        animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
+                    ),
+                    exit = ExitTransition.None
 
-            ) {
-                Box(
-                    modifier = Modifier.drawColoredShadow(Black20)
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                White,
-                            )
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        BottomNavItem(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable(
-                                    indication = rememberBounceIndication(
-                                        scale = 0.95f,
-                                        showBackground = true,
-                                        radius = RoundedCornerShape(8.dp)
-                                    ),
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    enabled = true,
-                                    onClick = {
-                                        navController.safePopBackStack()
-                                        navController.navigate(NavGroup.MAIN){
-                                            popUpTo(NavGroup.MAIN) { inclusive = false } // 이미 존재하면 백스택 유지
-                                            launchSingleTop = true                      // 동일 경로 중복 방지
-                                            restoreState = true
-                                        }
-                                    }
-                                ),
-                            resId = R.drawable.ic_home,
-                            isSelected = selectRoute == NavGroup.MAIN || NavGroup.DETAIL in selectRoute.toString(),
-                            text = "메인"
-                        )
-                        BottomNavItem(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable(
-                                    indication = rememberBounceIndication(
-                                        scale = 0.95f,
-                                        showBackground = true,
-                                        radius = RoundedCornerShape(8.dp)
-                                    ),
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    enabled = true,
-                                    onClick = {
-                                        navController.safePopBackStack()
-                                        navController.navigate(NavGroup.BEFORE_SEARCH){
-                                            popUpTo(NavGroup.BEFORE_SEARCH) { inclusive = false } // 이미 존재하면 백스택 유지
-                                            launchSingleTop = true                      // 동일 경로 중복 방지
-                                            restoreState = true
-                                        }
-                                    }
-                                ),
-                            resId = R.drawable.ic_search,
-                            isSelected = selectRoute == "${NavGroup.SEARCH}?{search}" || NavGroup.BEFORE_SEARCH in selectRoute.toString(),
-                            text = "검색"
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        BottomNavItem(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable(
-                                    indication = rememberBounceIndication(
-                                        scale = 0.95f,
-                                        showBackground = true,
-                                        radius = RoundedCornerShape(8.dp)
-                                    ),
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    enabled = true,
-                                    onClick = {
-                                        navController.safePopBackStack()
-                                        navController.navigate(NavGroup.BOOKMARK){
-                                            popUpTo(NavGroup.BOOKMARK) { inclusive = false } // 이미 존재하면 백스택 유지
-                                            launchSingleTop = true                      // 동일 경로 중복 방지
-                                            restoreState = true
-                                        }
-                                    }
-                                ),
-                            resId = R.drawable.ic_bookmark,
-                            isSelected = selectRoute == NavGroup.BOOKMARK,
-                            text = "북마크"
-                        )
-                        BottomNavItem(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable(
-                                    indication = rememberBounceIndication(
-                                        scale = 0.95f,
-                                        showBackground = true,
-                                        radius = RoundedCornerShape(8.dp)
-                                    ),
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    enabled = true,
-                                    onClick = {
-                                        navController.safePopBackStack()
-                                        navController.navigate(NavGroup.PROFILE){
-                                            popUpTo(NavGroup.PROFILE) { inclusive = false } // 이미 존재하면 백스택 유지
-                                            launchSingleTop = true                      // 동일 경로 중복 방지
-                                            restoreState = true
-                                        }
-                                    }
-                                ),
-                            resId = R.drawable.ic_avatar,
-                            isSelected = selectRoute == NavGroup.PROFILE || NavGroup.USERPROFILE in selectRoute.toString(),
-                            text = "프로필"
-                        )
-                    }
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .offset(y = (-14).dp)
-                            .noRippleClickable {
-                                navController.navigate(
-                                    NavGroup.WRITE){
-                                    popUpTo(NavGroup.WRITE) { inclusive = false } // 이미 존재하면 백스택 유지
-                                    launchSingleTop = true                      // 동일 경로 중복 방지
-                                    restoreState = true
-                                }
-                            }
+                        modifier = Modifier.drawColoredShadow(Black20)
                     ) {
-                        BottomCircleTwo(
-                            isSelected = selectRoute == NavGroup.WRITE,
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    White,
+                                )
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            BottomNavItem(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable(
+                                        indication = rememberBounceIndication(
+                                            scale = 0.95f,
+                                            showBackground = true,
+                                            radius = RoundedCornerShape(8.dp)
+                                        ),
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        enabled = true,
+                                        onClick = {
+                                            navController.safePopBackStack()
+                                            navController.navigate(NavGroup.MAIN) {
+                                                popUpTo(NavGroup.MAIN) {
+                                                    inclusive = false
+                                                } // 이미 존재하면 백스택 유지
+                                                launchSingleTop =
+                                                    true                      // 동일 경로 중복 방지
+                                                restoreState = true
+                                            }
+                                        }
+                                    ),
+                                resId = R.drawable.ic_home,
+                                isSelected = selectRoute == NavGroup.MAIN || NavGroup.DETAIL in selectRoute.toString(),
+                                text = "메인"
+                            )
+                            BottomNavItem(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable(
+                                        indication = rememberBounceIndication(
+                                            scale = 0.95f,
+                                            showBackground = true,
+                                            radius = RoundedCornerShape(8.dp)
+                                        ),
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        enabled = true,
+                                        onClick = {
+                                            navController.safePopBackStack()
+                                            navController.navigate(NavGroup.BEFORE_SEARCH) {
+                                                popUpTo(NavGroup.BEFORE_SEARCH) {
+                                                    inclusive = false
+                                                } // 이미 존재하면 백스택 유지
+                                                launchSingleTop =
+                                                    true                      // 동일 경로 중복 방지
+                                                restoreState = true
+                                            }
+                                        }
+                                    ),
+                                resId = R.drawable.ic_search,
+                                isSelected = selectRoute == "${NavGroup.SEARCH}?{search}" || NavGroup.BEFORE_SEARCH in selectRoute.toString(),
+                                text = "검색"
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            BottomNavItem(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable(
+                                        indication = rememberBounceIndication(
+                                            scale = 0.95f,
+                                            showBackground = true,
+                                            radius = RoundedCornerShape(8.dp)
+                                        ),
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        enabled = true,
+                                        onClick = {
+                                            navController.safePopBackStack()
+                                            navController.navigate(NavGroup.BOOKMARK) {
+                                                popUpTo(NavGroup.BOOKMARK) {
+                                                    inclusive = false
+                                                } // 이미 존재하면 백스택 유지
+                                                launchSingleTop =
+                                                    true                      // 동일 경로 중복 방지
+                                                restoreState = true
+                                            }
+                                        }
+                                    ),
+                                resId = R.drawable.ic_bookmark,
+                                isSelected = selectRoute == NavGroup.BOOKMARK,
+                                text = "북마크"
+                            )
+                            BottomNavItem(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable(
+                                        indication = rememberBounceIndication(
+                                            scale = 0.95f,
+                                            showBackground = true,
+                                            radius = RoundedCornerShape(8.dp)
+                                        ),
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        enabled = true,
+                                        onClick = {
+                                            navController.safePopBackStack()
+                                            navController.navigate(NavGroup.PROFILE) {
+                                                popUpTo(NavGroup.PROFILE) {
+                                                    inclusive = false
+                                                } // 이미 존재하면 백스택 유지
+                                                launchSingleTop =
+                                                    true                      // 동일 경로 중복 방지
+                                                restoreState = true
+                                            }
+                                        }
+                                    ),
+                                resId = R.drawable.ic_avatar,
+                                isSelected = selectRoute == NavGroup.PROFILE || NavGroup.USERPROFILE in selectRoute.toString(),
+                                text = "프로필"
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .offset(y = (-14).dp)
+                                .noRippleClickable {
+                                    navController.navigate(
+                                        NavGroup.WRITE
+                                    ) {
+                                        popUpTo(NavGroup.WRITE) {
+                                            inclusive = false
+                                        } // 이미 존재하면 백스택 유지
+                                        launchSingleTop = true                      // 동일 경로 중복 방지
+                                        restoreState = true
+                                    }
+                                }
+                        ) {
+                            BottomCircleTwo(
+                                isSelected = selectRoute == NavGroup.WRITE,
+                            )
+                        }
                     }
-                    }
-            }
-        }) { it ->
+                }
+            }) { it ->
             Log.d("", "NavGraph: ")
             NavHost(
                 modifier = Modifier.padding(it),
@@ -265,8 +282,8 @@ fun NavGraph(
                     // you can change whatever you want transition
                     ExitTransition.None
                 },
-                popEnterTransition = { EnterTransition.None},
-                popExitTransition = {ExitTransition.None}
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None }
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -372,11 +389,11 @@ fun NavGraph(
                 composable(
                     NavGroup.PROFILE,
                     enterTransition = { EnterTransition.None },
-                    exitTransition = { ExitTransition.None},
+                    exitTransition = { ExitTransition.None },
                     popEnterTransition = { EnterTransition.None },
                     popExitTransition = { ExitTransition.None },
 
-                ) {
+                    ) {
                     ProfileScreen(navController)
                 }
                 composable(
@@ -390,10 +407,15 @@ fun NavGraph(
                     ),
                 ) {
                     val phoneNum = it.arguments?.getString("phone") ?: ""
-                    UserProfileScreen(
-                        navController = navController,
-                        userName = phoneNum
-                    )
+                    if (phoneNum == getUserProfile(MemoaApplication.getContext()).nickname) {
+                        navController.navigate(NavGroup.PROFILE)
+                    } else {
+                        UserProfileScreen(
+                            navController = navController,
+                            userName = phoneNum
+                        )
+                    }
+
                 }
                 composable(route = "${NavGroup.FOLLOWER}?{phone}?{checker}",
                     arguments = listOf(

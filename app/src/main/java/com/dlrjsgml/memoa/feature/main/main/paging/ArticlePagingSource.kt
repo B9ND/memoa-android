@@ -32,6 +32,9 @@ class ArticlePagingSource(
             // Key may be null during a refresh, if no explicit key is passed into Pager
             // construction. Use 0 as default, because our API is indexed started at index 0
             val pageNumber = params.key ?: 0
+            Log.d("확인", "adfd"+searchQuery);
+            Log.d("확인", "adfddddd"+searchTag);
+
 
             // Suspending network load via Retrofit. This doesn't need to be wrapped in a
             // withContext(Dispatcher.IO) { ... } block since Retrofit's Coroutine
@@ -39,7 +42,7 @@ class ArticlePagingSource(
 
             val response = RetrofitClient.getMainService.getArticles(
                 search = searchQuery,
-                tags = if (searchTag.isEmpty()) arrayListOf("대구소프트웨어마이스터고등학교") else searchTag,
+                tags = searchTag,
                 page = pageNumber,
                 size = 10
             )

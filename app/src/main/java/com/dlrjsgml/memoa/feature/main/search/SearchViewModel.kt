@@ -7,10 +7,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.data.local.search.SearchHistoryEntity
 import com.dlrjsgml.memoa.data.local.UserDatabase
 import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
 import com.dlrjsgml.memoa.feature.main.main.paging.FetchFlow
+import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +28,7 @@ import kotlinx.coroutines.launch
 data class SearchState(
     val search: String = "",
     val searchHistory: List<SearchHistoryEntity> = emptyList(),
-    val tags: List<String> = arrayListOf("대구소프트웨어마이스터고등학교","1학년"),
+    val tags: List<String> = arrayListOf(),
 //    val articles : FetchFlow<Flow<PagingData<ArticleResponse>>> = FetchFlow.Fetching()
     val articles: Flow<PagingData<ArticleResponse>> = flowOf(),
 
@@ -52,6 +54,12 @@ class SearchViewModel(
 
     private val room = UserDatabase.getInstance()
 
+    init {
+        val user = getUserProfile(MemoaApplication.getContext())
+    
+        val userSchool = user.department.school
+        fillTags(userSchool)
+    }
 
     fun beforeSearch() {
         Log.d("확인", "비포");
@@ -67,6 +75,7 @@ class SearchViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
+
                 val data = Pager(config = PagingConfig(
                     pageSize = 10,
                     enablePlaceholders = false,
@@ -75,7 +84,7 @@ class SearchViewModel(
                     pagingSourceFactory = {
                         ArticlePagingSource(
                             search,
-                            arrayListOf()
+                            _uiState.value.tags
                         )
                     }).flow.cachedIn(viewModelScope)
                 Log.d("확인", uiState.value.search);
@@ -103,6 +112,7 @@ class SearchViewModel(
     fun startFetching() {
 //        _uiState.update { it.copy(articles = FetchFlow.Fetching()) }
     }
+
     fun fillTags(tag: String) {
         _uiState.update {
             if (tag in it.tags) {
@@ -111,6 +121,7 @@ class SearchViewModel(
                 it.copy(tags = it.tags + arrayListOf(tag))
             }
         }
+        getSearchArticles(_uiState.value.search)
         Log.d("ㅎㅇ", "${uiState.value.tags.sorted()}");
     }
 

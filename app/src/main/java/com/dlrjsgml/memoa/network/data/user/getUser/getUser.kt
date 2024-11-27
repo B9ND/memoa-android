@@ -36,7 +36,7 @@ fun getUserProfile(context: Context): UserProfile = runBlocking {
     val department = Department(
         name = preferences[DEPARTMENT_NAME] ?: "",
         grade = preferences[DEPARTMENT_GRADE] ?: 0,
-        school = preferences[DEPARTMENT_SCHOOL] ?: "",
+        school = preferences[DEPARTMENT_SCHOOL] ?: "대구소프트웨어마이스터고등학교",
         subjects = preferences[DEPARTMENT_SUBJECTS]?.split(",") ?: emptyList()
     )
 
