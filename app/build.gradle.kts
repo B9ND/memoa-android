@@ -79,8 +79,8 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     // To use Kotlin Symbol Processing (KSP)
-    implementation (libs.hilt.android.v248)
-    ksp (libs.hilt.android.compiler)
+    implementation(libs.hilt.android.v248)
+    ksp(libs.hilt.android.compiler)
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.zoomable)
     implementation (libs.androidx.room.runtime)

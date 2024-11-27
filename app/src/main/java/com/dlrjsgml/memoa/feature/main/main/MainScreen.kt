@@ -86,7 +86,7 @@ fun MainScreen(
     var isLogin: Boolean? by remember { mutableStateOf(null) }
 
     val user = getUserProfile(MemoaApplication.getContext())
-    val userSchool = listOf( user.department.school)
+    val userSchool = listOf(user.department.school)
     val userTags = user.department.subjects
     LaunchedEffect(Unit) {
         Log.d("Log", "called Launched Effect")
@@ -94,7 +94,7 @@ fun MainScreen(
             val value = isLogin(MemoaApplication.getContext())
             Log.d("메인화면 컨텍스", value.toString())
             isLogin = value
-            if (isLogin == true) {
+            if (isLogin == true && user.department.school != "" && user.department.subjects.isNotEmpty()) {
                 viewModel.getArticles()
             } else {
                 clearToken(MemoaApplication.getContext())
@@ -127,10 +127,12 @@ fun MainScreen(
                     navController.safePopBackStack()
                     navController.navigate(NavGroup.START)
                 }
+
                 ArticlesSideEffect.Success -> {
                     Log.d("상태", "지금은  성공러 : ${lazyPagingItems.itemCount}");
 
                 }
+
                 ArticlesSideEffect.TokenError -> {
                     Log.d("상태", "지금은  토큰에러 : ${lazyPagingItems.itemCount}");
 
