@@ -232,7 +232,7 @@ fun MainScreen(
                                         )
                                     }
                                 }
-                                Log.d("test", "MainScreen: cool")
+                                Log.d("test", "MainScreen: good")
                             } else {
                                 items(1) {
                                     Column(
