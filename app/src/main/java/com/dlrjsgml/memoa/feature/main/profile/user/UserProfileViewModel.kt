@@ -81,6 +81,11 @@ class UserProfileViewModel : ViewModel() {
                         articles = response
                     )
                 }
+                _followUiState.update {
+                    it.copy(
+                        isLoaded = true
+                    )
+                }
                 _userArticlesSideEffect.emit(UserArticlesSideEffect.Success)
             } catch (e: Exception) {
                 Log.d("유저", "오류 : $e");
@@ -132,7 +137,7 @@ class UserProfileViewModel : ViewModel() {
                     it.copy(
                         following = userFollowingResponse.size,
                         follower = userFollowersResponse.size,
-                        isLoaded = true
+//                        isLoaded = true
                     )
                 }
                 _followingUiEffect.emit(UserFollowingEffect.Success)

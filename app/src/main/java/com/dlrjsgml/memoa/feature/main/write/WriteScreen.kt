@@ -14,6 +14,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -82,6 +83,7 @@ fun WriteScreen(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val rowScrollerState = rememberScrollState()
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     val customAlertDialogState = viewModel.customAlertDialogState.value
@@ -199,22 +201,23 @@ fun WriteScreen(
         )
         Spacer(modifier = Modifier.height(10.dp))
         Box {
-            LazyRow(
+            Row(
                 modifier = Modifier
                     .padding(horizontal = 21.dp)
-                    .scrollable(
-                        state = scrollState,
-                        orientation = Orientation.Horizontal
-                    )
+                    .horizontalScroll(rowScrollerState) // 스크롤 가능하게 설정
             ) {
-                items(selectTags.size) {
-                    MemoaCheckBox(
-                        text = selectTags[it],
-                        onClick = { viewModel.fillTags(selectTags[it]) }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                selectTags.forEach { tag ->
+                    Row {
+                        MemoaCheckBox(
+                            text = tag,
+                            onClick = { viewModel.fillTags(tag) }
+                        )
+                        Spacer(modifier = Modifier.width(4.dp)) // 간격 유지
+                    }
+
                 }
             }
+
         }
 
         Spacer(modifier = Modifier.height(10.dp))

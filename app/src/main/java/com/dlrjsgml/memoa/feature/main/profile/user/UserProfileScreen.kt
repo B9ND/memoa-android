@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +51,9 @@ import com.dlrjsgml.memoa.ui.component.items.CircleProfile
 import com.dlrjsgml.memoa.ui.component.items.FollowNumber
 import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
 import com.dlrjsgml.memoa.ui.theme.Black
+import com.dlrjsgml.memoa.ui.theme.Gray10
+import com.dlrjsgml.memoa.ui.theme.Gray30
+import com.dlrjsgml.memoa.ui.theme.Gray40
 import com.dlrjsgml.memoa.ui.theme.Purple60
 import com.dlrjsgml.memoa.ui.theme.boardName
 import com.dlrjsgml.memoa.ui.theme.caption2
@@ -180,7 +184,7 @@ fun UserProfileScreen(
                     }
                 }
 
-                if(uiState.articles.isNotEmpty()){
+                if (uiState.articles.isNotEmpty()) {
                     items(uiState.articles.size) {
                         val article = uiState.articles[it]
                         Box(modifier = Modifier.background(Color.White)) {
@@ -193,7 +197,11 @@ fun UserProfileScreen(
                                 profile = article.authorProfileImage,
                                 tag = article.tags.toImmutableList(),
                                 comment = 1,
-                                onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
+                                onProfileClick = {
+//                                    if (article.author != uiState.nickname) {
+//                                        navController.navigate("${NavGroup.USERPROFILE}?${article.author}")
+//                                    }
+                                },
                                 onBookmarkClick = {
 //                        viewModel.bookmark(article.id)
                                 },
@@ -204,9 +212,17 @@ fun UserProfileScreen(
                         }
                     }
                 } else {
-                    item(){
-                        Box(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)){
-                            Text(modifier = Modifier.align(Alignment.Center), text = "작성한 글이 없습니다.", style = caption2)
+                    item() {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.Center),
+                                text = "작성한 글이 없습니다.",
+                                style = caption2
+                            )
 
                         }
                     }
@@ -215,10 +231,16 @@ fun UserProfileScreen(
             }
         } else {
             Box(
-                modifier = Modifier.fillMaxSize().background(Color.White),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Black)
+                CircularProgressIndicator(
+                    modifier = Modifier.size(28.dp),
+                    strokeWidth = 2.dp,
+                    color = Gray40
+                )
             }
         }
 

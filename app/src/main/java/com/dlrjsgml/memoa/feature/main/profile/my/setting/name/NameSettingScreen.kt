@@ -1,17 +1,21 @@
 package com.dlrjsgml.memoa.feature.main.profile.my.setting.name
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.description.DescriptionSideEffect
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
+import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.textfield.SettingTextField
 import com.dlrjsgml.memoa.ui.theme.Purple60
@@ -59,9 +64,20 @@ fun NameSettingScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier.noRippleClickable {
-                    viewModel.changeName()
-                },
+                modifier = Modifier.clickable(
+                    indication = rememberBounceIndication(
+                        scale = 0.95f,
+                        showBackground = true,
+                        radius = RoundedCornerShape(8.dp)
+                    ),
+                    interactionSource = remember { MutableInteractionSource() },
+                    enabled = true,
+                    onClick = {
+                        viewModel.changeName()
+
+
+                    }
+                ),
                 text = "완료",
                 color = Purple60,
                 style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
