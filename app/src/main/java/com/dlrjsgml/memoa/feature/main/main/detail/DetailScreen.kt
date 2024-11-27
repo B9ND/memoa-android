@@ -1,4 +1,4 @@
-package com.dlrjsgml.memoa.feature.main.main.deatil
+package com.dlrjsgml.memoa.feature.main.main.detail
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -77,7 +77,7 @@ fun DetailScreen(
             Spacer(modifier = Modifier.height(20.dp))
             CommentList(
                 name = uiState.author,
-                date = uiState.createdAt,
+                date = uiState.createdAt.substring(0, 10),
                 title = uiState.title,
                 profile = uiState.authorProfileImage,
                 onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${uiState.author}") },
@@ -128,7 +128,7 @@ fun DetailScreen(
                     BookMarkButton(
                         modifier = Modifier.align(Alignment.CenterVertically),
                         bookmarked = uiState.isBookmarked,
-                        onClick = {bookMarkViewModel.bookmark(uiState.id)})
+                        onClick = { bookMarkViewModel.bookmark(uiState.id) })
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterVertically),

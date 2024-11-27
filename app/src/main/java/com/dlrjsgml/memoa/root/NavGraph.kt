@@ -8,12 +8,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -44,7 +39,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
-import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.feature.auth.start.login.LoginScreen
@@ -58,7 +52,7 @@ import com.dlrjsgml.memoa.feature.main.follower.FollowerScreen
 import com.dlrjsgml.memoa.feature.main.image.ImageDetailScreen
 import com.dlrjsgml.memoa.feature.main.main.MainScreen
 import com.dlrjsgml.memoa.feature.main.main.comment.CommentScreen
-import com.dlrjsgml.memoa.feature.main.main.deatil.DetailScreen
+import com.dlrjsgml.memoa.feature.main.main.detail.DetailScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.ProfileScreen
 import com.dlrjsgml.memoa.feature.main.profile.my.setting.SettingScreen
 import com.dlrjsgml.memoa.feature.main.profile.user.UserProfileScreen
@@ -94,7 +88,9 @@ fun NavGraph(
         NavGroup.FOLLOWER,
         "${NavGroup.USERPROFILE}?{phone}",
         "${NavGroup.DETAIL}?{phone}",
-        "userprofile?{phone}", "${NavGroup.USERPROFILE}?{phone}"
+        "userprofile?{phone}", "${NavGroup.USERPROFILE}?{phone}",
+        "${NavGroup.FOLLOWER}?{phone}?{checker}"
+
     )
 
     val backstackEntry by navController.currentBackStackEntryAsState()
@@ -116,17 +112,15 @@ fun NavGraph(
     Surface(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Scaffold(bottomBar = {
+        Scaffold(
+            bottomBar = {
             AnimatedVisibility(
                 visible = isShowNavBar,
                 enter = slideInVertically(
                     initialOffsetY = { it }, // 시작 위치: 컴포넌트의 높이만큼 아래에서 시작
                     animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
                 ),
-                exit = slideOutVertically(
-                    targetOffsetY = { it }, // 끝 위치: 컴포넌트의 높이만큼 아래로 사라짐
-                    animationSpec = tween(durationMillis = 200) // 300ms 애니메이션
-                )
+                exit = ExitTransition.None
 
             ) {
                 Box(
@@ -153,7 +147,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.MAIN)
+                                        navController.navigate(NavGroup.MAIN){
+                                            popUpTo(NavGroup.MAIN) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_home,
@@ -173,7 +171,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.BEFORE_SEARCH)
+                                        navController.navigate(NavGroup.BEFORE_SEARCH){
+                                            popUpTo(NavGroup.BEFORE_SEARCH) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_search,
@@ -194,7 +196,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.BOOKMARK)
+                                        navController.navigate(NavGroup.BOOKMARK){
+                                            popUpTo(NavGroup.BOOKMARK) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_bookmark,
@@ -214,7 +220,11 @@ fun NavGraph(
                                     enabled = true,
                                     onClick = {
                                         navController.safePopBackStack()
-                                        navController.navigate(NavGroup.PROFILE)
+                                        navController.navigate(NavGroup.PROFILE){
+                                            popUpTo(NavGroup.PROFILE) { inclusive = false } // 이미 존재하면 백스택 유지
+                                            launchSingleTop = true                      // 동일 경로 중복 방지
+                                            restoreState = true
+                                        }
                                     }
                                 ),
                             resId = R.drawable.ic_avatar,
@@ -228,26 +238,25 @@ fun NavGraph(
                             .offset(y = (-14).dp)
                             .noRippleClickable {
                                 navController.navigate(
-                                    NavGroup.WRITE)
-                                    navOptions {
-                                        launchSingleTop = true
-                                    }
+                                    NavGroup.WRITE){
+                                    popUpTo(NavGroup.WRITE) { inclusive = false } // 이미 존재하면 백스택 유지
+                                    launchSingleTop = true                      // 동일 경로 중복 방지
+                                    restoreState = true
+                                }
                             }
                     ) {
                         BottomCircleTwo(
                             isSelected = selectRoute == NavGroup.WRITE,
                         )
                     }
-                }
-
-
+                    }
             }
         }) { it ->
             Log.d("", "NavGraph: ")
             NavHost(
                 modifier = Modifier.padding(it),
                 navController = navController,
-                startDestination = getStartDestination(),
+                startDestination = NavGroup.MAIN,
                 enterTransition = {
                     // you can change whatever you want transition
                     EnterTransition.None
@@ -255,7 +264,9 @@ fun NavGraph(
                 exitTransition = {
                     // you can change whatever you want transition
                     ExitTransition.None
-                }
+                },
+                popEnterTransition = { EnterTransition.None},
+                popExitTransition = {ExitTransition.None}
             ) {
                 composable(NavGroup.START) {
                     StartScreen(navController = navController)
@@ -294,10 +305,8 @@ fun NavGraph(
                     MainScreen(navController = navController)
                 }
                 composable(route = "${NavGroup.DETAIL}?{phone}",
-                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
-                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
-                    popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End) },
-                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) },
+                    exitTransition = { null },
+                    popExitTransition = { null },
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     )) {
@@ -362,13 +371,20 @@ fun NavGraph(
                 }
                 composable(
                     NavGroup.PROFILE,
-                    exitTransition = { null },
-                    popExitTransition = { null },
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None},
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { ExitTransition.None },
+
                 ) {
                     ProfileScreen(navController)
                 }
                 composable(
                     route = "${NavGroup.USERPROFILE}?{phone}",
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
+                    exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start) },
+                    popEnterTransition = { EnterTransition.None },
+                    popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End) },
                     arguments = listOf(
                         navArgument("phone") { NavType.StringType }
                     ),
@@ -393,9 +409,7 @@ fun NavGraph(
                             AnimatedContentTransitionScope.SlideDirection.End, tween(100)
                         )
                     }, popEnterTransition = {
-                        return@composable slideIntoContainer(
-                            AnimatedContentTransitionScope.SlideDirection.Start, tween(100)
-                        )
+                        return@composable EnterTransition.None
                     })
                 {
                     val phoneNum = it.arguments?.getString("phone") ?: ""

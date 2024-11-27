@@ -38,8 +38,8 @@ import net.engawapg.lib.zoomable.zoomable
 
 @Composable
 fun ImageDetailScreen(
-    navController : NavHostController,
-    imgUrl : String
+    navController: NavHostController,
+    imgUrl: String,
 ) {
     val zoomState = rememberZoomState()
     Box(
@@ -60,18 +60,17 @@ fun ImageDetailScreen(
                 contentDescription = null
             )
         }
-        Box(modifier = Modifier.padding(top = 32.dp, start = 20.dp)){
+        Box(modifier = Modifier.padding(top = 32.dp, start = 20.dp)) {
             Row(
                 modifier = Modifier.noRippleClickable(
-                    onClick = {navController.safePopBackStack()}
+                    onClick = { navController.safePopBackStack() }
                 )
             ) {
                 Image(
                     modifier = Modifier
                         .width(12.dp)
                         .height(19.dp)
-                        .align(Alignment.CenterVertically)
-                    ,
+                        .align(Alignment.CenterVertically),
                     colorFilter = ColorFilter.tint(Color.White),
 
                     painter = painterResource(id = R.drawable.ic_back), contentDescription = null

@@ -40,6 +40,8 @@ data class MyProfileState(
 data class MyFollowingState(
     val following: Int = -1,
     val follower: Int = -1,
+    val isLoaded: Boolean = false
+
 )
 
 sealed interface MyProfileEffect {
@@ -94,7 +96,7 @@ class ProfileViewModel : ViewModel() {
                         email = response.email,
                         nickname = response.nickname,
                         description = response.description,
-                        profileImage = response.profileImage
+                        profileImage = response.profileImage,
                     )
                 }
                 _uiEffect.emit(MyProfileEffect.Success)
@@ -138,7 +140,8 @@ class ProfileViewModel : ViewModel() {
                 _followUiState.update {
                     it.copy(
                         following = followingResponse.size,
-                        follower = followersResponse.size
+                        follower = followersResponse.size,
+                        isLoaded = true
                     )
                 }
                 _followingUiEffect.emit(MyFollowingEffect.Success)

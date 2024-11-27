@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButton
+import com.dlrjsgml.memoa.ui.component.items.FollowJJapList
 import com.dlrjsgml.memoa.ui.component.items.FollowerList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -81,36 +82,42 @@ fun FollowerScreen(
             ),
         )
         LazyColumn {
-            if (uiState.value.isFollowing) {
-                items(uiState.value.followings.size) {
-                    FollowerList(
-                        name = uiState.value.followings[it].nickname,
-                        profile = uiState.value.followings[it].profileImage,
-                        onClick = {
-                            navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followings[it].nickname}")
-                        },
-                        onFollowClick = {
-                            viewModel.follow(uiState.value.followings[it].nickname)
-                            viewModel.getFollow(userId)
-                        }
-                    )
+            if(uiState.value.isLoaded){
+                if (uiState.value.isFollowing) {
+                    items(uiState.value.followings.size) {
+                        FollowerList(
+                            name = uiState.value.followings[it].nickname,
+                            profile = uiState.value.followings[it].profileImage,
+                            buttonEnabled = uiState.value.followings[it].isFollowed,
+                            onClick = {
+                                navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followings[it].nickname}")
+                            },
+                            onFollowClick = {
+                                viewModel.follow(uiState.value.followings[it].nickname)
+                            }
+                        )
+                    }
+                } else {
+                    items(uiState.value.followers.size) {
+                        FollowerList(
+                            name = uiState.value.followers[it].nickname,
+                            profile = uiState.value.followers[it].profileImage,
+                            buttonEnabled = uiState.value.followers[it].isFollowed,
+                            onClick = {
+                                navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followers[it].nickname}")
+                            },
+                            onFollowClick = {
+                                viewModel.follow(uiState.value.followers[it].nickname)
+                            }
+                        )
+                    }
                 }
             } else {
-                items(uiState.value.followers.size) {
-                    FollowerList(
-                        name = uiState.value.followers[it].nickname,
-                        profile = uiState.value.followers[it].profileImage,
-                        buttonEnabled = uiState.value.followers[it].followed,
-                        onClick = {
-                            navController.navigate("${NavGroup.USERPROFILE}?${uiState.value.followers[it].nickname}")
-                        },
-                        onFollowClick = {
-                            viewModel.follow(uiState.value.followers[it].nickname)
-                            viewModel.getFollow(userId)
-                        }
-                    )
+                items(10){
+                    FollowJJapList()
                 }
             }
+
         }
     }
 }
