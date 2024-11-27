@@ -56,7 +56,7 @@ fun BookMarkScreen(
             LazyColumn {
                 if(uiState.isLoaded){
                     item {
-                        Spacer(modifier = Modifier.height(58.dp))
+                        Spacer(modifier = Modifier.height(56.dp))
                     }
                     items(uiState.bookMarks.size) {
                         val bookMark = uiState.bookMarks[it]

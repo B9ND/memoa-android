@@ -212,6 +212,7 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .height(55.dp),
                     text = "로그인",
+                    isLoading = uiState.isLoading,
                     enabled = true,
                     onClick = {
                         viewModel.login(uiState.email, uiState.password)

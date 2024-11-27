@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
 import com.dlrjsgml.memoa.ui.theme.ButtonColor
+import com.dlrjsgml.memoa.ui.theme.Gray40
 import com.dlrjsgml.memoa.ui.theme.caption1
 
 
@@ -41,6 +44,7 @@ fun MemoaButton(
     enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(12.dp),
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    isLoading: Boolean = false,
     onClick: () -> Unit,
 ) {
     Box(
@@ -65,17 +69,28 @@ fun MemoaButton(
             )
 
         ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(contentPadding),
-                text = text,
-                color = if (enabled) Color.Black else Color.Gray, //색깔 꼭 바꾸자 ㅎㅎ
-                style = caption1.copy(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(vertical = 18.5.dp)
+                        .size(24.dp),
+                    color = Gray40
                 )
-            )
+            } else {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(contentPadding),
+                    text = text,
+                    color = if (enabled) Color.Black else Color.Gray, //색깔 꼭 바꾸자 ㅎㅎ
+                    style = caption1.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+
 
         }
 
@@ -92,6 +107,7 @@ private fun MemoaButtonPreview() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
+        isLoading = true,
         contentPadding = PaddingValues(vertical = 20.dp),
         enabled = false
     ) {}
