@@ -50,7 +50,8 @@ fun MemoaDropDown(
     onTextChanged: (String) -> Unit,
 ) {
     var expandStatus by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(selectList[0]) }
+    var selectedText by remember { mutableStateOf(
+        selectList[0].ifEmpty { "로그인필요" }) }
     val isSelected = remember { mutableStateOf(true) }
 
 
