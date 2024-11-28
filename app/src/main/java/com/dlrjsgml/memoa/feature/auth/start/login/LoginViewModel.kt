@@ -1,8 +1,6 @@
 package com.dlrjsgml.memoa.feature.auth.start.login
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,7 +37,6 @@ sealed interface LoginSideEffect {
 }
 
 class LoginViewModel(
-    private val networkUtil: NetworkUtil
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TextState())
     val uiState = _uiState.asStateFlow()

@@ -33,6 +33,7 @@ appcompat = "1.7.0"
 roomCompilerVersion = "2.6.4"
 zoomable = "1.6.2"
 pagingComposeAndroid = "3.3.4"
+foundationLayoutAndroid = "1.6.6"
 
 
 [libraries]
@@ -78,6 +79,7 @@ room-compiler-v251 = { module = "androidx.room:room-compiler", version.ref = "an
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 zoomable = { module = "net.engawapg.lib:zoomable", version.ref = "zoomable" }
 androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "pagingComposeAndroid" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -20,18 +20,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -46,6 +47,7 @@ import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
+import com.dlrjsgml.memoa.ui.component.textfield.AuthText
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -60,48 +62,7 @@ fun NameScreen(
     val uiState by viewModel.uiState.collectAsState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    val authString = buildAnnotatedString {
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-            )
-        ) {
-            append("계정을 생성함으로써,\n")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.auth_text)
-            )
-        ) {
-            append("이용약관")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-            )
-        ) {
-            append("과")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.auth_text)
-            )
-        ) {
-            append("개인정처리약관")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-            )
-        ) {
-            append("에 동의하셨음을 확인합니다.")
-        }
-    }
+    val textFieldHasFocus = remember { mutableStateOf(false) }
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -170,7 +131,7 @@ fun NameScreen(
                     value = uiState.name,
                     onValueChange = viewModel::updateName,
                     hint = emailText,
-                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp),
+                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
                     firstFocus = true,
                 )
                 Spacer(Modifier.height(10.dp))
@@ -188,10 +149,10 @@ fun NameScreen(
                     .align(alignment = Alignment.BottomCenter),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = authString,
-                    textAlign = TextAlign.Center,
-                )
+                if (!textFieldHasFocus.value) {
+                    AuthText()
+                }
+                Spacer(Modifier.height(5.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()

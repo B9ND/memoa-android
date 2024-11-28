@@ -290,7 +290,7 @@ fun NavGraph(
                     StartScreen(navController = navController)
                 }
                 composable(NavGroup.LOGIN) {
-                    LoginScreen(navController = navController, networkUtil = NetworkUtil(MemoaApplication.getContext()))
+                    LoginScreen(navController = navController)
                 }
                 composable(NavGroup.SIGNUP_EMAIL) {
                     EmailScreen(navController = navController)
