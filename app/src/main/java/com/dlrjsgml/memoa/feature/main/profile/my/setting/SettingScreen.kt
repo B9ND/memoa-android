@@ -215,7 +215,6 @@ fun SettingScreen(
                     enabled = true,
                     onClick = {
                         navController.safePopBackStack()
-
                     }
                 ),
                 text = "완료",
