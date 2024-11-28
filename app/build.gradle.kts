@@ -123,6 +123,9 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("androidx.room:room-ktx:2.6.1")
-
+    implementation("io.insert-koin:koin-core:3.2.2")
+    implementation("io.insert-koin:koin-android:3.2.2")
+    implementation("io.insert-koin:koin-androidx-compose:3.2.2")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     //Room
 }

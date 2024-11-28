@@ -148,7 +148,7 @@ fun PasswordScreen(
         Box(
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 45.dp)
+                .padding(horizontal = 20.dp, vertical = 25.dp)
         ) {
             BackButtonWhite {
                 navController.popBackStack()
@@ -160,7 +160,7 @@ fun PasswordScreen(
             ) {
                 Text(
                     text = "회원가입",
-                    fontSize = 30.sp,
+                    fontSize = 25.sp,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -171,7 +171,7 @@ fun PasswordScreen(
                     value = uiState.password,
                     onValueChange = viewModel::updatePassword,
                     hint = passwordText,
-                    modifier = Modifier.focusRequester(focusRequester)
+                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp)
                 )
                 Spacer(Modifier.height(10.dp))
                 Text(
@@ -192,7 +192,6 @@ fun PasswordScreen(
                     text = authString,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(Modifier.height(10.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()

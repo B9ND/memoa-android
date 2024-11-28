@@ -63,8 +63,8 @@ fun SchoolButton(
             )
             .drawColoredShadow(Color.Black)
             .background(color = Color.White, shape = shape)
-            .width(87.dp)
-            .height(83.dp)
+            .width(78.dp)
+            .height(73.dp)
             .border(width = if (isSelected) 5.dp else 0.dp, color = Color(0xFFC2B9FF), shape = shape)
     ) {
         Box(

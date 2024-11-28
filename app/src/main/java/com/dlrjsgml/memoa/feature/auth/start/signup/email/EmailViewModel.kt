@@ -3,6 +3,7 @@ package com.dlrjsgml.memoa.feature.auth.start.signup.email
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.memoa.remote.NetworkUtil
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,7 +23,8 @@ data class TextState(
     val error: String = "",
     val errorCode: Int = 0,
     val showDialog: Boolean = false,
-    val clicked: Boolean = false
+    val clicked: Boolean = false,
+    val loadingState: Boolean = false
 )
 
 sealed interface Code {
@@ -40,6 +42,10 @@ class EmailViewModel : ViewModel() {
 
     fun updateEmail(content: String) {
         _uiState.update { it.copy(email = content) }
+    }
+
+    fun updateLoadingState(show: Boolean) {
+        _uiState.update { it.copy(loadingState = show) }
     }
 
     fun updateAuth(auth: String) {
@@ -72,40 +78,56 @@ class EmailViewModel : ViewModel() {
 
 
 
-    suspend fun sendCode(email: String) {
-        return withContext(Dispatchers.IO) {
-            try {
-                RetrofitClient.getCodeService.sendAuthCode(email = email)
-                updateErrorCode(100)
-                Log.d("good1", "sendCode: ${_uiState.value.errorCode}")
-                updateShowDialog(false)
-            } catch (e: HttpException) {
-                Log.d("sign", e.code().toString())
-                if (e.code() == 400) {
-                    Log.d("sign", "HttpException2: ${e.code()}")
-                    updateError("이메일을 확인해 주세요.")
-                    updateShowDialog(true)
-                    updateErrorCode(400)
+    suspend fun sendCode(email: String, networkUtil: NetworkUtil) {
+        if (!networkUtil.isNetworkConnected()) {
+            updateLoadingState(true)
+        } else {
+            updateLoadingState(false)
+            return withContext(Dispatchers.IO) {
+                try {
+                    RetrofitClient.getCodeService.sendAuthCode(email = email)
+                    updateErrorCode(100)
+                    Log.d("good1", "sendCode: ${_uiState.value.errorCode}")
+                    updateShowDialog(false)
+                } catch (e: HttpException) {
+                    Log.d("sign", e.code().toString())
+                    if (e.code() == 409) {
+                        updateError("이미 존재하는 이메일 입니다.")
+                        updateShowDialog(true)
+                        updateErrorCode(409)
+                    } else {
+                        if (e.code() == 400) {
+                            Log.d("sign", "HttpException2: ${e.code()}")
+                            updateError("이메일을 확인해 주세요.")
+                            updateShowDialog(true)
+                            updateErrorCode(400)
+                        }
+                    }
                 }
             }
         }
     }
 
 
-    fun checkCode(email: String, code: String) {
-        viewModelScope.launch {
-            if (code == "123456") {
-                _uiEffect.emit(Code.Success)
-            }
-            try {
-                RetrofitClient.sendCodeService.checkAuthCode(email, code)
-                _uiEffect.emit(Code.Success)
-            } catch (e: HttpException) {
-                if (e.code() == 401 || e.code() == 500) {
-                    updateError("인증코드를 확인해 주세요.")
-                    updateErrorCode(401)
-                    updateError("인증번호를 확인해 주세요")
-                    updateShowDialog(true)
+    fun checkCode(email: String, code: String, networkUtil: NetworkUtil) {
+        if (!networkUtil.isNetworkConnected()) {
+            updateLoadingState(true)
+        } else {
+            updateLoadingState(false)
+            viewModelScope.launch {
+                if (code == "123456") {
+                    _uiEffect.emit(Code.Success)
+                }
+                try {
+                    RetrofitClient.sendCodeService.checkAuthCode(email, code)
+                    _uiEffect.emit(Code.Success)
+                } catch (e: HttpException) {
+                    if (e.code() == 401 || e.code() == 500) {
+                        updateError("인증코드를 확인해 주세요.")
+                        updateErrorCode(401)
+                        updateError("인증번호를 확인해 주세요")
+                        updateShowDialog(true)
+                    }
                 }
             }
         }

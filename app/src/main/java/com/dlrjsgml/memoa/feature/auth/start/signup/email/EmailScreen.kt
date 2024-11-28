@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -44,7 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.remote.NetworkUtil
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
@@ -110,7 +113,7 @@ fun EmailScreen(
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
         ) {
@@ -118,7 +121,7 @@ fun EmailScreen(
         }
         withStyle(
             SpanStyle(
-                fontSize = 16.sp,
+                fontSize = 14.sp,
             )
         ) {
             append("를 입력하세요")
@@ -127,7 +130,7 @@ fun EmailScreen(
     val authText = buildAnnotatedString {
         withStyle(
             SpanStyle(
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
         ) {
@@ -135,7 +138,7 @@ fun EmailScreen(
         }
         withStyle(
             SpanStyle(
-                fontSize = 16.sp
+                fontSize = 14.sp
             )
         ) {
             append("를 입력하세요")
@@ -154,7 +157,7 @@ fun EmailScreen(
         }
     }
     LaunchedEffect(uiState.errorCode) {
-        if (uiState.errorCode == 500) {
+        if (uiState.errorCode == 500 || uiState.errorCode == 409 || uiState.errorCode == 400) {
             viewModel.updateClicked(false)
         }
     }
@@ -169,11 +172,6 @@ fun EmailScreen(
             Log.d("나인", "EmailScreen: ${uiState.time}")
         }
     }
-    LaunchedEffect(uiState.errorCode) {
-        if (uiState.errorCode == 400) {
-            viewModel.updateClicked(false)
-        }
-    }
     fun updateEmail(newInput: String) {
         viewModel.updateEmail(newInput)
         viewModel.updateClicked(false)
@@ -186,6 +184,7 @@ fun EmailScreen(
             buttonText = "확인"
         )
     }
+
     Box(
         modifier
             .fillMaxSize()
@@ -211,7 +210,7 @@ fun EmailScreen(
         Box(
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 45.dp)
+                .padding(horizontal = 20.dp, vertical = 25.dp)
         ) {
             BackButtonWhite {
                 navController.popBackStack()
@@ -223,7 +222,7 @@ fun EmailScreen(
             ) {
                 Text(
                     text = "회원가입",
-                    fontSize = 30.sp,
+                    fontSize = 25.sp,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -237,39 +236,39 @@ fun EmailScreen(
                     textButton = true,
                     textButtonVal = if (uiState.clicked) uiState.time.toString() else "인증",
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp),
                     textButtonOnClick = {
                         coroutineScope.launch {
                             viewModel.updateErrorCode(0)
                             viewModel.updateError("")
                             viewModel.updateClicked(true)
-                            viewModel.sendCode(uiState.email)
+                            viewModel.sendCode(uiState.email, NetworkUtil(MemoaApplication.getContext()))
                         }
                     }
                 )
                 Spacer(Modifier.height(10.dp))
                 MemoaTextField(
+                    modifier.padding(horizontal = 10.dp),
                     value = uiState.auth,
                     onValueChange = viewModel::updateAuth,
                     hint = authText,
-                    firstFocus = false,
-                    modifier = Modifier,
+                    firstFocus = false
                 )
             }
             Column(
-                modifier
-                    .align(alignment = Alignment.BottomCenter),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
             ) {
                 Text(
                     text = authString,
                     textAlign = TextAlign.Center,
+                    modifier = modifier.fillMaxWidth()
                 )
-                Spacer(Modifier.height(10.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()
-                        .height(55.dp),
+                        .height(55.dp)
+                        .imePadding(),
                     text = "다음",
                     enabled = true,
                 ) {
@@ -279,7 +278,7 @@ fun EmailScreen(
                     if (uiState.auth.length == 6) {
                         coroutineScope.launch {
                             try {
-                                viewModel.checkCode(uiState.email, uiState.auth)
+                                viewModel.checkCode(uiState.email, uiState.auth, NetworkUtil(MemoaApplication.getContext()))
                             } catch (e: Exception) {
                                 Log.d("Auth Check", "Error during checkCode: ${e.message}")
                                 e.printStackTrace()
@@ -300,6 +299,7 @@ fun EmailScreen(
         }
     }
 }
+
 fun Modifier.addFocusCleaner(
     focusManager: FocusManager,
     doOnClear: () -> Unit = {}): Modifier {

@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -27,19 +27,27 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.dlrjsgml.memoa.R
+import com.dlrjsgml.memoa.remote.NetworkUtil
 import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
+import com.dlrjsgml.memoa.ui.component.button.MemoaButtonWhite
 import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.Purple10
 import com.dlrjsgml.memoa.ui.theme.caption1
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StartScreen(
     navController: NavHostController,
 ) {
-    LaunchedEffect(Unit) {
+    val systemUiController = rememberSystemUiController()
 
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = Purple0,
+            darkIcons = false
+        )
     }
     Box(
         modifier = Modifier.fillMaxSize()
@@ -102,8 +110,8 @@ fun StartScreen(
                     .padding(horizontal = 35.dp)
                     .padding(bottom = 40.dp)
             ) {
-                MemoaButton(modifier = Modifier.fillMaxWidth(),
-                    enabled = false,
+                MemoaButtonWhite(modifier = Modifier.fillMaxWidth(),
+                    enabled = true,
                     contentPadding = PaddingValues(vertical = 18.dp),
                     text = "회원가입",
                     onClick = {

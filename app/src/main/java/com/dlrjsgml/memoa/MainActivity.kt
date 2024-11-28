@@ -22,6 +22,10 @@ import coil.memory.MemoryCache
 import com.dlrjsgml.memoa.data.local.UserDatabase
 import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
 import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveAccToken
+import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
+import com.dlrjsgml.memoa.network.token.AccTokenRequest
+import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGraph
 import com.dlrjsgml.memoa.ui.theme.MemoaTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,37 +71,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//private suspend fun isLogin(context: Context): Boolean {
-//    Log.d("LOGIN", "get Start")
-//    val refToken = getRefToken(context)
-//    Log.d("LOGIN", "get result: $refToken")
-//    if (refToken != null) {
-//        try {
-//            val response = accToken(context)
-//            return response == "success"
-//        } catch (_: Exception) {
-//            return false
-//        }
-//    }
-//    return false
-//}
-
-//private suspend fun accToken(context: Context): String {
-//    try {
-//        val tokenData = getRefToken(context)?.let { AccTokenRequest(it) }
-//        Log.d("스타트뷰모델", "accToken: }")
-//        val response = tokenData?.let { RetrofitClient.tokenService.token(it) }
-//        Log.d("스타트뷰모델", "accToken: 여기서 안됨")
-//        if (response != null) {
-//            saveAccToken(context, response.access)
-//            saveRefToken(context, response.refresh)
-//        }
-//        return "success"
-//    } catch (e: Exception) {
-//        Log.d("스타트뷰모델", "error massage: $e")
-//        return "fail"
-//    }
-//}
 fun clearAppData(context: Context) {
     val cache = context.cacheDir //캐시 폴더 호출
     val appDir = File(cache.parent) //App Data 삭제를 위해 캐시 폴더의 부모폴더까지 호출

@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.remote
 
 import com.dlrjsgml.memoa.BuildConfig
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.network.bookmark.GetBookMarkService
 import com.dlrjsgml.memoa.network.bookmark.PostBookMarkService
 import com.dlrjsgml.memoa.network.data.login.LoginService
@@ -51,7 +52,7 @@ object RetrofitClient {
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
         .addInterceptor(RequestInterceptor(
-//            NetworkUtil(MemoaApplication.getContext())
+            NetworkUtil(MemoaApplication.getContext())
                     )
         )
         .addInterceptor(ResponseInterceptor())

@@ -66,6 +66,7 @@ import com.dlrjsgml.memoa.feature.main.search.before.BeforeSearchScreen
 import com.dlrjsgml.memoa.feature.main.search.ing.SearchingScreen
 import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
+import com.dlrjsgml.memoa.remote.NetworkUtil
 import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.effect.drawColoredShadow
@@ -289,7 +290,7 @@ fun NavGraph(
                     StartScreen(navController = navController)
                 }
                 composable(NavGroup.LOGIN) {
-                    LoginScreen(navController = navController)
+                    LoginScreen(navController = navController, networkUtil = NetworkUtil(MemoaApplication.getContext()))
                 }
                 composable(NavGroup.SIGNUP_EMAIL) {
                     EmailScreen(navController = navController)

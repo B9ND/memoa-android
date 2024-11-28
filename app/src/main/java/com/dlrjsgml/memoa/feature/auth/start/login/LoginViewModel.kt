@@ -1,12 +1,17 @@
 package com.dlrjsgml.memoa.feature.auth.start.login
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.memoa.MemoaApplication
+import com.dlrjsgml.memoa.feature.auth.start.start.NetworkErrorHandler
 import com.dlrjsgml.memoa.network.data.login.LoginRequest
 import com.dlrjsgml.memoa.network.data.user.saveUser.saveAccToken
 import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
+import com.dlrjsgml.memoa.remote.NetworkUtil
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,16 +28,17 @@ data class TextState(
     val access: String = "",
     val refresh: String = "",
     val error: String = "",
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
+    val loadingState: Boolean = false
 )
-
 
 sealed interface LoginSideEffect {
     data object Success : LoginSideEffect
     data object Failed : LoginSideEffect
 }
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+): ViewModel() {
     private val _uiState = MutableStateFlow(TextState())
     val uiState = _uiState.asStateFlow()
 
@@ -64,36 +70,45 @@ class LoginViewModel : ViewModel() {
         _uiState.update { it.copy(showDialog = show) }
     }
 
+    fun updateLoadingState(show: Boolean) {
+        _uiState.update { it.copy(loadingState = show) }
+    }
 
-
-    fun login(email: String, password: String) {
+    fun login(email: String, password: String, networkUtil: NetworkUtil) {
         if(email.length <= 255 && password.length <= 255) {
-            viewModelScope.launch {
-                try {
-                    val loginData = LoginRequest(email, password)
-                    val response = RetrofitClient.getLoginService.login(loginData)
-                    updateToken(response.access, response.refresh)
-                    _uiEffect.emit(LoginSideEffect.Success)
-                    updateDialog(false)
-                } catch (e: HttpException) {
-                    _uiEffect.emit(LoginSideEffect.Failed)
-                    updateDialog(true)
-                    if (e.code() == 401) {
-                        updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
-                        Log.d("뷰모델쪽", "login: ${e.code()}")
-                    } else {
-                        if (e.code() == 400) {
-                            updateError("유효하지 않은 이메일 입니다.")
+            if (!networkUtil.isNetworkConnected()) {
+                updateLoadingState(true)
+            }
+            else {
+                _uiState.update { it.copy(loadingState = false) }
+                viewModelScope.launch {
+                    try {
+                        val loginData = LoginRequest(email, password)
+                        val response = RetrofitClient.getLoginService.login(loginData)
+                        updateToken(response.access, response.refresh)
+                        _uiEffect.emit(LoginSideEffect.Success)
+                        updateDialog(false)
+                    } catch (e: HttpException) {
+                        _uiEffect.emit(LoginSideEffect.Failed)
+                        NetworkErrorHandler.handle(MemoaApplication.getContext(), e)
+                        updateDialog(true)
+                        if (e.code() == 401) {
+                            updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
                             Log.d("뷰모델쪽", "login: ${e.code()}")
                         } else {
-                            if (e.code() == 406) {
-                                updateError("현재 서버가 동작하지 않습니다.\n잠시후 다시 시도해 주세요.")
+                            if (e.code() == 400) {
+                                updateError("유효하지 않은 이메일 입니다.")
                                 Log.d("뷰모델쪽", "login: ${e.code()}")
+                            } else {
+                                if (e.code() == 406) {
+                                    updateError("현재 서버가 동작하지 않습니다.\n잠시후 다시 시도해 주세요.")
+                                    Log.d("뷰모델쪽", "login: ${e.code()}")
+                                }
                             }
                         }
                     }
+                    Log.d("뷰모델쪽", "login: ${_uiState.value.error}")
                 }
-                Log.d("뷰모델쪽", "login: ${_uiState.value.error}")
             }
         }
     }
@@ -103,6 +118,7 @@ class LoginViewModel : ViewModel() {
         saveRefToken(context,uiState.value.refresh)
     }
 }
+
 
 
 

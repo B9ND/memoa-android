@@ -35,7 +35,7 @@ import com.dlrjsgml.memoa.ui.theme.caption1
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MemoaButton(
+fun MemoaButtonWhite(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,
@@ -61,7 +61,7 @@ fun MemoaButton(
     ) {
         Box(
             modifier = modifier.background(
-                color = if (enabled) ButtonColor else Color.White, shape = shape
+                color = Color.White, shape = shape
             )
 
         ) {

@@ -147,7 +147,7 @@ fun NameScreen(
         Box(
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 45.dp)
+                .padding(horizontal = 20.dp, vertical = 25.dp)
         ) {
             BackButtonWhite {
                 navController.popBackStack()
@@ -159,7 +159,7 @@ fun NameScreen(
             ) {
                 Text(
                     text = "회원가입",
-                    fontSize = 30.sp,
+                    fontSize = 25.sp,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -170,7 +170,7 @@ fun NameScreen(
                     value = uiState.name,
                     onValueChange = viewModel::updateName,
                     hint = emailText,
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp),
                     firstFocus = true,
                 )
                 Spacer(Modifier.height(10.dp))
@@ -192,7 +192,6 @@ fun NameScreen(
                     text = authString,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(Modifier.height(10.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()
