@@ -36,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -56,6 +55,7 @@ import com.dlrjsgml.memoa.ui.component.button.SchoolButton
 import com.dlrjsgml.memoa.ui.component.dialog.dialog
 import com.dlrjsgml.memoa.ui.component.items.DepartmentList
 import com.dlrjsgml.memoa.ui.component.items.SchoolList
+import com.dlrjsgml.memoa.ui.component.textfield.AuthText
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaDropDownTextField
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import com.dlrjsgml.memoa.ui.component.textfield.SearchTextField
@@ -100,52 +100,6 @@ fun SchoolChooseScreen(
             coroutineScope.launch {
                 sheetState.hide()
             }
-        }
-    }
-    val authString = buildAnnotatedString {
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-
-            )
-        )
-        {
-            append("계정을 생성함으로써,\n")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.auth_text)
-            )
-        ) {
-            append("이용약관")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-            )
-        )
-        {
-            append("과")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.auth_text)
-            )
-        ) {
-            append("개인정처리약관")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-            )
-        )
-        {
-            append("에 동의하셨음을 확인합니다.")
         }
     }
     val schoolText = buildAnnotatedString {
@@ -289,7 +243,7 @@ fun SchoolChooseScreen(
                             .clickable(
                                 onClick = {
                                     viewModel.updateShowBottomSheet(true)
-                                    viewModel.updateExpand(false)
+                                    viewModel.updateExpand()
                                     viewModel.schoolSearch(uiState.school)
                                 }
                             )
@@ -312,14 +266,15 @@ fun SchoolChooseScreen(
                             }
                         },
                         modifier = Modifier.clickable {
-                            viewModel.updateExpand(true)
-                        }
+                            viewModel.updateExpand()
+                        },
+                        expandStatus = uiState.isExpanded
                     )
                     Spacer(Modifier.height(3.dp))
-                    Log.d("갑자기", "SchoolChooseScreen: ${uiState.isExpanded}")
-                    Log.d("갑자기", "SchoolChooseScreen: ${uiState.selectedItem}")
                     if (uiState.isExpanded && uiState.selectedItem != -1) {
-                        LazyColumn {
+                        LazyColumn(
+                            modifier.padding(horizontal = 10.dp)
+                        ) {
                             viewModel.updateList()
                             items(count = uiState.departmentList.size) { index ->
                                 DepartmentList(
@@ -327,7 +282,7 @@ fun SchoolChooseScreen(
                                         .clickable {
                                             Log.d("kmj", "SchoolChooseScreen: $index")
                                             viewModel.updateDepItem(index)
-                                            viewModel.updateExpand(false)
+                                            viewModel.updateExpand()
                                             if (uiState.selectedDepartment != -1 && uiState.selectedDepartment != index) {
                                                 val selectedId = getDepartNames(
                                                     response = uiState.response,
@@ -356,10 +311,8 @@ fun SchoolChooseScreen(
                 modifier.align(alignment = Alignment.BottomCenter),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = authString,
-                    textAlign = TextAlign.Center,
-                )
+                AuthText()
+                Spacer(Modifier.height(5.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()

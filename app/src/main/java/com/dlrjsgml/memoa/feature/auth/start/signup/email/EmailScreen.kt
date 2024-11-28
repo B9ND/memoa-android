@@ -2,6 +2,7 @@ package com.dlrjsgml.memoa.feature.auth.start.signup.email
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -29,12 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -52,6 +54,7 @@ import com.dlrjsgml.memoa.root.NavGroup
 import com.dlrjsgml.memoa.ui.component.button.BackButtonWhite
 import com.dlrjsgml.memoa.ui.component.button.MemoaButton
 import com.dlrjsgml.memoa.ui.component.dialog.dialog
+import com.dlrjsgml.memoa.ui.component.textfield.AuthText
 import com.dlrjsgml.memoa.ui.component.textfield.MemoaTextField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -68,48 +71,8 @@ fun EmailScreen(
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-    val authString = buildAnnotatedString {
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-            )
-        ) {
-            append("계정을 생성함으로써,\n")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.auth_text)
-            )
-        ) {
-            append("이용약관")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-                )
-        ) {
-            append("과")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.auth_text)
-            )
-        ) {
-            append("개인정처리약관")
-        }
-        withStyle(
-            SpanStyle(
-                fontSize = 12.sp,
-                color = colorResource(R.color.text_black)
-                )
-        ) {
-            append("에 동의하셨음을 확인합니다.")
-        }
-    }
+    val textFieldHasFocus = remember { mutableStateOf(false) }
+
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -144,6 +107,12 @@ fun EmailScreen(
             append("를 입력하세요")
         }
     }
+
+    // Request focus when the screen is displayed
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.uiEffect.collect { effect ->
             when (effect) {
@@ -170,6 +139,15 @@ fun EmailScreen(
             viewModel.updateClicked(false)
             viewModel.updateTime(300)
             Log.d("나인", "EmailScreen: ${uiState.time}")
+        }
+    }
+    if (uiState.loadingState) {
+        LaunchedEffect(Boolean) {
+            delay(1500)
+            viewModel.updateLoadingState(false)
+            Toast.makeText(MemoaApplication.getContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            viewModel.updateClicked(false)
+            viewModel.updateTime(300)
         }
     }
     fun updateEmail(newInput: String) {
@@ -236,7 +214,7 @@ fun EmailScreen(
                     textButton = true,
                     textButtonVal = if (uiState.clicked) uiState.time.toString() else "인증",
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp),
+                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
                     textButtonOnClick = {
                         coroutineScope.launch {
                             viewModel.updateErrorCode(0)
@@ -248,7 +226,9 @@ fun EmailScreen(
                 )
                 Spacer(Modifier.height(10.dp))
                 MemoaTextField(
-                    modifier.padding(horizontal = 10.dp),
+                    modifier.padding(horizontal = 10.dp).onFocusChanged { focusState ->
+                        textFieldHasFocus.value = focusState.isFocused
+                                                                        },
                     value = uiState.auth,
                     onValueChange = viewModel::updateAuth,
                     hint = authText,
@@ -259,11 +239,10 @@ fun EmailScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
             ) {
-                Text(
-                    text = authString,
-                    textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
-                )
+                if (!textFieldHasFocus.value) {
+                    AuthText()
+                }
+                Spacer(modifier.height(5.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()
@@ -271,6 +250,7 @@ fun EmailScreen(
                         .imePadding(),
                     text = "다음",
                     enabled = true,
+                    isLoading = uiState.loadingState
                 ) {
                     viewModel.updateEmail(uiState.email)
                     focusManager.clearFocus()
@@ -293,7 +273,6 @@ fun EmailScreen(
                         Log.d("good", "EmailScreen: ${uiState.errorCode}")
                         viewModel.updateShowDialog(true)
                     }
-
                 }
             }
         }
@@ -310,6 +289,7 @@ fun Modifier.addFocusCleaner(
         })
     }
 }
+
 //
 //@RequiresApi(Build.VERSION_CODES.O)
 //@Composable

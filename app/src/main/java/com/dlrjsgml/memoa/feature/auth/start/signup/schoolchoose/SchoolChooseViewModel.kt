@@ -32,7 +32,8 @@ data class TextState(
     val departmentList: List<String> = emptyList(),
     val selectedItem: Int = -1,
     val selectedDepartment: Int = -1,
-    val isExpanded: Boolean = false
+    val isExpanded: Boolean = false,
+    val depExpand: Boolean = false
 )
 
 sealed interface SignUpSideEffect {
@@ -53,8 +54,8 @@ class SchoolChooseScreenViewModel : ViewModel() {
         _uiState.update { it.copy(departmentName = buildAnnotatedString {  }) }
     }
 
-    fun updateExpand(expand: Boolean) {
-        _uiState.update { it.copy(isExpanded = expand) }
+    fun updateExpand() {
+        _uiState.update { it.copy(isExpanded = !_uiState.value.isExpanded) }
     }
 
     fun updateItem(item: Int) {
@@ -75,9 +76,6 @@ class SchoolChooseScreenViewModel : ViewModel() {
             it.grade == currentState.selectedGradeInt
         }
 
-        Log.d("shit?", "updateList: ${selectedSchool}")
-        Log.d("shit?", "updateList: ${_uiState.value.selectedItem}")
-        Log.d("shit?", "updateList: ${currentState.response.getOrNull(0)}")
         val selectedDepartment = departmentsForGrade?.getOrNull(item)
         if (selectedDepartment != null) {
             _uiState.update {
@@ -88,7 +86,6 @@ class SchoolChooseScreenViewModel : ViewModel() {
                     isExpanded = false
                 )
             }
-            Log.d("kmj1", "updateDepItem: $selectedDepartment")
         } else {
             Log.d("Department", "Invalid department selection")
         }
