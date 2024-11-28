@@ -29,8 +29,8 @@ data class TextState(
     val refresh: String = "",
     val error: String = "",
     val showDialog: Boolean = false,
-    val loadingState: Boolean = false
-    val isLoading: Boolean = false
+    val loadingState: Boolean = false,
+    val isLoading: Boolean = false,
 )
 
 sealed interface LoginSideEffect {
@@ -39,7 +39,8 @@ sealed interface LoginSideEffect {
 }
 
 class LoginViewModel(
-): ViewModel() {
+    private val networkUtil: NetworkUtil
+) : ViewModel() {
     private val _uiState = MutableStateFlow(TextState())
     val uiState = _uiState.asStateFlow()
 
@@ -76,12 +77,10 @@ class LoginViewModel(
     }
 
     fun login(email: String, password: String, networkUtil: NetworkUtil) {
-        if(email.length <= 255 && password.length <= 255) {
-//여기 
+        if (email.length <= 255 && password.length <= 255) {
             if (!networkUtil.isNetworkConnected()) {
                 updateLoadingState(true)
-            }
-            else {
+            } else {
                 _uiState.update { it.copy(loadingState = false) }
                 viewModelScope.launch {
                     try {
@@ -96,50 +95,48 @@ class LoginViewModel(
                         updateDialog(true)
                         if (e.code() == 401) {
                             updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
-//여기 고쳐야함
-            viewModelScope.launch {
-                try {
-                    _uiState.update { it.copy(isLoading = true) }
-                    val loginData = LoginRequest(email, password)
-                    val response = RetrofitClient.getLoginService.login(loginData)
-                    updateToken(response.access, response.refresh)
-                    _uiEffect.emit(LoginSideEffect.Success)
-                    updateDialog(false)
-                } catch (e: HttpException) {
-                    _uiEffect.emit(LoginSideEffect.Failed)
-                    updateDialog(true)
-                    if (e.code() == 401) {
-                        updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
-                        Log.d("뷰모델쪽", "login: ${e.code()}")
-                    } else {
-                        if (e.code() == 400) {
-                            updateError("유효하지 않은 이메일 입니다.")
-//여기 고쳐야함
-                            Log.d("뷰모델쪽", "login: ${e.code()}")
-                        } else {
-                            if (e.code() == 400) {
-                                updateError("유효하지 않은 이메일 입니다.")
-                                Log.d("뷰모델쪽", "login: ${e.code()}")
-                            } else {
-                                if (e.code() == 406) {
-                                    updateError("현재 서버가 동작하지 않습니다.\n잠시후 다시 시도해 주세요.")
-                                    Log.d("뷰모델쪽", "login: ${e.code()}")
+                            viewModelScope.launch {
+                                try {
+                                    _uiState.update { it.copy(isLoading = true) }
+                                    val loginData = LoginRequest(email, password)
+                                    val response = RetrofitClient.getLoginService.login(loginData)
+                                    updateToken(response.access, response.refresh)
+                                    _uiEffect.emit(LoginSideEffect.Success)
+                                    updateDialog(false)
+                                } catch (e: HttpException) {
+                                    _uiEffect.emit(LoginSideEffect.Failed)
+                                    updateDialog(true)
+                                    when (e.code()) {
+                                        401 -> {
+                                            updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
+                                            Log.d("뷰모델쪽", "login: ${e.code()}")
+                                        }
+                                        400 -> {
+                                            updateError("유효하지 않은 이메일 입니다.")
+                                            Log.d("뷰모델쪽", "login: ${e.code()}")
+                                        }
+
+                                        406 -> {
+                                            if (e.code() == 406) {
+                                                updateError("현재 서버가 동작하지 않습니다.\n잠시후 다시 시도해 주세요.")
+                                                Log.d("뷰모델쪽", "login: ${e.code()}")
+                                            }
+                                        }
+                                    }
+                                    Log.d("뷰모델쪽", "login: ${_uiState.value.error}")
                                 }
                             }
                         }
                     }
-                    Log.d("뷰모델쪽", "login: ${_uiState.value.error}")
                 }
             }
         }
     }
-
-    fun saveTokens(context: Context){
-        saveAccToken(context,uiState.value.access)
-        saveRefToken(context,uiState.value.refresh)
+    fun saveTokens(context: Context) {
+        saveAccToken(context, uiState.value.access)
+        saveRefToken(context, uiState.value.refresh)
     }
 }
-
 
 
 
