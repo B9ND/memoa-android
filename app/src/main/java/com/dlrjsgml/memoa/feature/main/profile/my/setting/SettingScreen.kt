@@ -31,6 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,9 +48,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -67,15 +73,20 @@ import com.dlrjsgml.memoa.ui.animation.noRippleClickable
 import com.dlrjsgml.memoa.ui.animation.rememberBounceIndication
 import com.dlrjsgml.memoa.ui.component.button.BackButton
 import com.dlrjsgml.memoa.ui.component.button.ShadowButton
+import com.dlrjsgml.memoa.ui.component.dialog.MemoaSimpleDialog
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.CircleProfile
 import com.dlrjsgml.memoa.ui.component.items.FollowNumber
 import com.dlrjsgml.memoa.ui.component.textfield.ChangeEditText
 import com.dlrjsgml.memoa.ui.theme.Gray30
 import com.dlrjsgml.memoa.ui.theme.Purple60
+import com.dlrjsgml.memoa.ui.theme.boardContent
 import com.dlrjsgml.memoa.ui.theme.boardName
+import com.dlrjsgml.memoa.ui.theme.caption1
 import com.dlrjsgml.memoa.ui.theme.caption1Regular
+import com.dlrjsgml.memoa.ui.theme.caption2
 import com.dlrjsgml.memoa.ui.theme.miniCaption1
+import com.dlrjsgml.memoa.ui.theme.miniCaption2
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -94,6 +105,25 @@ fun SettingScreen(
     val coroutineScope = rememberCoroutineScope()
     var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var selectedFileName by remember { mutableStateOf("") }
+    val isShowDialog = remember { mutableStateOf(false) }
+    if (isShowDialog.value) {
+        MemoaSimpleDialog(
+            content = "준비중인 기능입니다.",
+            onClickConfirm = { isShowDialog.value = false }
+        )
+    }
+    val annotatedText = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                fontSize = 14.sp,
+                color = Color.Red,
+                textDecoration = TextDecoration.Underline // 밑줄 추가
+            )
+        ) {
+            append("회원탈퇴")
+        }
+    }
+
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->
@@ -175,9 +205,18 @@ fun SettingScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                modifier = Modifier.noRippleClickable {
-                    navController.safePopBackStack()
-                },
+                modifier = Modifier.clickable(
+                    indication = rememberBounceIndication(
+                        scale = 0.95f,
+                        showBackground = true,
+                        radius = RoundedCornerShape(8.dp)
+                    ),
+                    interactionSource = remember { MutableInteractionSource() },
+                    enabled = true,
+                    onClick = {
+                        navController.safePopBackStack()
+                    }
+                ),
                 text = "완료",
                 color = Purple60,
                 style = caption1Regular.copy(fontWeight = FontWeight.SemiBold)
@@ -218,13 +257,13 @@ fun SettingScreen(
                     )
             ) {
                 CircleProfile(
-                    modifier = Modifier
-
-                        ,
+                    modifier = Modifier,
                     profile = uiState.profileImage
                 )
                 Image(
-                    modifier = Modifier.align(Alignment.BottomStart).padding(12.dp),
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(12.dp),
                     painter = painterResource(R.drawable.ic_change_image),
                     contentDescription = null
                 )
@@ -281,6 +320,25 @@ fun SettingScreen(
             ShadowButton(modifier = Modifier.padding(horizontal = 20.dp), text = "로그아웃") {
                 settingViewModel.logout(context = context)
             }
+            Text(
+                modifier = Modifier
+                    .clickable(
+                        indication = rememberBounceIndication(
+                            scale = 0.95f,
+                            showBackground = true,
+                            radius = RoundedCornerShape(8.dp)
+                        ),
+                        interactionSource = remember { MutableInteractionSource() },
+                        enabled = true,
+                        onClick = {
+                            isShowDialog.value = true
+                        }
+                    )
+                    .align(Alignment.End)
+                    .padding(end = 36.dp, top = 8.dp),
+
+                text =annotatedText, style = miniCaption1.copy(fontSize = 14.sp, color = Color.Red),
+            )
             Spacer(modifier = Modifier.height(220.dp))
         }
     }

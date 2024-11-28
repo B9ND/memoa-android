@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,7 +72,7 @@ fun SearchScreen(
     val user = getUserProfile(MemoaApplication.getContext())
     val userSchool = user.department.school
     val selectTags = user.department.subjects
-
+    val rowScrollerState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         viewModel.getSearchArticles(search)
@@ -114,18 +116,21 @@ fun SearchScreen(
                         viewModel.fillTags(it)
                     }
                 }
-                LazyRow(
-                    modifier = Modifier.padding(top = 4.dp)
+                Row(
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .horizontalScroll(rowScrollerState)
                 ) {
-                    items(selectTags.size) {
-                        MemoaCheckBox(
-                            text = selectTags[it],
-                            onClick = { viewModel.fillTags(selectTags[it]) }
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                    selectTags.forEach { tag ->
+                        Row {
+                            MemoaCheckBox(
+                                text = tag,
+                                onClick = { viewModel.fillTags(tag) }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
                     }
                 }
-
             }
             Spacer(modifier = Modifier.height(4.dp))
         }
@@ -184,14 +189,11 @@ fun SearchScreen(
                                     )
                                 }
                             }
-
                         }
-
                     }
                 }
             }
         }
     }
-
 }
 

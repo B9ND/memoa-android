@@ -30,6 +30,7 @@ data class TextState(
     val error: String = "",
     val showDialog: Boolean = false,
     val loadingState: Boolean = false
+    val isLoading: Boolean = false
 )
 
 sealed interface LoginSideEffect {
@@ -76,6 +77,7 @@ class LoginViewModel(
 
     fun login(email: String, password: String, networkUtil: NetworkUtil) {
         if(email.length <= 255 && password.length <= 255) {
+//여기 
             if (!networkUtil.isNetworkConnected()) {
                 updateLoadingState(true)
             }
@@ -94,6 +96,25 @@ class LoginViewModel(
                         updateDialog(true)
                         if (e.code() == 401) {
                             updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
+//여기 고쳐야함
+            viewModelScope.launch {
+                try {
+                    _uiState.update { it.copy(isLoading = true) }
+                    val loginData = LoginRequest(email, password)
+                    val response = RetrofitClient.getLoginService.login(loginData)
+                    updateToken(response.access, response.refresh)
+                    _uiEffect.emit(LoginSideEffect.Success)
+                    updateDialog(false)
+                } catch (e: HttpException) {
+                    _uiEffect.emit(LoginSideEffect.Failed)
+                    updateDialog(true)
+                    if (e.code() == 401) {
+                        updateError("아이디 또는 비밀번호가 일치하지 않습니다.")
+                        Log.d("뷰모델쪽", "login: ${e.code()}")
+                    } else {
+                        if (e.code() == 400) {
+                            updateError("유효하지 않은 이메일 입니다.")
+//여기 고쳐야함
                             Log.d("뷰모델쪽", "login: ${e.code()}")
                         } else {
                             if (e.code() == 400) {

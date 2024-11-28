@@ -193,7 +193,9 @@ fun ProfileScreen(
                     profile = article.authorProfileImage,
                     tag = article.tags.toImmutableList(),
                     comment = 1,
-                    onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${article.author}") },
+                    onProfileClick = {
+//                        navController.navigate("${NavGroup.USERPROFILE}?${article.author}")
+                    },
                     onBookmarkClick = {
 //                        viewModel.bookmark(article.id)
                     },

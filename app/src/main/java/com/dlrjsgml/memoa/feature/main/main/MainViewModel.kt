@@ -98,81 +98,83 @@ class MainViewModel : ViewModel() {
                 _uiEffect.emit(ArticlesSideEffect.Success)
             }
         }
-        }
-        fun getArticles() {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val data = Pager(
-                        config = PagingConfig(
-                            pageSize = 10,
-                            enablePlaceholders = false,
-                            initialLoadSize = 10
-                        ),
-                        pagingSourceFactory = { ArticlePagingSource("", _tagUiState.value.tags) }
-                    ).flow
-                        .catch { e ->
-                            when (e) {
-                                is HttpException -> {
-                                    when (e.code()) {
-                                        402 -> {
-                                            // 토큰 관련 에러 처리
-                                            Log.e("MainViewModel", "Token Error: ${e.message()}")
-                                            _uiEffect.emit(ArticlesSideEffect.TokenError)
-                                        }
+    }
 
-                                        else -> {
-                                            Log.e("MainViewModel", "HTTP Error: ${e.code()}")
-                                            _uiEffect.emit(ArticlesSideEffect.TokenError)
-                                        }
+    fun getArticles() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val data = Pager(
+                    config = PagingConfig(
+                        pageSize = 10,
+                        enablePlaceholders = false,
+                        initialLoadSize = 10
+                    ),
+                    pagingSourceFactory = { ArticlePagingSource("", _tagUiState.value.tags) }
+                ).flow
+                    .catch { e ->
+                        when (e) {
+                            is HttpException -> {
+                                when (e.code()) {
+                                    402 -> {
+                                        // 토큰 관련 에러 처리
+                                        Log.e("MainViewModel", "Token Error: ${e.message()}")
+                                        _uiEffect.emit(ArticlesSideEffect.TokenError)
+                                    }
+
+                                    else -> {
+                                        Log.e("MainViewModel", "HTTP Error: ${e.code()}")
+                                        _uiEffect.emit(ArticlesSideEffect.TokenError)
                                     }
                                 }
-                                is Exception ->{
-                                    _uiEffect.emit(ArticlesSideEffect.Failure)
-                                }
+                            }
 
-                                else -> {
-                                    Log.e("MainViewModel", "Error: ${e.message}")
-                                    _uiEffect.emit(ArticlesSideEffect.Failure)
-                                }
+                            is Exception -> {
+                                _uiEffect.emit(ArticlesSideEffect.Failure)
+                            }
+
+                            else -> {
+                                Log.e("MainViewModel", "Error: ${e.message}")
+                                _uiEffect.emit(ArticlesSideEffect.Failure)
                             }
                         }
-                        .cachedIn(viewModelScope)
-                    Log.e("메인뷰", "$data")
+                    }
+                    .cachedIn(viewModelScope)
+                Log.e("메인뷰", "$data")
 
-                    _uiState.update { it.copy(articles = data) }
-                    _uiEffect.emit(ArticlesSideEffect.Success)
-                } catch (e: Exception) {
-                    Log.e("MainViewModel", "Error: ${e.message}")
-                    _uiEffect.emit(ArticlesSideEffect.Failure)
-                }
+                _uiState.update { it.copy(articles = data) }
+                _uiEffect.emit(ArticlesSideEffect.Success)
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error: ${e.message}")
+                _uiEffect.emit(ArticlesSideEffect.Failure)
             }
         }
+    }
 
-        fun fillTags(tag: String) {
-            _tagUiState.update {
-                if (tag in it.tags) {
-                    it.copy(tags = it.tags)
-                } else {
-                    it.copy(tags = arrayListOf(tag))
-                }
-            }
-            getArticles()
-        }
-
-        fun bookmark(id: Int) {
-            viewModelScope.launch(Dispatchers.IO) {
-                Log.d("북마크", "들어갔음");
-                try {
-                    val response = RetrofitClient.postBookMarkService.postBookMark(id)
-                    _bookMarkUiEffect.emit(BookMarkDoSideEffect.Success)
-                    Log.d("북마크", response.toString());
-
-                } catch (e: Exception) {
-                    Log.d("북마크", e.message.toString());
-                    _bookMarkUiEffect.emit(BookMarkDoSideEffect.Failure)
-                }
+    fun fillTags(tag: String) {
+        _tagUiState.update {
+            if (tag in it.tags) {
+                it.copy(tags = it.tags)
+            } else {
+                it.copy(tags = arrayListOf(tag))
             }
         }
+        getArticles()
+    }
+
+    fun bookmark(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("북마크", "들어갔음");
+            try {
+                val response = RetrofitClient.postBookMarkService.postBookMark(id)
+                _bookMarkUiEffect.emit(BookMarkDoSideEffect.Success)
+                Log.d("북마크", response.toString());
+
+            } catch (e: Exception) {
+                Log.d("북마크", e.message.toString());
+                _bookMarkUiEffect.emit(BookMarkDoSideEffect.Failure)
+            }
+        }
+    }
 
 //    fun bookMarks(articleId: Int) : Boolean{
 //        viewModelScope.launch(Dispatchers.IO) {
@@ -180,6 +182,6 @@ class MainViewModel : ViewModel() {
 //            return@launch (room!!.bookMarkDao().upsert(article))
 //        }
 //    }
-    }
+}
 
 

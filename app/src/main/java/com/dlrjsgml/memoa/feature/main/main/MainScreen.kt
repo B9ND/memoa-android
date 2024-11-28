@@ -85,8 +85,8 @@ fun MainScreen(
     var isLogin: Boolean? by remember { mutableStateOf(null) }
 
     val user = getUserProfile(MemoaApplication.getContext())
-    val userSchool = listOf(user.department.school)
-    val userTags = user.department.subjects
+    val userSchool = listOf(user.department.school.ifEmpty { "로그인필요" })
+    val userTags = user.department.subjects.ifEmpty { arrayListOf("로그인필요합니다") }
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             val tokenResult = accToken(MemoaApplication.getContext())

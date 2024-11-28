@@ -54,9 +54,9 @@ fun BookMarkScreen(
         ) {
             BackHandlers(navController = navController)
             LazyColumn {
-                if(uiState.isLoaded){
+                if (uiState.isLoaded) {
                     item {
-                        Spacer(modifier = Modifier.height(58.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                     items(uiState.bookMarks.size) {
                         val bookMark = uiState.bookMarks[it]
@@ -69,15 +69,24 @@ fun BookMarkScreen(
                             image = bookMark.images.toImmutableList(),
                             bookmarked = true,
                             onProfileClick = { navController.navigate("${NavGroup.USERPROFILE}?${bookMark.nickname}") },
-                            onArticleClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") },
+                            onImageClick = { navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}"){
+                                restoreState = true
+                                launchSingleTop = true
+                            } },
+                            onArticleClick = {
+                                navController.navigate("${NavGroup.DETAIL}?${bookMark.postId}") {
+                                    restoreState = true
+                                    launchSingleTop = true
+                                }
+                            },
                             onBookmarkClick = { mainViewModel.bookmark(bookMark.postId) }
                         )
                     }
                 } else {
                     item {
-                        Spacer(modifier = Modifier.height(58.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
-                    items(10){
+                    items(10) {
                         JJapList()
                     }
                 }
