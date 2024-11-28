@@ -60,6 +60,7 @@ fun MemoaDropDownTextField(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = 10.dp)
             .background(
                 color = Color.White,
                 shape = shape
@@ -74,12 +75,11 @@ fun MemoaDropDownTextField(
         Row(
             modifier = modifier
                 .align(Alignment.CenterStart)
-                .padding(horizontal = 8.dp, vertical = 8.dp),
+                .padding( vertical = 6.dp)
+                .padding(start = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = modifier
-                    .padding(start = 6.dp),
                 painter = painterResource(id = R.drawable.ic_token_id_text_field),
                 contentDescription = null
             )
@@ -93,14 +93,14 @@ fun MemoaDropDownTextField(
                 decorationBox = { innerTextField ->
                     Box(
                         modifier = modifier
-                            .padding(start = 10.dp, end = 12.dp)
+                            .padding(end = 14.dp)
                             .width(290.dp)
                     ) {
                         if (value.isEmpty()) {
                             Text(
                                 modifier = Modifier.align(Alignment.CenterStart),
                                 text = hint,
-                                style = caption2.copy(fontSize = 20.sp),
+                                style = caption2.copy(fontSize = 16.sp),
                                 maxLines = 1
                             )
                         }
@@ -111,7 +111,6 @@ fun MemoaDropDownTextField(
             Image(
                 painter = painterResource(R.drawable.dropdown),
                 contentDescription = null,
-                Modifier.size(10.dp),
                 contentScale = ContentScale.Crop
             )
 
@@ -130,5 +129,6 @@ fun MemoaDropDownTextFieldPreview() {
         hint = buildAnnotatedString {
             append("가장좋은학교는우리소프트웨어마이스터고등학교")
         },
+        modifier = Modifier.padding(horizontal = 10.dp)
     )
 }

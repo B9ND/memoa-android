@@ -221,7 +221,7 @@ fun SchoolChooseScreen(
         Box(
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 45.dp)
+                .padding(horizontal = 20.dp, vertical = 25.dp)
         ) {
             BackButtonWhite {
                 navController.popBackStack()
@@ -233,7 +233,7 @@ fun SchoolChooseScreen(
             ) {
                 Text(
                     text = "회원가입",
-                    fontSize = 30.sp,
+                    fontSize = 25.sp,
                     color = Color.White,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -285,13 +285,15 @@ fun SchoolChooseScreen(
                         value = uiState.school,
                         onValueChange = viewModel::updateSchool,
                         hint = schoolText,
-                        modifier = Modifier.clickable(
-                            onClick = {
-                                viewModel.updateShowBottomSheet(true)
-                                viewModel.updateExpand(false)
-                                viewModel.schoolSearch(uiState.school)
-                            }
-                        )
+                        modifier = Modifier
+                            .clickable(
+                                onClick = {
+                                    viewModel.updateShowBottomSheet(true)
+                                    viewModel.updateExpand(false)
+                                    viewModel.schoolSearch(uiState.school)
+                                }
+                            )
+                            .padding(horizontal = 10.dp)
                     )
                     Spacer(Modifier.height(10.dp))
                     MemoaDropDownTextField(
@@ -314,14 +316,16 @@ fun SchoolChooseScreen(
                         }
                     )
                     Spacer(Modifier.height(3.dp))
+                    Log.d("갑자기", "SchoolChooseScreen: ${uiState.isExpanded}")
+                    Log.d("갑자기", "SchoolChooseScreen: ${uiState.selectedItem}")
                     if (uiState.isExpanded && uiState.selectedItem != -1) {
                         LazyColumn {
-                            viewModel.updateList(
-                            )
+                            viewModel.updateList()
                             items(count = uiState.departmentList.size) { index ->
                                 DepartmentList(
                                     modifier = Modifier
                                         .clickable {
+                                            Log.d("kmj", "SchoolChooseScreen: $index")
                                             viewModel.updateDepItem(index)
                                             viewModel.updateExpand(false)
                                             if (uiState.selectedDepartment != -1 && uiState.selectedDepartment != index) {
@@ -337,7 +341,6 @@ fun SchoolChooseScreen(
                                                 Log.d("Debug", "No department selected")
                                             }
                                             viewModel.updateDepItem(index)
-
                                         },
                                     text = uiState.departmentList[index],
                                     top = index == 0,
@@ -357,7 +360,6 @@ fun SchoolChooseScreen(
                     text = authString,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(Modifier.height(10.dp))
                 MemoaButton(
                     modifier = modifier
                         .fillMaxWidth()
@@ -442,4 +444,6 @@ fun getDepartNames(
 ): List<Department>? {
     return response.find { it.name == name }?.departments?.filter { it.grade == grade }
 }
+
+
 

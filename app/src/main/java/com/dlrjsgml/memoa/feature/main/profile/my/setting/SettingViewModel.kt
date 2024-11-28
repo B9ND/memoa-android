@@ -8,8 +8,12 @@ import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.feature.main.profile.my.MyProfileEffect
 import com.dlrjsgml.memoa.feature.main.write.UpLoadImageSideEffect
+import com.dlrjsgml.memoa.network.data.user.clearToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
+import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.network.data.user.saveUser.saveRefToken
 import com.dlrjsgml.memoa.network.write.image.FileUtil
 import com.dlrjsgml.memoa.network.write.image.FormDataUtil
@@ -41,10 +45,9 @@ class SettingViewModel : ViewModel() {
     fun logout(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                saveRefToken(context, null)
+                clearToken(context)
                 _uiEffect.emit(SettingSideEffect.LogoutSuccess)
             } catch (e: Exception) {
-
                 _uiEffect.emit(SettingSideEffect.LogoutFailed)
             }
         }

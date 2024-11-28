@@ -31,7 +31,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.ui.theme.caption2
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MemoaPasswordTextField(
@@ -68,8 +67,8 @@ fun MemoaPasswordTextField(
             decorationBox = { innerTextField ->
                 Box(
                     modifier = modifier
-                        .padding(vertical = 14.dp)
-                        .padding(start = 55.dp, end = 45.dp),
+                        .padding(vertical = 12.dp)
+                        .padding(start = 30.dp, end = 12.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {
@@ -85,12 +84,12 @@ fun MemoaPasswordTextField(
         Image(
             modifier = modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 14.dp),
+                .padding(start = 4.dp),
             painter = painterResource(id = R.drawable.ic_token_id_text_field),
             contentDescription = null
         )
         IconButton(
-            modifier = Modifier.align(Alignment.CenterEnd),
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 5.dp),
             onClick = {
                 isHide = !isHide
             }
@@ -105,6 +104,7 @@ fun MemoaPasswordTextField(
     }
 
 }
+
 
 //
 //@Composable

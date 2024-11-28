@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.dlrjsgml.memoa.ui.theme.Purple60
 
 @Composable
 fun dialog(
@@ -62,7 +63,7 @@ fun dialog(
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    color = Color.Black
+                    color = Purple60
                 )
             }
         }

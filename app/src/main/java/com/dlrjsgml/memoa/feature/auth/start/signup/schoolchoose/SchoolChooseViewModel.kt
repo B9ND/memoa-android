@@ -69,14 +69,16 @@ class SchoolChooseScreenViewModel : ViewModel() {
 
     fun updateDepItem(item: Int) {
         val currentState = _uiState.value
-        val selectedSchool = currentState.response.getOrNull(currentState.selectedItem)
+        val selectedSchool = currentState.response.getOrNull(0)
 
         val departmentsForGrade = selectedSchool?.departments?.filter {
             it.grade == currentState.selectedGradeInt
         }
 
+        Log.d("shit?", "updateList: ${selectedSchool}")
+        Log.d("shit?", "updateList: ${_uiState.value.selectedItem}")
+        Log.d("shit?", "updateList: ${currentState.response.getOrNull(0)}")
         val selectedDepartment = departmentsForGrade?.getOrNull(item)
-
         if (selectedDepartment != null) {
             _uiState.update {
                 it.copy(
@@ -86,6 +88,7 @@ class SchoolChooseScreenViewModel : ViewModel() {
                     isExpanded = false
                 )
             }
+            Log.d("kmj1", "updateDepItem: $selectedDepartment")
         } else {
             Log.d("Department", "Invalid department selection")
         }
@@ -96,11 +99,15 @@ class SchoolChooseScreenViewModel : ViewModel() {
 
     fun updateList() {
         val currentState = _uiState.value
-        val selectedSchool = currentState.response.getOrNull(currentState.selectedItem)
+        val selectedSchool = currentState.response.getOrNull(0)
+        Log.d("갑자기?", "updateList: ${currentState.response}")
 
         val departmentNames = selectedSchool?.departments
             ?.filter { it.grade == currentState.selectedGradeInt }
             ?.map { it.name } ?: emptyList()
+        Log.d("갑자기??", "updateList: ${currentState.selectedGradeInt}")
+        Log.d("갑자기??", "updateList: ${selectedSchool?.name}")
+        Log.d("갑자기??", "updateList: ${selectedSchool?.departments}")
 
 
         _uiState.update {

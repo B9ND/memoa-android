@@ -56,10 +56,9 @@ import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
-import com.dlrjsgml.memoa.feature.main.write.UpLoadImageSideEffect
-import com.dlrjsgml.memoa.feature.main.write.WriteSideEffect
 import com.dlrjsgml.memoa.network.data.user.clearToken
 import com.dlrjsgml.memoa.network.data.user.clearUserProfile
+import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
 import com.dlrjsgml.memoa.network.data.user.getUser.getRefToken
 import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
 import com.dlrjsgml.memoa.network.data.user.saveUser.saveAccToken
@@ -68,8 +67,8 @@ import com.dlrjsgml.memoa.network.data.user.saveUser.saveUserProfile
 import com.dlrjsgml.memoa.network.token.AccTokenRequest
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import com.dlrjsgml.memoa.root.NavGroup
-import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.MemoaDropDown
+import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.theme.Gray10
 import com.dlrjsgml.memoa.ui.theme.caption2
@@ -89,18 +88,25 @@ fun MainScreen(
     val userSchool = listOf(user.department.school.ifEmpty { "로그인필요" })
     val userTags = user.department.subjects.ifEmpty { arrayListOf("로그인필요합니다") }
     LaunchedEffect(Unit) {
-        Log.d("Log", "called Launched Effect")
         coroutineScope.launch {
-            val value = isLogin(MemoaApplication.getContext())
-            Log.d("메인화면 컨텍스", value.toString())
-            isLogin = value
-            if (isLogin == true && user.department.school != "" && user.department.subjects.isNotEmpty()) {
-                viewModel.getArticles()
+            val tokenResult = accToken(MemoaApplication.getContext())
+            if (tokenResult == "success") {
+                val value = isLogin(MemoaApplication.getContext())
+                isLogin = value
+                val updatedUser = getUserProfile(MemoaApplication.getContext())
+                if (value && updatedUser.department.school.isNotEmpty() && updatedUser.department.subjects.isNotEmpty()) {
+                    viewModel.getArticles()
+                } else {
+                    Log.d("이야", "logout: ${getAccToken(MemoaApplication.getContext())}")
+                    clearToken(MemoaApplication.getContext())
+                    Log.d("야", "MainScreen: ")
+                    navController.navigate(NavGroup.START)
+                }
+                viewModel.fillTags(updatedUser.department.school)
             } else {
                 clearToken(MemoaApplication.getContext())
                 navController.navigate(NavGroup.START)
             }
-            viewModel.fillTags(user.department.school)
         }
     }
     val lazyState = rememberLazyListState()
@@ -132,7 +138,6 @@ fun MainScreen(
                     Log.d("상태", "지금은  성공러 : ${lazyPagingItems.itemCount}");
 
                 }
-
                 ArticlesSideEffect.TokenError -> {
                     Log.d("상태", "지금은  토큰에러 : ${lazyPagingItems.itemCount}");
 
@@ -339,7 +344,6 @@ private suspend fun isLogin(context: Context): Boolean {
     clearUserProfile(context)
     return false
 }
-
 
 private suspend fun accToken(context: Context): String {
     try {

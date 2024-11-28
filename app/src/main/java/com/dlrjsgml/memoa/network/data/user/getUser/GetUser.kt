@@ -37,7 +37,7 @@ fun getUserProfile(context: Context): UserProfile = runBlocking {
         name = preferences[DEPARTMENT_NAME] ?: "",
         grade = preferences[DEPARTMENT_GRADE] ?: 0,
         school = preferences[DEPARTMENT_SCHOOL] ?: "",
-        subjects = preferences[DEPARTMENT_SUBJECTS]?.split(",") ?: arrayListOf("로그인필요")
+        subjects = preferences[DEPARTMENT_SUBJECTS]?.split(",") ?: arrayListOf("ERROR")
     )
 
     UserProfile(
