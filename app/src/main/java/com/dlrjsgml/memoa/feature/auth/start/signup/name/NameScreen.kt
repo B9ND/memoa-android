@@ -160,7 +160,7 @@ fun NameScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    if (uiState.name.length <= 255) {
+                    if (uiState.name.length <= 255 && uiState.name.isNotEmpty()) {
                         navController.navigate("${NavGroup.SIGNUP_SCHOOL}?${email}?${password}?${uiState.name}")
                     }
                 }
