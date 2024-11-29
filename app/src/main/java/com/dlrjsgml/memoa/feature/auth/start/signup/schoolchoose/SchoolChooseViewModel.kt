@@ -97,14 +97,10 @@ class SchoolChooseScreenViewModel : ViewModel() {
     fun updateList() {
         val currentState = _uiState.value
         val selectedSchool = currentState.response.getOrNull(0)
-        Log.d("갑자기?", "updateList: ${currentState.response}")
 
         val departmentNames = selectedSchool?.departments
             ?.filter { it.grade == currentState.selectedGradeInt }
             ?.map { it.name } ?: emptyList()
-        Log.d("갑자기??", "updateList: ${currentState.selectedGradeInt}")
-        Log.d("갑자기??", "updateList: ${selectedSchool?.name}")
-        Log.d("갑자기??", "updateList: ${selectedSchool?.departments}")
 
 
         _uiState.update {
