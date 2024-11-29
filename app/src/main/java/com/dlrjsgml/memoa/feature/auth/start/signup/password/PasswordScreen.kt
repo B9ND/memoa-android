@@ -160,7 +160,7 @@ fun PasswordScreen(
                     text = "다음",
                     enabled = true,
                 ) {
-                    if (uiState.password.length <= 255) {
+                    if (uiState.password.length <= 255 && uiState.password.isNotEmpty()) {
                         navController.navigate("${NavGroup.SIGNUP_NICKNAME}?${email}?${uiState.password}")
                     }
                 }
