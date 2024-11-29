@@ -216,11 +216,18 @@ fun EmailScreen(
                     firstFocus = true,
                     modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
                     textButtonOnClick = {
-                        coroutineScope.launch {
-                            viewModel.updateErrorCode(0)
-                            viewModel.updateError("")
-                            viewModel.updateClicked(true)
-                            viewModel.sendCode(uiState.email, NetworkUtil(MemoaApplication.getContext()))
+                        if (uiState.email.isNotEmpty()) {
+                            coroutineScope.launch {
+                                viewModel.updateErrorCode(0)
+                                viewModel.updateError("")
+                                viewModel.updateClicked(true)
+                                viewModel.sendCode(
+                                    uiState.email,
+                                    NetworkUtil(MemoaApplication.getContext())
+                                )
+                            }
+                        } else {
+                            viewModel.updateError("이메일을 입력해 주세요")
                         }
                     }
                 )

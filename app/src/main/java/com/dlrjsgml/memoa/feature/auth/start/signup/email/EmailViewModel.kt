@@ -91,12 +91,13 @@ class EmailViewModel : ViewModel() {
                     updateShowDialog(false)
                 } catch (e: HttpException) {
                     Log.d("sign", e.code().toString())
-                    if (e.code() == 409) {
-                        updateError("이미 존재하는 이메일 입니다.")
-                        updateShowDialog(true)
-                        updateErrorCode(409)
-                    } else {
-                        if (e.code() == 400) {
+                    when (e.code()) {
+                        409 -> {
+                            updateError("이미 존재하는 이메일 입니다.")
+                            updateShowDialog(true)
+                            updateErrorCode(409)
+                        }
+                        400 -> {
                             Log.d("sign", "HttpException2: ${e.code()}")
                             updateError("이메일을 확인해 주세요.")
                             updateShowDialog(true)
@@ -115,9 +116,6 @@ class EmailViewModel : ViewModel() {
         } else {
             updateLoadingState(false)
             viewModelScope.launch {
-                if (code == "123456") {
-                    _uiEffect.emit(Code.Success)
-                }
                 try {
                     RetrofitClient.sendCodeService.checkAuthCode(email, code)
                     _uiEffect.emit(Code.Success)
