@@ -77,15 +77,15 @@ fun MemoaTextField(
             decorationBox = { innerTextField ->
                 Box(
                     modifier = modifier
-                        .padding(vertical = 12.dp)
-                        .padding(start = 30.dp, end = 12.dp)
+                        .padding(vertical = 14.dp)
+                        .padding(start = 45.dp, end = 12.dp)
                 ) {
                     if (value.isEmpty()) {
                         Text(
                             modifier = Modifier.align(Alignment.CenterStart),
-                            text = hint, style = caption2.copy(fontSize = 5.sp),
+                            text = hint, style = caption2.copy(fontSize = 14.sp),
                             color = Color.Gray,
-                            fontSize = 5.sp
+                            fontSize = 10.sp
                         )
                     }
                     innerTextField()
@@ -93,19 +93,19 @@ fun MemoaTextField(
             },
             keyboardOptions = if(firstFocus) KeyboardOptions( imeAction = ImeAction.Next ) else KeyboardOptions( imeAction = ImeAction.Done ),
         )
-        Image(
-            modifier = modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 4.dp),
-            painter = painterResource(id = R.drawable.ic_token_id_text_field),
-            contentDescription = null
-        )
         Row(
             modifier = modifier
                 .align(Alignment.CenterStart)
                 .padding(end = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Image(
+                modifier = modifier
+                    .padding(start = 6.dp)
+                    ,
+                painter = painterResource(id = R.drawable.ic_token_id_text_field),
+                contentDescription = null
+            )
             Spacer(modifier = Modifier.weight(1f))
 
             if (textButton) {
@@ -113,8 +113,11 @@ fun MemoaTextField(
                     Text(text = textButtonVal, style = caption1, color = Purple60)
                 }
             }
+
         }
+
     }
+
 }
 
 

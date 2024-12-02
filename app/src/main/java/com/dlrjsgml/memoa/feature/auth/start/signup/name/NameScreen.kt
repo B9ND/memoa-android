@@ -131,7 +131,7 @@ fun NameScreen(
                     value = uiState.name,
                     onValueChange = viewModel::updateName,
                     hint = emailText,
-                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
+                    modifier = Modifier.focusRequester(focusRequester).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
                     firstFocus = true,
                 )
                 Spacer(Modifier.height(10.dp))

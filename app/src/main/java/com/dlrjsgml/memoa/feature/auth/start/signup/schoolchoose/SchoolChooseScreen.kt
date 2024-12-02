@@ -247,7 +247,6 @@ fun SchoolChooseScreen(
                                     viewModel.schoolSearch(uiState.school)
                                 }
                             )
-                            .padding(horizontal = 10.dp)
                     )
                     Spacer(Modifier.height(10.dp))
                     MemoaDropDownTextField(
@@ -272,9 +271,7 @@ fun SchoolChooseScreen(
                     )
                     Spacer(Modifier.height(3.dp))
                     if (uiState.isExpanded && uiState.selectedItem != -1) {
-                        LazyColumn(
-                            modifier.padding(horizontal = 10.dp)
-                        ) {
+                        LazyColumn{
                             viewModel.updateList()
                             items(count = uiState.departmentList.size) { index ->
                                 DepartmentList(

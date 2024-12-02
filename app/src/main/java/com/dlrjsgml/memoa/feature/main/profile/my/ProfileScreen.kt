@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.feature.main.profile.my
 
+import android.app.Activity
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -31,6 +32,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,6 +65,7 @@ fun ProfileScreen(
     val text = remember { mutableStateOf("이건희") }
     val uiState by viewModel.uiState.collectAsState()
     val followUiState by viewModel.followUiState.collectAsState()
+    val view = LocalView.current
 
     LaunchedEffect(Unit) {
         viewModel.getProfileInfo()

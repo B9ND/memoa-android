@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalView
 import androidx.navigation.compose.rememberNavController
 import coil.Coil
 import coil.ImageLoader
@@ -66,6 +68,7 @@ class MainActivity : ComponentActivity() {
 //                isLogin?.let { NavGraph(isLogined = it, navController = navHostController) }
                 NavGraph(navController = navHostController)
             }
+
         }
         Log.d("리프레쉬", "onCreate: ${getAccToken(context = MemoaApplication.getContext())}")
     }

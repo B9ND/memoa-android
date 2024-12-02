@@ -1,5 +1,6 @@
 package com.dlrjsgml.memoa.feature.main.main
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -33,17 +34,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,6 +61,7 @@ import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.R
 import com.dlrjsgml.memoa.backhandler.HomeBackOnPressed
 import com.dlrjsgml.memoa.backhandler.safePopBackStack
+import com.dlrjsgml.memoa.network.data.user.UserProfile
 import com.dlrjsgml.memoa.network.data.user.clearToken
 import com.dlrjsgml.memoa.network.data.user.clearUserProfile
 import com.dlrjsgml.memoa.network.data.user.getUser.getAccToken
@@ -71,6 +77,7 @@ import com.dlrjsgml.memoa.ui.component.MemoaDropDown
 import com.dlrjsgml.memoa.ui.component.items.ArticleList
 import com.dlrjsgml.memoa.ui.component.items.JJapList
 import com.dlrjsgml.memoa.ui.theme.Gray10
+import com.dlrjsgml.memoa.ui.theme.Purple0
 import com.dlrjsgml.memoa.ui.theme.caption2
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -87,41 +94,60 @@ fun MainScreen(
     val user = getUserProfile(MemoaApplication.getContext())
     val userSchool = listOf(user.department.school.ifEmpty { "로그인필요" })
     val userTags = user.department.subjects.ifEmpty { arrayListOf("로그인필요합니다") }
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            val tokenResult = accToken(MemoaApplication.getContext())
-            if (tokenResult == "success") {
-                val value = isLogin(MemoaApplication.getContext())
-                isLogin = value
-                val updatedUser = getUserProfile(MemoaApplication.getContext())
-                if (value && updatedUser.department.school.isNotEmpty() && updatedUser.department.subjects.isNotEmpty()) {
-                    viewModel.getArticles()
-                } else {
-                    Log.d("이야", "logout: ${getAccToken(MemoaApplication.getContext())}")
-                    clearToken(MemoaApplication.getContext())
-                    Log.d("야", "MainScreen: ")
-                    navController.navigate(NavGroup.START)
-                }
-                viewModel.fillTags(updatedUser.department.school)
-            } else {
-                clearToken(MemoaApplication.getContext())
-                navController.navigate(NavGroup.START)
-            }
-        }
-    }
+    val view = LocalView.current
     val lazyState = rememberLazyListState()
-    val id = 1
+    val id = -1
+    val density = LocalDensity.current
     val uiState by viewModel.uiState.collectAsState()
     val lazyPagingItems = uiState.articles.collectAsLazyPagingItems()
     val pullRefreshState = rememberPullToRefreshState()
+    var isEffectExecuted by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        Log.d("Effect", "Current isEffectExecuted: $isEffectExecuted")
+
+        if (!isEffectExecuted) {
+            Log.d("Effect", "Starting execution")
+            isEffectExecuted = true  // 실행 시작 전에 true로 설정
+
+            Log.d("TAG", "${user}")
+            Log.d("email", "MainScreen: ${user.email}")
+
+            try {
+                val tokenResult = accToken(MemoaApplication.getContext())
+                if (tokenResult == "success") {
+                    val value = isLogin(MemoaApplication.getContext())
+                    isLogin = value
+                    val updatedUser = getUserProfile(MemoaApplication.getContext())
+                    if (value && updatedUser.department.school.isNotEmpty() && updatedUser.department.subjects.isNotEmpty()) {
+                        viewModel.getArticles()
+                    } else {
+                        Log.d("이야", "logout: ${getAccToken(MemoaApplication.getContext())}")
+                        clearToken(MemoaApplication.getContext())
+                        Log.d("야", "MainScreen: ")
+                        navController.navigate(NavGroup.START)
+                    }
+                    viewModel.fillTags(updatedUser.department.school)
+                } else {
+                    clearToken(MemoaApplication.getContext())
+                    navController.navigate(NavGroup.START)
+                }
+            } catch (e: Exception) {
+                Log.e("Effect", "Error during execution: ${e.message}")
+                isEffectExecuted = false  // 에러 발생 시 다시 시도할 수 있도록 false로 설정
+            }
+        }
+    }
     if (pullRefreshState.isRefreshing) {
+        Log.d("이거뜨면 안됨", "MainScreen: ")
         viewModel.getArticles()
         pullRefreshState.endRefresh()
     }
-
+//    LaunchedEffect(Unit) {
+//        viewModel.getArticles()
+//    }
 
     Log.d("ㅎㅇ", "dlrjsgml44 Ok ${lazyPagingItems.loadState}");
-    val density = LocalDensity.current
     Log.d("상태", "지금은 : ${lazyPagingItems.itemCount}");
 
     LaunchedEffect(viewModel) {
@@ -138,6 +164,7 @@ fun MainScreen(
                     Log.d("상태", "지금은  성공러 : ${lazyPagingItems.itemCount}");
 
                 }
+
                 ArticlesSideEffect.TokenError -> {
                     Log.d("상태", "지금은  토큰에러 : ${lazyPagingItems.itemCount}");
 

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -53,7 +54,6 @@ fun MemoaDropDownTextField(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
             .background(
                 color = Color.White,
                 shape = shape
@@ -68,15 +68,15 @@ fun MemoaDropDownTextField(
         Row(
             modifier = modifier
                 .align(Alignment.CenterStart)
-                .padding(vertical = 8.dp)
-                .padding(start = 4.dp),
+                .padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
+                modifier = modifier
+                    .padding(start = 6.dp),
                 painter = painterResource(id = R.drawable.ic_token_id_text_field),
                 contentDescription = null
             )
-            Spacer(Modifier.width(2.dp))
             BasicTextField(
                 value = nothing,
                 onValueChange = {},
@@ -87,13 +87,14 @@ fun MemoaDropDownTextField(
                 decorationBox = { innerTextField ->
                     Box(
                         modifier = modifier
-                            .width(195.dp)
+                            .padding(start = 10.dp, end = 12.dp)
+                            .width(20.dp)
                     ) {
                         if (value.isEmpty()) {
                             Text(
                                 modifier = Modifier.align(Alignment.CenterStart),
                                 text = hint,
-                                style = caption2.copy(fontSize = 16.sp),
+                                style = caption2.copy(fontSize = 20.sp),
                                 maxLines = 1
                             )
                         }
@@ -111,8 +112,9 @@ fun MemoaDropDownTextField(
                     id = R.drawable.ic_dropdown
                 )
             )
-            Spacer(modifier.width(10.dp))
+
         }
+
     }
 }
 
@@ -126,6 +128,5 @@ fun MemoaDropDownTextFieldPreview() {
         hint = buildAnnotatedString {
             append("가장좋은학교는우리소프트웨어마이스터고등학교")
         },
-        modifier = Modifier.padding(horizontal = 10.dp)
     )
 }
