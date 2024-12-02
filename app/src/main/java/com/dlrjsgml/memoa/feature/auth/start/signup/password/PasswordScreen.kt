@@ -132,7 +132,7 @@ fun PasswordScreen(
                     value = uiState.password,
                     onValueChange = viewModel::updatePassword,
                     hint = passwordText,
-                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
+                    modifier = Modifier.focusRequester(focusRequester).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
                 )
                 Spacer(Modifier.height(10.dp))
                 Text(

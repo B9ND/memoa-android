@@ -188,7 +188,7 @@ fun EmailScreen(
         Box(
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 25.dp)
+                .padding(horizontal = 10.dp, vertical = 25.dp)
         ) {
             BackButtonWhite {
                 navController.popBackStack()
@@ -214,7 +214,7 @@ fun EmailScreen(
                     textButton = true,
                     textButtonVal = if (uiState.clicked) uiState.time.toString() else "인증",
                     firstFocus = true,
-                    modifier = Modifier.focusRequester(focusRequester).padding(horizontal = 10.dp).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
+                    modifier = Modifier.focusRequester(focusRequester).onFocusChanged { focusState -> textFieldHasFocus.value = focusState.isFocused },
                     textButtonOnClick = {
                         if (uiState.email.isNotEmpty()) {
                             coroutineScope.launch {
@@ -231,9 +231,9 @@ fun EmailScreen(
                         }
                     }
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(5.dp))
                 MemoaTextField(
-                    modifier.padding(horizontal = 10.dp).onFocusChanged { focusState ->
+                    modifier.onFocusChanged { focusState ->
                         textFieldHasFocus.value = focusState.isFocused
                                                                         },
                     value = uiState.auth,

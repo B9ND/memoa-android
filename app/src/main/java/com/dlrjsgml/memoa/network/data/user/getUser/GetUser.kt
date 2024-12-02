@@ -1,6 +1,7 @@
 package com.dlrjsgml.memoa.network.data.user.getUser
 
 import android.content.Context
+import android.util.Log
 import com.dlrjsgml.memoa.network.data.user.saveUser.ACC_TOKEN
 import com.dlrjsgml.memoa.network.data.user.saveUser.DEPARTMENT_GRADE
 import com.dlrjsgml.memoa.network.data.user.saveUser.DEPARTMENT_NAME
@@ -32,6 +33,7 @@ fun getAccToken(context: Context): String? {
     }
 }
 fun getUserProfile(context: Context): UserProfile = runBlocking {
+    Log.d("TAG", "getUserProfile: ")
     val preferences = context.userProfileDataStore.data.first()
     val department = Department(
         name = preferences[DEPARTMENT_NAME] ?: "",

@@ -67,8 +67,8 @@ fun MemoaPasswordTextField(
             decorationBox = { innerTextField ->
                 Box(
                     modifier = modifier
-                        .padding(vertical = 12.dp)
-                        .padding(start = 30.dp, end = 12.dp),
+                        .padding(vertical = 14.dp)
+                        .padding(start = 45.dp, end = 45.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {
@@ -84,12 +84,12 @@ fun MemoaPasswordTextField(
         Image(
             modifier = modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 4.dp),
+                .padding(start = 6.dp),
             painter = painterResource(id = R.drawable.ic_token_id_text_field),
             contentDescription = null
         )
         IconButton(
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = 5.dp),
+            modifier = Modifier.align(Alignment.CenterEnd),
             onClick = {
                 isHide = !isHide
             }

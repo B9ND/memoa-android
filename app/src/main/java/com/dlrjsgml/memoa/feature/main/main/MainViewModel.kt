@@ -10,6 +10,7 @@ import androidx.paging.cachedIn
 import com.dlrjsgml.memoa.MemoaApplication
 import com.dlrjsgml.memoa.data.local.bookmark.BookMarkEntity
 import com.dlrjsgml.memoa.feature.main.main.paging.ArticlePagingSource
+import com.dlrjsgml.memoa.network.data.user.getUser.getUserProfile
 import com.dlrjsgml.memoa.network.main.ArticleResponse
 import com.dlrjsgml.memoa.remote.RetrofitClient
 import kotlinx.coroutines.Dispatchers
@@ -45,12 +46,15 @@ sealed interface BookMarkDoSideEffect {
 }
 
 
+
 class MainViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ArticlesState())
     val uiState = _uiState.asStateFlow()
 
+
     private val _tagUiState = MutableStateFlow(TagState())
     val tagUiState = _tagUiState.asStateFlow()
+
 
     private val _uiEffect = MutableSharedFlow<ArticlesSideEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
@@ -96,6 +100,10 @@ class MainViewModel : ViewModel() {
                 _uiState.update { it.copy(articles = data) }
                 Log.d("인확", "dlrjsgml44 Ok $data");
                 _uiEffect.emit(ArticlesSideEffect.Success)
+            }
+            launch{
+                val localUser = getUserProfile(MemoaApplication.getContext())
+
             }
         }
     }

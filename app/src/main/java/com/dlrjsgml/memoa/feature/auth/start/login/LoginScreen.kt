@@ -91,6 +91,7 @@ fun LoginScreen(
         }
     }
 
+
     val emailText = buildAnnotatedString {
         withStyle(
             SpanStyle(
@@ -175,7 +176,7 @@ fun LoginScreen(
         Box(
             modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 25.dp)
+                .padding(horizontal = 15.dp, vertical = 25.dp)
         ) {
             BackButtonWhite {
                 navController.popBackStack()
@@ -202,14 +203,12 @@ fun LoginScreen(
                     modifier = Modifier
                         .focusRequester(focusRequester)
                         .focusRequester(focusRequester)
-                        .padding(horizontal = 10.dp),
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(5.dp))
                 MemoaPasswordTextField(
                     value = uiState.password,
                     onValueChange = viewModel::updatePassword,
                     hint = authText,
-                    modifier = Modifier.padding(horizontal = 10.dp)
                 )
                 Spacer(Modifier.height(10.dp))
             }
